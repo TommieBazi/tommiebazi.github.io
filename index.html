@@ -399,7 +399,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <div class="wrap">
       <span class="mono rv">排盤 · ผูกดวงฟรี</span>
       <h2 class="rv" style="margin-top:12px">ใส่วันเวลาเกิด แล้วดูอักษรแปดตัวของคุณ</h2>
-      <p class="rv" style="margin-top:14px;max-width:38em;color:#c6c8d6">ผูกดวงตามระบบ อ.มาศ เปลี่ยนปีและเปลี่ยนเดือนตามจุดสุริยะ (中氣) ใช้เวลาสุริยะจริงของตำบลที่เกิด ผลนี้คือ “ผัง” ไม่ใช่ “คำอ่าน” ถ้าอยากรู้ว่าผังบอกอะไร ส่งให้ Tommie อ่านต่อได้ทางไลน์</p>
+      <p class="rv" style="margin-top:14px;max-width:38em;color:#c6c8d6">ผูกดวงตามระบบ อ.มาศ เปลี่ยนปีและเปลี่ยนเดือนตามจุดสุริยะ (中氣) เวลาเปลี่ยนสารทตรงกับค่าทางดาราศาสตร์ และใช้เวลาสุริยะจริงของตำบลที่เกิด ผลนี้คือ “ผัง” ไม่ใช่ “คำอ่าน” ถ้าอยากรู้ว่าผังบอกอะไร ส่งให้ Tommie อ่านต่อได้ทางไลน์</p>
       <form class="cform rv" id="cform" novalidate>
         <fieldset class="cset"><legend>วันเกิด</legend>
           <div class="crow c3">
@@ -767,15 +767,30 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     for (var i = 0; i < 2; i++) if (c[i] && c[i].getYear() === y) return ms(c[i]);
     throw new Error('no 冬至 ' + y);
   }
-  function solarCorr(y, m, d, lon, tz) { // minutes: longitude vs zone meridian + equation of time
-    var n = (Date.UTC(y, m - 1, d) - Date.UTC(y, 0, 1)) / 864e5 + 1, B = 2 * Math.PI * (n - 81) / 364;
-    return (lon - tz * 15) * 4 + 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
+  /* Equation of time — NOAA Solar Calculator formulation (Meeus, Astronomical Algorithms), evaluated at the actual
+     instant; accurate to a few seconds. Returns minutes (apparent minus mean solar time). */
+  function eot(msUTC) {
+    var jd = msUTC / 864e5 + 2440587.5, T = (jd - 2451545) / 36525, r = Math.PI / 180;
+    var L0 = (280.46646 + T * (36000.76983 + T * 0.0003032)) % 360;
+    var M = 357.52911 + T * (35999.05029 - 0.0001537 * T);
+    var e = 0.016708634 - T * (0.000042037 + 0.0000001267 * T);
+    var eps0 = 23 + (26 + (21.448 - T * (46.815 + T * (0.00059 - T * 0.001813))) / 60) / 60;
+    var eps = eps0 + 0.00256 * Math.cos((125.04 - 1934.136 * T) * r);
+    var y = Math.tan(eps * r / 2); y *= y;
+    var E = y * Math.sin(2 * L0 * r) - 2 * e * Math.sin(M * r) + 4 * e * y * Math.sin(M * r) * Math.cos(2 * L0 * r)
+      - 0.5 * y * y * Math.sin(4 * L0 * r) - 1.25 * e * e * Math.sin(2 * M * r);
+    return 4 * E / r;
+  }
+  /* minutes to add to the zone clock to get local apparent (true) solar time */
+  function solarCorr(t, lon, tz) {
+    var msUTC = Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4]) - tz * 3600000;
+    return (lon - tz * 15) * 4 + eot(msUTC);
   }
   /* t = [y,m,d,h,mi] local clock; o = {tz:7, lon, system:'amat'|'std', lateZi:'same'|'next', noTime} */
   function chart(t, o) {
     o = o || {}; var tz = o.tz == null ? 7 : o.tz;
     var bj = add(t, (8 - tz) * 60), bjMs = Date.UTC(bj[0], bj[1] - 1, bj[2], bj[3], bj[4]);
-    var corr = (o.lon != null && !o.noTime) ? solarCorr(t[0], t[1], t[2], o.lon, tz) : 0;
+    var corr = (o.lon != null && !o.noTime) ? solarCorr(t, o.lon, tz) : 0;
     var L = add(t, corr), res = { corr: corr, local: L };
     var Y, M, D, H;
     if (o.system === 'std') {
@@ -797,7 +812,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     }
     res.y = Y; res.m = M; res.d = D; res.h = o.noTime ? null : H; return res;
   }
-  var api = { chart: chart, solarCorr: solarCorr, STEMS: STEMS, BR: BR };
+  var api = { chart: chart, solarCorr: solarCorr, eot: eot, STEMS: STEMS, BR: BR };
   if (typeof module !== 'undefined') module.exports = api; else root.TBZ = api;
 })(this);
 
@@ -886,7 +901,9 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     var meta = 'เกิด <b>' + d + ' ' + MONTH[m - 1] + ' ' + be + '</b>' + (noTime ? ' (ไม่ทราบเวลา)' : ' เวลา <b>' + pad(h) + ':' + pad(mi) + ' น.</b>');
     if (pl && !noTime) {
       var c = Math.round(R.corr), L = R.local;
-      meta += '<br>เวลาสุริยะจริงที่ ' + pl.name + ' ≈ <b>' + pad(L[3]) + ':' + pad(L[4]) + ' น.</b> (' + (c < 0 ? 'ช้ากว่า' : 'เร็วกว่า') + 'เวลานาฬิกา ' + Math.abs(c) + ' นาที)' + (pl.level !== 'ตำบล' ? ' · ใช้พิกัดกลาง' + pl.level : '');
+      var lonM = (pl.lon - 105) * 4, eqM = R.corr - lonM, sg = function (x) { return (x < 0 ? '−' : '+') + Math.abs(x).toFixed(1); };
+      meta += '<br>เวลาสุริยะจริงที่ ' + pl.name + ' ≈ <b>' + pad(L[3]) + ':' + pad(L[4]) + ' น.</b> (' + (c < 0 ? 'ช้ากว่า' : 'เร็วกว่า') + 'เวลานาฬิกา ' + Math.abs(c) + ' นาที)' + (pl.level !== 'ตำบล' ? ' · ใช้พิกัดกลาง' + pl.level : '') +
+        '<br><span class="cnote" style="margin:0">เส้นแวง ' + pl.lon.toFixed(2) + '°E เทียบเส้นเวลาไทย 105°E ' + sg(lonM) + ' นาที · สมการเวลา (สูตร NOAA) ' + sg(eqM) + ' นาที</span>';
     } else if (!noTime) meta += '<br>ใช้เวลานาฬิกา ยังไม่ได้ปรับเวลาสุริยะจริง เพราะไม่ได้ระบุสถานที่เกิด';
     meta += '<br>' + (sys === 'std' ? 'ระบบทั่วไป (立春)' : 'ระบบ อ.มาศ · เดือนนี้เริ่มที่ ' + (QITH[R.monthStart] || R.monthStart));
     $('#cmeta').innerHTML = meta;
