@@ -1,9 +1,25 @@
-<title>Tommie BaZi</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07080d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%2307080d' stroke='%23ffd660' stroke-width='3'/%3E%3Ctext x='32' y='44' font-size='34' text-anchor='middle' fill='%23ffd660' font-family='serif' font-weight='700'%3E%E5%85%AB%3C/text%3E%3C/svg%3E">
+<link rel="canonical" href="https://tommiebazi.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tommiebazi.github.io/">
+<meta property="og:title" content="Tommie BaZi · รับดูดวงจีนปาจื้อ สี่เสาหลักแห่งชะตา">
+<meta property="og:description" content="ดวงของคุณเขียนไว้แล้วในอักษรแปดตัว อ่านผังสี่เสาจากวันเวลาเกิด การงาน การเงิน คู่ครอง และดวงใหญ่สิบปี ทักไลน์ @moo2moon">
+<meta property="og:image" content="https://tommiebazi.github.io/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<script>document.documentElement.classList.add('js')</script>
+<title>Tommie BaZi · รับดูดวงจีนปาจื้อ สี่เสาหลักแห่งชะตา</title>
 <meta name="description" content="รับดูดวงจีนปาจื้อ สี่เสาหลักแห่งชะตา 八字 命理">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;700;800&family=Noto+Sans+Thai:wght@400;500;600&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@600;700;800&family=Prompt:wght@400;500;700;800&family=Noto+Sans+Thai:wght@400;500;600&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
 /* Layout concept: one long ink-black scroll. A live four-pillar chart opens the page, the reel is the centerpiece,
    and the five element colors are the only accents, so the site reads as the same world as the video. */
@@ -20,6 +36,7 @@
   --earth: #d68e46;
   --gold: #ffd660;
   --water: #3ca5ff;
+  --f-head: "Noto Serif Thai", "Noto Serif TC", "Prompt", serif;
   --f-display: "Prompt", "Noto Sans Thai", system-ui, sans-serif;
   --f-body: "Noto Sans Thai", "Prompt", system-ui, sans-serif;
   --f-kanji: "Noto Serif TC", "Noto Serif CJK SC", "Songti SC", serif;
@@ -31,17 +48,20 @@
 html { scroll-behavior: smooth; }
 body {
   margin: 0; background: var(--ink); color: var(--text);
-  font-family: var(--f-body); font-size: 16px; line-height: 1.75;
-  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  font-family: var(--f-body); font-size: 17px; line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
 }
+html, body { overflow-x: clip; }
+section, .ribbon { overflow-x: clip; }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); background: var(--ink); z-index: 60; }
 a { color: inherit; }
 .wrap { width: 100%; max-width: 1180px; margin: 0 auto; padding-left: var(--gut); padding-right: var(--gutr); }
 section { position: relative; padding-block: clamp(72px, 10vw, 128px); }
-h1, h2, h3 { font-family: var(--f-display); margin: 0; text-wrap: balance; line-height: 1.25; }
+h1, h2, h3 { font-family: var(--f-head); margin: 0; text-wrap: balance; line-height: 1.25; }
 h2 { font-size: clamp(28px, 4.4vw, 52px); font-weight: 800; letter-spacing: -0.01em; }
 p { margin: 0; }
-.mono { font-family: var(--f-mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); }
+.mono { font-family: var(--f-display); font-size: 14px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: #b4b7c9; }
+.mono:not(:lang(th)), .lat { font-family: var(--f-mono); }
 .kan { font-family: var(--f-kanji); font-weight: 900; }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
 
@@ -67,7 +87,7 @@ header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; back
 .btn:hover { box-shadow: 0 0 0 6px rgba(255,214,96,.14), 0 10px 40px rgba(255,214,96,.25); }
 .btn.ghosty { background: transparent; color: var(--text); border-color: var(--line); }
 .btn.ghosty:hover { border-color: var(--text); box-shadow: none; }
-@media (max-width: 760px) { .nav ul { display: none; } }
+@media (max-width: 760px) { .nav ul { display: none; } .nav .btn { padding: 10px 16px; font-size: 14px; } }
 
 /* hero */
 .hero::before { content: ""; position: absolute; inset: -10% -10% auto -10%; height: 90%; z-index: -1; pointer-events: none; background: radial-gradient(40% 50% at 18% 30%, rgba(70,235,130,.13), transparent 70%), radial-gradient(38% 45% at 80% 20%, rgba(255,92,40,.13), transparent 70%), radial-gradient(45% 50% at 60% 85%, rgba(60,165,255,.12), transparent 70%); filter: blur(30px); animation: aur 16s ease-in-out infinite alternate; }
@@ -103,8 +123,8 @@ h1 em { font-style: normal; background: linear-gradient(95deg, var(--wood), var(
 .wood { --c: var(--wood); } .fire { --c: var(--fire); } .earth { --c: var(--earth); } .gold { --c: var(--gold); } .water { --c: var(--water); }
 .dm::after { content: ""; position: absolute; inset: -9px; border: 1.5px solid var(--earth); border-radius: 20px; animation: pulse 2.4s ease-in-out infinite; pointer-events: none; }
 @keyframes pulse { 50% { transform: scale(1.04); opacity: .35; } }
-.dmtag { position: absolute; left: 50%; bottom: -34px; transform: translateX(-50%); white-space: nowrap; font-family: var(--f-display); font-size: 13px; font-weight: 600; color: var(--earth); }
-.chart-foot { margin-top: 52px; text-align: center; }
+.dmtag { position: absolute; left: 50%; top: -13px; transform: translateX(-50%); white-space: nowrap; padding: 1px 10px; border-radius: 999px; background: var(--earth); color: var(--ink); font-family: var(--f-display); font-size: 12px; font-weight: 700; line-height: 1.6; z-index: 2; }
+.chart-foot { margin-top: 26px; text-align: center; text-transform: none; letter-spacing: 0; line-height: 1.7; color: var(--dim); font-size: 14.5px; }
 
 /* ribbon */
 .ribbon { overflow: hidden; border-block: 1px solid var(--line); background: color-mix(in srgb, var(--ink-2) 80%, transparent); padding-block: 18px; }
@@ -117,6 +137,8 @@ h1 em { font-style: normal; background: linear-gradient(95deg, var(--wood), var(
 .reel-head p { max-width: 32em; color: var(--dim); }
 .player { position: relative; border-radius: 6px; background: #000; border: 1px solid var(--line); box-shadow: 0 40px 120px -40px rgba(60,165,255,.35), 0 0 0 1px #000; overflow: hidden; }
 .player video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #000; cursor: pointer; }
+.player.port { max-width: 440px; margin-inline: auto; }
+.player.port video { aspect-ratio: 9 / 16; }
 .br { position: absolute; width: 26px; height: 26px; border: 0 solid #fff; opacity: .7; pointer-events: none; }
 .br.a { left: 12px; top: 12px; border-width: 2px 0 0 2px; } .br.b { right: 12px; top: 12px; border-width: 2px 2px 0 0; }
 .br.c { left: 12px; bottom: 58px; border-width: 0 0 2px 2px; } .br.d { right: 12px; bottom: 58px; border-width: 0 2px 2px 0; }
@@ -142,7 +164,7 @@ h1 em { font-style: normal; background: linear-gradient(95deg, var(--wood), var(
 .card:hover::before { opacity: 1; }
 .card .kan { position: relative; font-size: 64px; line-height: 1; color: var(--c); text-shadow: 0 0 30px color-mix(in srgb, var(--c) 60%, transparent); }
 .card h3 { position: relative; margin-top: 26px; font-size: 20px; font-weight: 700; }
-.card p { position: relative; margin-top: 10px; color: var(--dim); font-size: 15px; line-height: 1.7; }
+.card p { position: relative; margin-top: 10px; color: #b4b7c9; font-size: 16px; line-height: 1.7; }
 @media (max-width: 980px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .cards { grid-template-columns: minmax(0, 1fr); } .card { min-height: 0; } }
 
@@ -197,7 +219,7 @@ h1 em { font-style: normal; background: linear-gradient(95deg, var(--wood), var(
 .step .n { position: absolute; left: 0; top: 0; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); border: 2px solid var(--c); color: var(--c); font: 800 20px var(--f-display); transition: background .4s, color .4s; }
 .step.in .n { background: var(--c); color: var(--ink); }
 .step h3 { font-size: 20px; margin-bottom: 8px; }
-.step p { color: var(--dim); font-size: 15px; }
+.step p { color: #b4b7c9; font-size: 16px; }
 @media (max-width: 860px) { .steps { grid-template-columns: minmax(0, 1fr); gap: 34px; } .rail { left: 27px; right: auto; top: 0; bottom: 0; width: 2px; height: auto; } .rail i { transform: scaleY(var(--p, 0)); transform-origin: 50% 0; } .step { padding: 0 0 0 80px; min-height: 56px; } }
 
 /* about + faq */
@@ -208,7 +230,7 @@ h1 em { font-style: normal; background: linear-gradient(95deg, var(--wood), var(
 .orbit .ring span { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px; display: grid; place-items: center; border: 1.5px solid var(--c); border-radius: 50%; background: var(--ink); font-family: var(--f-kanji); font-weight: 900; font-size: 20px; color: var(--c); transform: rotate(var(--a)) translateY(-168%) rotate(calc(-1 * var(--a))); }
 .orbit .ring span i { display: grid; place-items: center; width: 100%; height: 100%; font-style: normal; animation: turn 26s linear infinite reverse; }
 @keyframes turn { to { transform: rotate(360deg); } }
-.about p { color: #c6c8d6; margin-top: 18px; max-width: 34em; }
+.about p { color: #c6c8d6; margin-top: 18px; max-width: 34em; font-size: 18px; }
 .note { margin-top: 22px; padding: 14px 18px; border-left: 2px solid var(--gold); color: var(--dim); font-size: 14.5px; }
 .faq { margin-top: 44px; border-top: 1px solid var(--line); }
 details { border-bottom: 1px solid var(--line); }
@@ -227,19 +249,28 @@ details .a { padding: 0 4px 30px; color: #d4d6e2; max-width: 40em; font-size: cl
 .lineid { position: relative; margin-top: 26px; display: inline-flex; align-items: center; gap: 12px; padding: 8px 8px 8px 20px; border: 1px solid var(--line); border-radius: 999px; font-family: var(--f-mono); font-size: 15px; user-select: all; }
 .lineid button { appearance: none; border: 0; background: var(--ink-3); color: var(--text); border-radius: 999px; padding: 8px 16px; font: 500 13px var(--f-display); cursor: pointer; }
 .btn.big { padding: 18px 36px; font-size: 18px; }
+
+.mcta { display: none; }
+@media (max-width: 760px) {
+  .mcta { display: flex; position: fixed; z-index: 80; left: 0; right: 0; bottom: 0; padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); background: rgba(7,8,13,.86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,.08); transform: translateY(110%); transition: transform .35s ease; }
+  .mcta.show { transform: none; }
+  .mcta .btn { flex: 1; justify-content: center; padding: 14px; font-size: 16px; }
+  footer { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+}
 footer { border-top: 1px solid var(--line); padding-block: 34px calc(34px + env(safe-area-inset-bottom, 0px)); color: var(--dim); font-size: 14px; }
 footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; }
 
 /* reveal on scroll: readable at rest, eases in */
-.rv { opacity: .3; transform: translateY(26px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1); transition-delay: var(--rd, 0s); }
-.rv.in { opacity: 1; transform: none; }
+.js .rv { opacity: 0; transform: translateY(26px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1); transition-delay: var(--rd, 0s); }
+.js .rv.in { opacity: 1; transform: none; }
 @media (max-width: 880px) { .hero-grid { grid-template-columns: minmax(0, 1fr); } .about-grid { grid-template-columns: minmax(0, 1fr); } .chart-foot { margin-top: 48px; } }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .rv { opacity: 1; transform: none; } html { scroll-behavior: auto; }
+  .js .rv { opacity: 1; transform: none; } html { scroll-behavior: auto; }
 }
 </style>
-
+</head>
+<body>
 <canvas id="field" aria-hidden="true"></canvas>
 <div class="glow" id="glow" aria-hidden="true"></div>
 <div class="prog" aria-hidden="true"><i id="prog"></i></div>
@@ -273,21 +304,21 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
           <a class="btn ghosty" href="#reel">ดูรีล 15 วินาที ▸</a>
         </div>
       </div>
-      <div class="chart" aria-label="ตัวอย่างผังสี่เสาหลัก 甲子 丙寅 戊午 壬戌">
+      <div class="chart" aria-label="ตัวอย่างผังสี่เสาหลัก เรียงจากขวาไปซ้าย: ปี 甲子 เดือน 丙寅 วัน 戊午 ยาม 壬戌">
         <div class="chart-head"><span class="mono">ตัวอย่างผังสี่เสาหลัก</span><span class="mono kan" style="letter-spacing:.3em">四柱</span></div>
         <div class="pillars" id="pillars">
-          <div class="pillar"><div class="plabel"><span class="kan">年</span>ปี</div>
-            <div class="glyph wood" style="--d:.5s"><span class="kan">甲</span><small>ไม้หยาง</small></div>
-            <div class="glyph water" style="--d:.65s"><span class="kan">子</span><small>ชวด · น้ำ</small></div></div>
-          <div class="pillar"><div class="plabel"><span class="kan">月</span>เดือน</div>
-            <div class="glyph fire" style="--d:.7s"><span class="kan">丙</span><small>ไฟหยาง</small></div>
-            <div class="glyph wood" style="--d:.85s"><span class="kan">寅</span><small>ขาล · ไม้</small></div></div>
-          <div class="pillar"><div class="plabel"><span class="kan">日</span>วัน</div>
-            <div class="glyph earth dm" style="--d:.9s"><span class="kan">戊</span><small>ดินหยาง</small><span class="dmtag">ตัวเรา · 日主</span></div>
-            <div class="glyph fire" style="--d:1.05s"><span class="kan">午</span><small>มะเมีย · ไฟ</small></div></div>
           <div class="pillar"><div class="plabel"><span class="kan">時</span>ยาม</div>
             <div class="glyph water" style="--d:1.1s"><span class="kan">壬</span><small>น้ำหยาง</small></div>
             <div class="glyph earth" style="--d:1.25s"><span class="kan">戌</span><small>จอ · ดิน</small></div></div>
+          <div class="pillar"><div class="plabel"><span class="kan">日</span>วัน</div>
+            <div class="glyph earth dm" style="--d:.9s"><span class="kan">戊</span><small>ดินหยาง</small><span class="dmtag">ตัวเรา · 日主</span></div>
+            <div class="glyph fire" style="--d:1.05s"><span class="kan">午</span><small>มะเมีย · ไฟ</small></div></div>
+          <div class="pillar"><div class="plabel"><span class="kan">月</span>เดือน</div>
+            <div class="glyph fire" style="--d:.7s"><span class="kan">丙</span><small>ไฟหยาง</small></div>
+            <div class="glyph wood" style="--d:.85s"><span class="kan">寅</span><small>ขาล · ไม้</small></div></div>
+          <div class="pillar"><div class="plabel"><span class="kan">年</span>ปี</div>
+            <div class="glyph wood" style="--d:.5s"><span class="kan">甲</span><small>ไม้หยาง</small></div>
+            <div class="glyph water" style="--d:.65s"><span class="kan">子</span><small>ชวด · น้ำ</small></div></div>
         </div>
         <p class="chart-foot mono">ผังตัวอย่าง — ทุกดวงมีอักษรแปดตัวเช่นนี้ อักษรบนเสาวันคือ “ตัวเรา” ส่วนที่เหลือคือสิ่งแวดล้อมที่ตัวเราต้องอยู่ร่วมด้วยตลอดชีวิต</p>
       </div>
@@ -303,9 +334,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         <p>ไม้ ไฟ ดิน ทอง น้ำ ทีละธาตุ ก่อนมารวมกันเป็นวงจรเดียว แตะที่ตัวอักษรด้านล่างเพื่อข้ามไปดูธาตุที่ต้องการ</p>
       </div>
       <div class="player rv" id="player">
-        <video id="rv" src="reel.mp4" poster="poster.jpg" muted loop playsinline preload="auto" aria-label="รีลห้าธาตุของ Tommie BaZi ความยาว 15 วินาที"></video>
-        <i class="br a"></i><i class="br b"></i><i class="br c"></i><i class="br d"></i>
-        <div class="ctrl">
+        <video id="rv" src="reel.mp4" poster="poster.jpg" muted loop playsinline preload="metadata" aria-label="รีลห้าธาตุของ Tommie BaZi ความยาว 15 วินาที"></video>
+                <div class="ctrl">
           <button id="pp" type="button" aria-label="เล่นหรือหยุด">หยุด</button>
           <div class="chapters" id="chap"></div>
           <button id="snd" type="button" aria-pressed="false">เปิดเสียง</button>
@@ -430,6 +460,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   </section>
 </main>
 
+<div class="mcta" id="mcta"><a class="btn" href="https://line.me/R/ti/p/@moo2moon" target="_blank" rel="noopener">ทักไลน์ขอดูดวง · @moo2moon</a></div>
 <footer><div class="wrap"><span>Tommie BaZi · รับดูดวงจีนปาจื้อ สี่เสาหลักแห่งชะตา 八字 命理</span><span class="mono">五行 · 木 火 土 金 水</span></div></footer>
 
 <script>
@@ -507,6 +538,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     stepsEl.style.setProperty('--p', p.toFixed(3));
     $$('.step', stepsEl).forEach(function (s, i) { s.classList.toggle('in', p > i / 4 + .02); });
   }
+  var mcta = $('#mcta');
+  addEventListener('scroll', function () { var cr = $('#contact').getBoundingClientRect(); mcta.classList.toggle('show', (window.scrollY || 0) > innerHeight * .8 && cr.top > innerHeight * .9); }, { passive: true });
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
   /* reveal */
@@ -514,10 +547,12 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
     $$('.rv').forEach(function (el) { io.observe(el); });
   } else { $$('.rv').forEach(function (el) { el.classList.add('in'); }); }
+  setTimeout(function () { $$('.rv').forEach(function (el) { if (el.getBoundingClientRect().top < innerHeight) el.classList.add('in'); }); }, 1800);
 
   /* reel player with element chapters */
   var v = $('#rv'), pp = $('#pp'), snd = $('#snd'), chap = $('#chap');
-  var CH = [['TOMMIEBAZI', 0, 1.5], ['木', 1.5, 3.5], ['火', 3.5, 5.5], ['土', 5.5, 7.5], ['金', 7.5, 9.5], ['水', 9.5, 11.5], ['五行', 11.5, 15]];
+  if (matchMedia('(max-width: 700px) and (orientation: portrait)').matches) { v.src = 'reel-9x16.mp4'; v.poster = 'poster-9x16.jpg'; $('#player').classList.add('port'); }
+  var CH = [[innerWidth < 640 ? '▶' : 'TOMMIEBAZI', 0, 1.5], ['木', 1.5, 3.5], ['火', 3.5, 5.5], ['土', 5.5, 7.5], ['金', 7.5, 9.5], ['水', 9.5, 11.5], ['五行', 11.5, 15]];
   CH.forEach(function (c) { var b = document.createElement('button'); b.type = 'button'; b.innerHTML = c[0] + '<i></i><b></b>'; b.title = c[0]; b.addEventListener('click', function () { v.currentTime = c[1] + .02; v.play().catch(function () {}); }); chap.appendChild(b); });
   var chb = $$('button', chap);
   function tick() {
@@ -542,7 +577,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   var INFO = {
     wood: { th: 'ไม้', dir: 'ทิศตะวันออก', sea: 'ฤดูใบไม้ผลิ', st: '甲 乙', br: '寅 卯' },
     fire: { th: 'ไฟ', dir: 'ทิศใต้', sea: 'ฤดูร้อน', st: '丙 丁', br: '巳 午' },
-    earth: { th: 'ดิน', dir: 'ศูนย์กลาง', sea: 'ปลายฤดูร้อน', st: '戊 己', br: '辰 戌 丑 未' },
+    earth: { th: 'ดิน', dir: 'ศูนย์กลาง', sea: 'รอยต่อทุกฤดู (18 วันท้ายฤดู)', st: '戊 己', br: '辰 戌 丑 未' },
     gold: { th: 'ทอง', dir: 'ทิศตะวันตก', sea: 'ฤดูใบไม้ร่วง', st: '庚 辛', br: '申 酉' },
     water: { th: 'น้ำ', dir: 'ทิศเหนือ', sea: 'ฤดูหนาว', st: '壬 癸', br: '亥 子' }
   };
@@ -602,3 +637,5 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   });
 })();
 </script>
+</body>
+</html>
