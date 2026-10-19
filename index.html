@@ -268,6 +268,56 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .js .rv { opacity: 1; transform: none; } html { scroll-behavior: auto; }
 }
+/* calculator */
+.cform { margin-top: 34px; display: grid; gap: 22px; max-width: 820px; padding: clamp(20px, 3vw, 32px); border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(160deg, rgba(255,214,96,.05), transparent 40%), var(--ink-2); }
+.cset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.cset legend { padding: 0; margin-bottom: 10px; font-family: var(--f-display); font-weight: 700; font-size: 17px; color: var(--text); }
+.cset legend small { font-weight: 400; font-size: 13px; color: var(--dim); margin-left: 6px; }
+.crow { display: grid; gap: 12px; align-items: end; }
+.crow.c3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.crow.c2 { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 10px; }
+.cform label { display: grid; gap: 6px; font-family: var(--f-display); font-size: 14px; color: var(--dim); min-width: 0; }
+.cform select { appearance: none; width: 100%; min-width: 0; padding: 12px 34px 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--ink-3) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23ffd660' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 13px center; color: var(--text); font: 500 16px var(--f-display); text-overflow: ellipsis; }
+.cform select:focus-visible { border-color: var(--gold); outline: none; box-shadow: 0 0 0 3px rgba(255,214,96,.18); }
+.cform select:disabled { opacity: .4; }
+.cform .chk { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; color: var(--text); font-size: 15px; cursor: pointer; }
+.cform .chk input { width: 20px; height: 20px; accent-color: var(--gold); }
+.seg { display: inline-flex; padding: 4px; gap: 4px; border: 1px solid var(--line); border-radius: 999px; background: var(--ink-3); }
+.seg label { display: block; cursor: pointer; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg span { display: block; padding: 9px 22px; border-radius: 999px; font: 500 15px var(--f-display); color: var(--dim); transition: background .2s, color .2s; }
+.seg input:checked + span { background: var(--gold); color: var(--ink); }
+.seg input:focus-visible + span { outline: 2px solid var(--gold); outline-offset: 2px; }
+.adv summary { padding: 4px 0; font-size: 15px; color: var(--dim); }
+.adv summary::after { width: 26px; height: 26px; font-size: 18px; }
+.cerr { margin: 0; color: var(--fire); font-family: var(--f-display); }
+.cform > .btn { justify-self: start; font-size: 17px; padding: 14px 40px; }
+.cout { margin-top: 40px; }
+.cmeta { margin-bottom: 26px; color: #c6c8d6; font-size: 15.5px; line-height: 1.8; }
+.cmeta b { color: var(--gold); font-weight: 600; }
+.cpillars { max-width: 640px; }
+.glyph.unk { --c: #555a70; }
+.glyph.unk .kan { text-shadow: none; color: #6b7088; }
+.cgrid { margin-top: 30px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.cbox { border: 1px solid var(--line); border-radius: 18px; padding: 24px; background: var(--ink-2); min-width: 0; }
+.cbox h3 { font-size: 20px; }
+.cdm-k { display: flex; align-items: center; gap: 16px; margin: 14px 0 10px; }
+.cdm-k .kan { font-size: 64px; line-height: 1; color: var(--c); text-shadow: 0 0 26px color-mix(in srgb, var(--c) 60%, transparent); }
+.cdm-k b { font-family: var(--f-display); font-size: 20px; color: var(--c); }
+.cbox p { color: #c6c8d6; }
+.cbar { display: grid; gap: 10px; margin-top: 16px; }
+.cbar div { display: grid; grid-template-columns: 70px 1fr 28px; align-items: center; gap: 10px; font-family: var(--f-display); font-size: 15px; }
+.cbar i { display: block; height: 10px; border-radius: 6px; background: var(--ink-3); overflow: hidden; }
+.cbar i b { display: block; height: 100%; width: var(--w); background: var(--c); border-radius: 6px; }
+.cbar .zero { color: var(--dim); }
+.cnote { margin-top: 14px; font-size: 14px; color: var(--dim); line-height: 1.7; }
+@media (max-width: 760px) {
+  .crow.c3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .crow.c3 .wide, .crow.c3 .chk, .crow.c2 label, .crow.c3 label:nth-child(3):not(.chk) { grid-column: 1 / -1; }
+  .crow.c2, .cgrid { grid-template-columns: minmax(0, 1fr); }
+  .crow .chk { padding-bottom: 0; }
+  .seg { display: flex; } .seg label { flex: 1; text-align: center; } .seg span { padding: 9px 6px; }
+}
 </style>
 </head>
 <body>
@@ -279,6 +329,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <div class="wrap nav">
     <a class="brand" href="#top" aria-label="Tommie BaZi"><span class="seal">八</span>Tommie BaZi</a>
     <ul>
+      <li><a href="#calc">ผูกดวงฟรี</a></li>
       <li><a href="#reel">รีลห้าธาตุ</a></li>
       <li><a href="#services">บริการและราคา</a></li>
       <li><a href="#process">ขั้นตอน</a></li>
@@ -301,7 +352,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         <p class="lede">วันเวลาเกิดของคุณแปลงเป็นผังสี่เสา — ปี เดือน วัน ยาม อ่านออกมาเป็นจังหวะชีวิต การงาน การเงิน และคนรอบตัว ตามตำราปาจื้อจีนโบราณ</p>
         <div class="cta-row">
           <a class="btn" href="https://line.me/R/ti/p/@moo2moon" target="_blank" rel="noopener" data-mag>ขอดูดวงของฉัน</a>
-          <a class="btn ghosty" href="#reel">ดูรีล 15 วินาที ▸</a>
+          <a class="btn ghosty" href="#calc">ผูกดวงฟรี ▸</a>
         </div>
       </div>
       <div class="chart" aria-label="ตัวอย่างผังสี่เสาหลัก เรียงจากขวาไปซ้าย: ปี 甲子 เดือน 丙寅 วัน 戊午 ยาม 壬戌">
@@ -340,6 +391,66 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
           <div class="chapters" id="chap"></div>
           <button id="snd" type="button" aria-pressed="false">เปิดเสียง</button>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="calc">
+    <div class="wrap">
+      <span class="mono rv">排盤 · ผูกดวงฟรี</span>
+      <h2 class="rv" style="margin-top:12px">ใส่วันเวลาเกิด แล้วดูอักษรแปดตัวของคุณ</h2>
+      <p class="rv" style="margin-top:14px;max-width:38em;color:#c6c8d6">ผูกดวงตามระบบ อ.มาศ เปลี่ยนปีและเปลี่ยนเดือนตามจุดสุริยะ (中氣) ใช้เวลาสุริยะจริงของตำบลที่เกิด ผลนี้คือ “ผัง” ไม่ใช่ “คำอ่าน” ถ้าอยากรู้ว่าผังบอกอะไร ส่งให้ Tommie อ่านต่อได้ทางไลน์</p>
+      <form class="cform rv" id="cform" novalidate>
+        <fieldset class="cset"><legend>วันเกิด</legend>
+          <div class="crow c3">
+            <label><span>วัน</span><select id="cd"></select></label>
+            <label><span>เดือน</span><select id="cm"></select></label>
+            <label class="wide"><span>ปี พ.ศ.</span><select id="cy"></select></label>
+          </div>
+        </fieldset>
+        <fieldset class="cset"><legend>เวลาเกิด</legend>
+          <div class="crow c3">
+            <label><span>ชั่วโมง</span><select id="ch"></select></label>
+            <label><span>นาที</span><select id="cmi"></select></label>
+            <label class="chk"><input type="checkbox" id="cnotime"> <span>ไม่ทราบเวลาเกิด</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="cset"><legend>สถานที่เกิด <small>ใช้ปรับเวลาสุริยะจริง</small></legend>
+          <div class="crow c3">
+            <label><span>จังหวัด</span><select id="cpv"><option value="">กำลังโหลด…</option></select></label>
+            <label><span>อำเภอ / เขต</span><select id="cap" disabled><option value="">เลือกจังหวัดก่อน</option></select></label>
+            <label><span>ตำบล / แขวง</span><select id="ctb" disabled><option value="">เลือกอำเภอก่อน</option></select></label>
+          </div>
+        </fieldset>
+        <fieldset class="cset"><legend>เพศ</legend>
+          <div class="seg" role="radiogroup">
+            <label><input type="radio" name="csex" value="ชาย"><span>ชาย</span></label>
+            <label><input type="radio" name="csex" value="หญิง"><span>หญิง</span></label>
+            <label><input type="radio" name="csex" value="" checked><span>ไม่ระบุ</span></label>
+          </div>
+        </fieldset>
+        <details class="adv">
+          <summary>ตั้งค่าขั้นสูง</summary>
+          <div class="crow c2">
+            <label><span>ระบบผูกดวง</span><select id="csys"><option value="amat">ระบบ อ.มาศ (ปีเริ่มที่ 冬至 · เดือนเริ่มที่ 中氣)</option><option value="std">ระบบทั่วไป (ปีเริ่มที่ 立春 · เดือนเริ่มที่ 節)</option></select></label>
+            <label id="czil" hidden><span>ช่วง 23:00–24:00 น.</span><select id="czi"><option value="same">ยังนับเป็นวันเดิม</option><option value="next">นับเป็นวันถัดไป</option></select></label>
+          </div>
+        </details>
+        <p class="cerr" id="cerr" hidden></p>
+        <button class="btn" type="submit">ผูกดวง</button>
+      </form>
+      <div id="cout" class="cout" hidden aria-live="polite">
+        <p class="cmeta" id="cmeta"></p>
+        <div class="pillars cpillars" id="cpil"></div>
+        <div class="cgrid">
+          <div class="cbox" id="cdm"></div>
+          <div class="cbox"><h3>ธาตุในอักษรแปดตัว</h3><div id="cbar" class="cbar"></div><p class="cnote">นับเฉพาะอักษรที่เห็นบนผัง ยังไม่รวมธาตุแฝงในราก (藏干) และฤดูเกิด ซึ่งมีผลต่อความแรงของธาตุจริง</p></div>
+        </div>
+        <div class="cta-row" style="margin-top:28px">
+          <a class="btn" id="cline" href="https://line.me/R/ti/p/@moo2moon" target="_blank" rel="noopener">ส่งผังนี้ให้ Tommie อ่านทางไลน์</a>
+          <button class="btn ghosty" type="button" id="ccopy">คัดลอกข้อมูลผัง</button>
+        </div>
+        <p class="cnote" style="margin-top:14px">คำนวณในเบราว์เซอร์ของคุณเท่านั้น ไม่มีการส่งหรือเก็บข้อมูลเกิดไว้ที่ใด จนกว่าคุณจะกดส่งทางไลน์เอง</p>
       </div>
     </div>
   </section>
@@ -634,6 +745,169 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     var b = this, done = function () { b.textContent = 'คัดลอกแล้ว'; setTimeout(function () { b.textContent = 'คัดลอก'; }, 1600); };
     var fb = function () { var r = document.createRange(); r.selectNodeContents($('#lid')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); };
     try { navigator.clipboard.writeText('@moo2moon').then(done, fb); } catch (e) { fb(); }
+  });
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.js"></script>
+<script>
+/* Tommie BaZi engine — wraps lunar-javascript (6tail, MIT; solar-term tables in UTC+8).
+   system 'amat' (อ.มาศ): year and months start at the 12 中氣 — 冬至 opens the year and 子 month;
+     day changes at 00:00 (23:00–24:00 stays on the same day).
+   system 'std': 立春 year, 節 months, choice of 子-hour convention. */
+(function (root) {
+  var STEMS = '甲乙丙丁戊己庚辛壬癸', BR = '子丑寅卯辰巳午未申酉戌亥';
+  var QI = { '冬至': 0, '大寒': 1, '雨水': 2, '春分': 3, '谷雨': 4, '小满': 5, '夏至': 6, '大暑': 7, '处暑': 8, '秋分': 9, '霜降': 10, '小雪': 11 };
+  function add(a, min) { var t = new Date(Date.UTC(a[0], a[1] - 1, a[2], a[3], a[4]) + min * 60000); return [t.getUTCFullYear(), t.getUTCMonth() + 1, t.getUTCDate(), t.getUTCHours(), t.getUTCMinutes()]; }
+  function S(a) { return Solar.fromYmdHms(a[0], a[1], a[2], a[3], a[4], 0); }
+  function ms(sol) { return Date.UTC(sol.getYear(), sol.getMonth() - 1, sol.getDay(), sol.getHour(), sol.getMinute(), sol.getSecond()); }
+  function gz(i) { i = ((i % 60) + 60) % 60; return STEMS[i % 10] + BR[i % 12]; }
+  function jdn(y, m, d) { var a = Math.floor((14 - m) / 12), yy = y + 4800 - a, mm = m + 12 * a - 3; return d + Math.floor((153 * mm + 2) / 5) + 365 * yy + Math.floor(yy / 4) - Math.floor(yy / 100) + Math.floor(yy / 400) - 32045; }
+  function dongZhi(y) { // winter solstice of Gregorian year y, as UTC+8 ms
+    var t = Solar.fromYmd(y, 12, 1).getLunar().getJieQiTable(), c = [t['冬至'], t['DONG_ZHI']];
+    for (var i = 0; i < 2; i++) if (c[i] && c[i].getYear() === y) return ms(c[i]);
+    throw new Error('no 冬至 ' + y);
+  }
+  function solarCorr(y, m, d, lon, tz) { // minutes: longitude vs zone meridian + equation of time
+    var n = (Date.UTC(y, m - 1, d) - Date.UTC(y, 0, 1)) / 864e5 + 1, B = 2 * Math.PI * (n - 81) / 364;
+    return (lon - tz * 15) * 4 + 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
+  }
+  /* t = [y,m,d,h,mi] local clock; o = {tz:7, lon, system:'amat'|'std', lateZi:'same'|'next', noTime} */
+  function chart(t, o) {
+    o = o || {}; var tz = o.tz == null ? 7 : o.tz;
+    var bj = add(t, (8 - tz) * 60), bjMs = Date.UTC(bj[0], bj[1] - 1, bj[2], bj[3], bj[4]);
+    var corr = (o.lon != null && !o.noTime) ? solarCorr(t[0], t[1], t[2], o.lon, tz) : 0;
+    var L = add(t, corr), res = { corr: corr, local: L };
+    var Y, M, D, H;
+    if (o.system === 'std') {
+      var e8 = S(bj).getLunar().getEightChar(); Y = e8.getYear(); M = e8.getMonth();
+      var e = S(L).getLunar().getEightChar(); e.setSect(o.lateZi === 'next' ? 1 : 2); D = e.getDay(); H = e.getTime();
+    } else {
+      var sy = bj[0]; if (bjMs >= dongZhi(bj[0])) sy += 1;
+      Y = gz(sy - 4);
+      var q = S(bj).getLunar().getPrevQi(false), qn = q.getName(), mb = QI[qn];
+      if (mb == null) throw new Error('qi ' + qn);
+      // month stem: the continuous month cycle — the 中氣 sits mid-way through the standard month of the same branch
+      var qs = q.getSolar(), qa = add([qs.getYear(), qs.getMonth(), qs.getDay(), qs.getHour(), qs.getMinute()], 1);
+      M = S(qa).getLunar().getEightChar().getMonth();
+      if (M[1] !== BR[mb]) throw new Error('month branch mismatch ' + M + ' ' + BR[mb]);
+      res.monthStart = qn;
+      var di = jdn(L[0], L[1], L[2]) + 49; D = gz(di);
+      var hb = Math.floor(L[3] / 2) % 12, ds = di % 10; // provisional: 子 = 00:00–01:59 … 亥 = 22:00–23:59
+      H = STEMS[((ds % 5) * 2 + hb) % 10] + BR[hb];
+    }
+    res.y = Y; res.m = M; res.d = D; res.h = o.noTime ? null : H; return res;
+  }
+  var api = { chart: chart, solarCorr: solarCorr, STEMS: STEMS, BR: BR };
+  if (typeof module !== 'undefined') module.exports = api; else root.TBZ = api;
+})(this);
+
+/* calculator UI */
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var form = $('#cform'); if (!form) return;
+  var KEYS = ['wood', 'fire', 'earth', 'gold', 'water'], ELTH = ['ไม้', 'ไฟ', 'ดิน', 'ทอง', 'น้ำ'], ELK = '木火土金水';
+  var STEMS = '甲乙丙丁戊己庚辛壬癸', BR = '子丑寅卯辰巳午未申酉戌亥';
+  var BRTH = ['ชวด', 'ฉลู', 'ขาล', 'เถาะ', 'มะโรง', 'มะเส็ง', 'มะเมีย', 'มะแม', 'วอก', 'ระกา', 'จอ', 'กุน'];
+  var EL_S = [0, 0, 1, 1, 2, 2, 3, 3, 4, 4], EL_B = [4, 2, 0, 0, 2, 1, 1, 2, 3, 3, 2, 4];
+  var DM = [
+    'ต้นไม้ใหญ่ที่หยั่งรากลึก ตั้งตรง มั่นคง มีเป้าหมายชัด ชอบเติบโตไปข้างหน้า และพร้อมเป็นร่มเงาให้คนรอบตัว',
+    'ไม้ดอกและไม้เลื้อย อ่อนโยน ยืดหยุ่น ปรับตัวเก่ง รู้จักหาทางเติบโตแม้ในที่แคบ',
+    'ดวงอาทิตย์ อบอุ่น เปิดเผย ใจกว้าง ให้แสงสว่างแก่คนรอบตัวโดยไม่เลือก',
+    'แสงเทียนและตะเกียง ละเอียดอ่อน อบอุ่นแบบใกล้ชิด ส่องทางให้คนในยามมืด',
+    'ภูเขาใหญ่ หนักแน่น มั่นคง น่าไว้ใจ เป็นที่พึ่งให้คนอื่นได้พักพิง',
+    'ดินในไร่นา โอบอุ้ม หล่อเลี้ยง ใส่ใจรายละเอียด ทำให้สิ่งรอบตัวงอกงาม',
+    'เหล็กกล้าและขวาน ตรงไปตรงมา เด็ดขาด กล้าตัดสินใจ ยิ่งผ่านการหลอมยิ่งแกร่ง',
+    'อัญมณีและเครื่องประดับ ประณีต รักความงาม มีมาตรฐานสูง ยิ่งขัดเกลายิ่งเปล่งประกาย',
+    'แม่น้ำใหญ่และทะเล ไหลแรง ความคิดกว้างไกล เปิดรับสิ่งใหม่ ไม่ชอบถูกกักไว้',
+    'ฝนและน้ำค้าง ช่างสังเกต ลึกซึ้ง เงียบแต่ซึมลึก หล่อเลี้ยงสิ่งรอบตัวอย่างอ่อนโยน'];
+  var MONTH = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+  var QITH = { '冬至': 'เหมายัน 冬至', '大寒': '大寒', '雨水': '雨水', '春分': 'วิษุวัตฤดูใบไม้ผลิ 春分', '谷雨': '谷雨', '小满': '小满', '夏至': 'ครีษมายัน 夏至', '大暑': '大暑', '处暑': '处暑', '秋分': 'ศารทวิษุวัต 秋分', '霜降': '霜降', '小雪': '小雪' };
+  function opts(sel, items, val) { sel.innerHTML = items.map(function (x) { return '<option value="' + x[0] + '"' + (String(x[0]) === String(val) ? ' selected' : '') + '>' + x[1] + '</option>'; }).join(''); }
+  function rng(a, b) { var o = []; for (var i = a; i <= b; i++) o.push(i); return o; }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  opts($('#cd'), rng(1, 31).map(function (i) { return [i, i]; }), 1);
+  opts($('#cm'), MONTH.map(function (m, i) { return [i + 1, m]; }), 1);
+  opts($('#cy'), rng(2460, 2575).reverse().map(function (y) { return [y, y + ' · ค.ศ. ' + (y - 543)]; }), 2533);
+  opts($('#ch'), rng(0, 23).map(function (h) { return [h, pad(h) + ' น.']; }), 12);
+  opts($('#cmi'), rng(0, 59).map(function (m) { return [m, pad(m)]; }), 0);
+  $('#cnotime').addEventListener('change', function () { $('#ch').disabled = $('#cmi').disabled = this.checked; });
+  $('#csys').addEventListener('change', function () { $('#czil').hidden = this.value !== 'std'; });
+
+  /* places: [[province, [[amphoe, [[tambon, lon, lat]]]]]] */
+  var PL = null, pv = $('#cpv'), ap = $('#cap'), tb = $('#ctb');
+  fetch('thai-places.json').then(function (r) { return r.json(); }).then(function (d) {
+    PL = d.sort(function (a, b) { return a[0] === 'กรุงเทพมหานคร' ? -1 : b[0] === 'กรุงเทพมหานคร' ? 1 : a[0].localeCompare(b[0], 'th'); });
+    opts(pv, [['', 'ไม่ระบุ / เกิดต่างประเทศ']].concat(PL.map(function (p, i) { return [i, p[0]]; })), '');
+  }).catch(function () { opts(pv, [['', 'โหลดรายชื่อจังหวัดไม่ได้']], ''); });
+  pv.addEventListener('change', function () {
+    tb.disabled = true; opts(tb, [['', 'เลือกอำเภอก่อน']], '');
+    if (pv.value === '') { ap.disabled = true; opts(ap, [['', 'เลือกจังหวัดก่อน']], ''); return; }
+    var A = PL[+pv.value][1]; ap.disabled = false;
+    opts(ap, [['', 'เลือกอำเภอ']].concat(A.map(function (a, i) { return [i, a[0]]; })), '');
+  });
+  ap.addEventListener('change', function () {
+    if (ap.value === '') { tb.disabled = true; opts(tb, [['', 'เลือกอำเภอก่อน']], ''); return; }
+    var T = PL[+pv.value][1][+ap.value][1]; tb.disabled = false;
+    opts(tb, [['', 'เลือกตำบล']].concat(T.map(function (t, i) { return [i, t[0]]; })), '');
+  });
+  function place() { // returns {name, lon} or null
+    if (!PL || pv.value === '') return null;
+    var P = PL[+pv.value], bkk = P[0] === 'กรุงเทพมหานคร', name = bkk ? P[0] : 'จ.' + P[0], lon, A, T;
+    if (ap.value !== '') {
+      A = P[1][+ap.value]; name = (bkk ? 'เขต' : 'อ.') + A[0] + ' ' + name;
+      if (tb.value !== '') { T = A[1][+tb.value]; name = (bkk ? 'แขวง' : 'ต.') + T[0] + ' ' + name; lon = T[1]; }
+      else lon = avg(A[1]);
+    } else lon = avg([].concat.apply([], P[1].map(function (a) { return a[1]; })));
+    return { name: name, lon: lon, level: tb.value !== '' ? 'ตำบล' : ap.value !== '' ? 'อำเภอ' : 'จังหวัด' };
+  }
+  function avg(ts) { var s = 0; ts.forEach(function (t) { s += t[1]; }); return s / ts.length; }
+
+  function card(g, label, zh, d) {
+    if (!g) return '<div class="pillar"><div class="plabel"><span class="kan">' + zh + '</span>' + label + '</div><div class="glyph unk" style="--d:' + d + 's"><span class="kan">？</span><small>ไม่ทราบ</small></div><div class="glyph unk" style="--d:' + (d + .12) + 's"><span class="kan">？</span><small>ไม่ทราบ</small></div></div>';
+    var s = STEMS.indexOf(g[0]), b = BR.indexOf(g[1]), dm = label === 'วัน';
+    return '<div class="pillar"><div class="plabel"><span class="kan">' + zh + '</span>' + label + '</div>' +
+      '<div class="glyph ' + KEYS[EL_S[s]] + (dm ? ' dm' : '') + '" style="--d:' + d + 's"><span class="kan">' + g[0] + '</span><small>' + ELTH[EL_S[s]] + (s % 2 ? 'หยิน' : 'หยาง') + '</small>' + (dm ? '<span class="dmtag">ตัวเรา · 日主</span>' : '') + '</div>' +
+      '<div class="glyph ' + KEYS[EL_B[b]] + '" style="--d:' + (d + .12) + 's"><span class="kan">' + g[1] + '</span><small>' + BRTH[b] + ' · ' + ELTH[EL_B[b]] + '</small></div></div>';
+  }
+  function err(m) { var e = $('#cerr'); e.textContent = m; e.hidden = !m; }
+  var last = '';
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault(); err('');
+    if (typeof Solar === 'undefined' || typeof TBZ === 'undefined') { err('ระบบคำนวณยังโหลดไม่เสร็จ ลองกดอีกครั้ง'); return; }
+    var be = +$('#cy').value, y = be - 543, m = +$('#cm').value, d = +$('#cd').value;
+    var dim = new Date(Date.UTC(y, m, 0)).getUTCDate();
+    if (d > dim) { err('เดือน' + MONTH[m - 1] + ' ปี ' + be + ' มีแค่ ' + dim + ' วัน'); return; }
+    var noTime = $('#cnotime').checked, h = noTime ? 12 : +$('#ch').value, mi = noTime ? 0 : +$('#cmi').value;
+    var pl = place(), sys = $('#csys').value, sex = (form.querySelector('input[name=csex]:checked') || {}).value || '';
+    var R;
+    try { R = TBZ.chart([y, m, d, h, mi], { tz: 7, lon: pl ? pl.lon : null, system: sys, lateZi: $('#czi').value, noTime: noTime }); }
+    catch (e) { err('คำนวณวันนี้ไม่ได้ (' + e.message + ')'); return; }
+    $('#cpil').innerHTML = card(R.h, 'ยาม', '時', .1) + card(R.d, 'วัน', '日', .3) + card(R.m, 'เดือน', '月', .5) + card(R.y, 'ปี', '年', .7);
+    var meta = 'เกิด <b>' + d + ' ' + MONTH[m - 1] + ' ' + be + '</b>' + (noTime ? ' (ไม่ทราบเวลา)' : ' เวลา <b>' + pad(h) + ':' + pad(mi) + ' น.</b>');
+    if (pl && !noTime) {
+      var c = Math.round(R.corr), L = R.local;
+      meta += '<br>เวลาสุริยะจริงที่ ' + pl.name + ' ≈ <b>' + pad(L[3]) + ':' + pad(L[4]) + ' น.</b> (' + (c < 0 ? 'ช้ากว่า' : 'เร็วกว่า') + 'เวลานาฬิกา ' + Math.abs(c) + ' นาที)' + (pl.level !== 'ตำบล' ? ' · ใช้พิกัดกลาง' + pl.level : '');
+    } else if (!noTime) meta += '<br>ใช้เวลานาฬิกา ยังไม่ได้ปรับเวลาสุริยะจริง เพราะไม่ได้ระบุสถานที่เกิด';
+    meta += '<br>' + (sys === 'std' ? 'ระบบทั่วไป (立春)' : 'ระบบ อ.มาศ · เดือนนี้เริ่มที่ ' + (QITH[R.monthStart] || R.monthStart));
+    $('#cmeta').innerHTML = meta;
+    var t = [0, 0, 0, 0, 0], all = [R.y, R.m, R.d].concat(R.h ? [R.h] : []), total = all.length * 2;
+    all.forEach(function (g) { t[EL_S[STEMS.indexOf(g[0])]]++; t[EL_B[BR.indexOf(g[1])]]++; });
+    $('#cbar').innerHTML = t.map(function (n, i) { return '<div class="' + (n ? '' : 'zero') + '" style="--c:var(--' + KEYS[i] + ')"><span>' + ELK[i] + ' ' + ELTH[i] + '</span><i><b style="--w:' + (n / total * 100) + '%"></b></i><span>' + n + '</span></div>'; }).join('');
+    var ds = STEMS.indexOf(R.d[0]), miss = t.map(function (n, i) { return n ? null : ELTH[i]; }).filter(Boolean);
+    $('#cdm').innerHTML = '<h3>ธาตุประจำตัว (日主)</h3><div class="cdm-k" style="--c:var(--' + KEYS[EL_S[ds]] + ')"><span class="kan">' + R.d[0] + '</span><b>' + ELTH[EL_S[ds]] + (ds % 2 ? 'หยิน' : 'หยาง') + '</b></div><p>' + DM[ds] + '</p>' +
+      (miss.length ? '<p class="cnote">ผังนี้ไม่มีธาตุ' + miss.join(' ธาตุ') + 'ปรากฏบนอักษรที่เห็น ส่วนจะต้องเสริมหรือไม่ ขึ้นกับความแรงของธาตุประจำตัว ซึ่งต้องอ่านทั้งผัง</p>' : '') +
+      '<p class="cnote">ภาพลักษณ์ตามตำรา ยังไม่ใช่คำอ่านดวง</p>' + (noTime ? '<p class="cnote">ไม่ทราบเวลาเกิด จึงยังไม่มีเสายาม ถ้าเกิดในวันเปลี่ยนเดือน เสาเดือนอาจคลาดได้</p>' : '');
+    last = 'สวัสดีครับ/ค่ะ อยากให้ Tommie อ่านผังนี้\nวันเกิด: ' + d + ' ' + MONTH[m - 1] + ' ' + be + (noTime ? ' (ไม่ทราบเวลา)' : ' เวลา ' + pad(h) + ':' + pad(mi) + ' น.') +
+      '\nสถานที่เกิด: ' + (pl ? pl.name : 'ไม่ระบุ') + (sex ? '\nเพศ: ' + sex : '') +
+      '\nผังสี่เสา (ปี เดือน วัน ยาม): ' + R.y + ' ' + R.m + ' ' + R.d + ' ' + (R.h || '??') + (sys === 'std' ? ' [ระบบทั่วไป]' : ' [ระบบ อ.มาศ]');
+    $('#cline').href = 'https://line.me/R/oaMessage/@moo2moon/?' + encodeURIComponent(last);
+    $('#cout').hidden = false;
+    $('#cout').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  });
+  $('#ccopy').addEventListener('click', function () {
+    var b = this, ok = function () { b.textContent = 'คัดลอกแล้ว'; setTimeout(function () { b.textContent = 'คัดลอกข้อมูลผัง'; }, 1600); };
+    var sel = function () { var r = document.createRange(); r.selectNodeContents($('#cmeta')); var g = getSelection(); g.removeAllRanges(); g.addRange(r); };
+    try { navigator.clipboard.writeText(last).then(ok, sel); } catch (e) { sel(); }
   });
 })();
 </script>
