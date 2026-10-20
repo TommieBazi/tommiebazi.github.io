@@ -131,7 +131,7 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
 
 /* luck */
 .luck { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(92px, 1fr); gap: 8px; overflow-x: auto; padding-bottom: 8px; direction: rtl; }
-.luck > div { direction: ltr; }
+.luck > * { direction: ltr; }
 .lk { border-radius: 14px; padding: 10px 6px; text-align: center; background: var(--ink-3); border: 1px solid var(--line); }
 .lk.now { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold), 0 0 30px -12px var(--gold); }
 .lk .kan { display: block; font-size: 30px; line-height: 1.2; }
@@ -183,6 +183,26 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
   .rp .flag { color: #c0391a; font-weight: 600; } .rp .ok { color: #1f8a4c; font-weight: 600; }
   .rp-foot { margin-top: 10mm; padding-top: 3mm; border-top: .5pt solid #ddd; color: #85848e; font-size: 9pt; text-align: center; }
 }
+.verdict { display: inline-block; padding: 8px 18px; border-radius: 999px; font: 700 16px var(--f-ui); background: var(--ink-4); border: 1.5px solid var(--line); }
+.verdict.gold { color: var(--ink); background: linear-gradient(90deg, #ffd660, #f5b73b); border-color: #ffd660; }
+.verdict.strong { color: var(--fire); border-color: var(--fire); } .verdict.bal { color: var(--wood); border-color: var(--wood); }
+.verdict.weak { color: var(--water); border-color: var(--water); } .verdict.follow { color: #c7a6ff; border-color: #c7a6ff; }
+.dscale { margin-top: 18px; } .dtrack { position: relative; height: 14px; border-radius: 7px; background: var(--ink-4); }
+.dtrack .z { position: absolute; top: 0; bottom: 0; opacity: .55; } .z.follow { background: #c7a6ff; border-radius: 7px 0 0 7px; } .z.weak { background: var(--water); } .z.bal { background: var(--wood); } .z.strong { background: var(--fire); } .z.gold { background: var(--gold); border-radius: 0 7px 7px 0; }
+.dtrack .pin { position: absolute; top: -8px; width: 4px; height: 30px; margin-left: -2px; background: #fff; border-radius: 2px; box-shadow: 0 0 0 2px var(--ink); }
+.dtrack .pin span { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font: 700 13px var(--f-ui); color: #fff; white-space: nowrap; }
+.dlab { position: relative; height: 22px; margin-top: 6px; font: 500 12.5px var(--f-ui); color: var(--soft); } .dlab span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.fam5 { grid-template-columns: repeat(5, minmax(0, 1fr)); } @media (max-width: 700px) { .fam5 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .dlab { font-size: 11px; } }
+.rxt td { min-width: 140px; } .rx { display: flex; gap: 8px; align-items: baseline; margin: 2px 0; font-size: 14px; }
+.tag { min-width: 48px; }
+button.lk { position: relative; font: inherit; color: inherit; cursor: pointer; transition: transform .15s, border-color .15s; }
+button.lk:hover { transform: translateY(-2px); border-color: var(--soft); }
+button.lk.sel { background: var(--ink-4); border-color: var(--soft); }
+.nowtag { position: absolute; top: -9px; left: 50%; transform: translateX(-50%); padding: 0 8px; border-radius: 999px; background: var(--gold); color: var(--ink); font: 700 11px/18px var(--f-ui); font-style: normal; white-space: nowrap; }
+.nowtag.inl { position: static; transform: none; display: inline-block; vertical-align: middle; margin-left: 6px; font-size: 12px; }
+.luck { padding-top: 12px; }
+.nowline { font: 500 15.5px var(--f-ui); } .nowline b { color: var(--gold); font-size: 20px; }
+.t.calc td:first-child { color: var(--dim); white-space: nowrap; width: 1%; padding-right: 18px; } .gold-t { color: var(--gold); }
 .rsec + .rsec { padding-top: 14px; border-top: 1px dashed var(--line); }
 .btn:disabled { opacity: .45; cursor: default; }
 </style>
@@ -266,7 +286,7 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
   }
   $('#clist').addEventListener('click', function (e) { var b = e.target.closest('button[data-id]'); if (!b) return; open(b.getAttribute('data-id')); });
   $('#q').addEventListener('input', renderList);
-  function open(id) { cur = db.clients.filter(function (c) { return c.id === id; })[0] || null; yearSel = null; render(); }
+  function open(id) { cur = db.clients.filter(function (c) { return c.id === id; })[0] || null; yearSel = null; luckSel = null; render(); }
   $('#bNew').addEventListener('click', function () {
     var c = { id: uid(), name: '', nick: '', sex: '', y: 2533, m: 1, d: 1, h: 12, mi: 0, noTime: false, pv: '', ap: '', tb: '', lon: '', system: 'amat', lateZi: 'same', contact: '', notes: '', report: {}, monthNotes: {}, created: Date.now(), updated: Date.now(), isNew: true };
     db.clients.push(c); cur = c; tab = 'chart'; save(); render(); setTimeout(function () { var n = $('#fName'); if (n) n.focus(); }, 50);
@@ -356,7 +376,7 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
     if (e.target.id === 'bCalc' && cur) {
       var dim = new Date(Date.UTC(cur.y - 543, cur.m, 0)).getUTCDate();
       if (cur.d > dim) { toast('เดือน' + MONTH[cur.m - 1] + ' ปี ' + cur.y + ' มีแค่ ' + dim + ' วัน'); return; }
-      cur.calc = snap(cur); delete cur.isNew; cur.updated = Date.now(); save(); markDirty(); renderBody(); renderList();
+      cur.calc = snap(cur); luckSel = null; delete cur.isNew; cur.updated = Date.now(); save(); markDirty(); renderBody(); renderList();
       var t = $('.tabs'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); toast('คำนวณผังแล้ว'); return;
     }
     if (e.target.id === 'bPrint') { buildPrint(); setTimeout(function () { window.print(); }, 60); }
@@ -407,52 +427,99 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
       row('เชี่ยงแซ<br>ของตัวเรา', function (k) { var s = A.cols[k].stage; return '<div class="cell">' + C.STAGES_TH[s] + '<br><span class="sub kan" style="font-size:13px">' + C.STAGES[s] + '</span></div>'; }) +
       row('เชี่ยงแซ<br>นั่งตัวเอง', function (k) { var s = A.cols[k].selfStage; return '<div class="cell">' + C.STAGES_TH[s] + '<br><span class="sub kan" style="font-size:13px">' + C.STAGES[s] + '</span></div>'; }) +
       '</div></div>';
-    var rel = A.rel.concat(A.groups.map(function (g) { return { t: g.t, x: g.x, label: 'ทั้งผัง' }; }));
-    h += '<div class="card"><h3>ความสัมพันธ์ในผัง</h3>' + (rel.length ? '<div class="rels">' + rel.map(function (r) { return '<div class="rel"><span class="tag ' + r.t + '">' + r.t + '</span><span><b>' + r.label + '</b> · ' + r.x + '</span></div>'; }).join('') + '</div>' : '<p class="sub">ไม่มีการรวม ปะทะ ลงโทษ ทำร้าย หรือทำลายระหว่างเสา</p>') + '</div>';
+    h += reactionCard(P, A);
     return h;
+  }
+  var RTH = { '合': 'ภาคี', '沖': 'ชง', '刑': 'เฮ้ง', '害': 'ไห่', '破': 'ผั่ว', '三合': 'ภาคี 3', '半合': 'ครึ่งภาคี', '三會': 'ภาคีฤดู' };
+  function chip(t) { return '<span class="tag ' + t + '">' + (RTH[t] || t) + '</span>'; }
+  function reactionCard(P, A) {
+    var ks = pillarKeys(P), pairs = [];
+    for (var i = 0; i < ks.length; i++) for (var j = i + 1; j < ks.length; j++) pairs.push([ks[i], ks[j]]);
+    var cell = function (on, a, b) { var list = A.rel.filter(function (x) { return x.on === on && ((x.a === a && x.b === b) || (x.a === b && x.b === a)); }); return '<td>' + (list.length ? list.map(function (x) { return '<div class="rx">' + chip(x.t) + '<span>' + x.x.replace(/^(ภาคีราศีบน|ชงราศีบน|ภาคีราศีล่าง|ชง|เฮ้งตัวเอง|เฮ้ง|ไห่|ผั่ว) /, '') + '</span></div>'; }).join('') : '<span class="sub">–</span>') + '</td>'; };
+    var counts = {}; A.rel.forEach(function (x) { counts[x.t] = (counts[x.t] || 0) + 1; }); A.groups.forEach(function (g) { counts[g.t] = (counts[g.t] || 0) + 1; });
+    var sum = ['合', '三合', '半合', '三會', '沖', '刑', '害', '破'].filter(function (t) { return counts[t]; }).map(function (t) { return chip(t) + ' <b>' + counts[t] + '</b>'; }).join(' &nbsp; ');
+    return '<div class="card"><h3>ปฏิกิริยาในผัง</h3><p class="sub" style="margin:4px 0 12px">ภาคี (合) · ชง (沖) · เฮ้ง (刑) · ไห่ (害) · ผั่ว (破) ระหว่างเสาแต่ละคู่ ทั้งราศีบนและราศีล่าง</p>' +
+      (sum ? '<p style="margin-bottom:12px">' + sum + '</p>' : '') +
+      '<div class="tw"><table class="t rxt"><thead><tr><th>คู่เสา</th><th>ราศีบน (天干)</th><th>ราศีล่าง (地支)</th></tr></thead><tbody>' +
+      pairs.map(function (p) { return '<tr><td><b>' + PNAME[p[0]] + '–' + PNAME[p[1]] + '</b><br><span class="kan sub" style="font-size:14px">' + P[p[0]] + ' · ' + P[p[1]] + '</span></td>' + cell('stem', p[0], p[1]) + cell('branch', p[0], p[1]) + '</tr>'; }).join('') +
+      '</tbody></table></div>' +
+      (A.groups.length ? '<h3 style="margin-top:16px;font-size:16px">ภาคีหลายเสา</h3><div class="rels">' + A.groups.map(function (g) { return '<div class="rel">' + chip(g.t) + '<span>' + g.x + '</span></div>'; }).join('') + '</div>' : '') + '</div>';
   }
 
   /* --- tab: strength (Tommie weights) --- */
+  var FAM = ['คู่ธาตุ', 'ถ่ายเท', 'โชคลาภ', 'อำนาจ', 'ส่งเสริม'], FAMZH = ['比劫', '食傷', '財', '官殺', '印'];
+  var VERD = {
+    gold: 'คู่ธาตุกับธาตุส่งเสริมรวมกันตั้งแต่ 8 คะแนนขึ้นไป ธาตุประจำตัวไหลไปทางเดียวกันทั้งผัง',
+    strong: 'ฝ่ายคู่ธาตุและส่งเสริมมากกว่าครึ่ง ธาตุประจำตัวมีแรงพอจะรับธาตุถ่ายเท โชคลาภ และอำนาจ',
+    bal: 'ฝ่ายเสริมกับฝ่ายต้านใกล้เคียงกัน (4.5–4.9 คะแนน)',
+    weak: 'ฝ่ายเสริมน้อยกว่าฝ่ายต้าน ธาตุประจำตัวต้องการคู่ธาตุหรือธาตุส่งเสริมช่วยพยุง',
+    follow: 'ฝ่ายเสริมน้อยกว่า 2 คะแนน ธาตุประจำตัวไหลตามกระแสธาตุที่แรงกว่าในผัง'
+  };
   function tPower(R) {
     var P = R.P, S = R.A.strength, dm = S.dm, rows = [];
     var cells = [['y', 0, 1], ['y', 1, 1], ['m', 0, 1], ['m', 1, 2], ['d', 0, 1], ['d', 1, 1.5]]; if (P.h) cells.push(['h', 0, 1], ['h', 1, 1]);
-    var fam = function (e) { var r = (e - dm + 5) % 5; return ['คู่ธาตุ (比劫)', 'ธาตุที่เราให้กำเนิด (食傷)', 'ธาตุที่เราข่ม (財)', 'ธาตุที่ข่มเรา (官殺)', 'ธาตุที่ให้กำเนิดเรา (印)'][r]; };
-    cells.forEach(function (c) { var ch = P[c[0]][c[1]], e = c[1] === 0 ? elOfStem(ch) : elOfBr(ch); rows.push('<tr><td>' + (c[1] === 0 ? 'ราศีบน' : 'ราศีล่าง') + 'เสา' + PNAME[c[0]] + (c[0] === 'm' && c[1] === 1 ? ' <span class="sub">(ฤดูกาล)</span>' : '') + '</td><td class="kan ' + KEYS[e] + '" style="color:var(--c)">' + ch + '</td><td>' + ELTH[e] + '</td><td>' + fam(e) + '</td><td style="text-align:right">' + c[2] + '</td></tr>'); });
-    var max = Math.max.apply(null, S.scores);
-    var bars = S.scores.map(function (v, i) { return '<div class="bar ' + KEYS[i] + '"><span>' + C.EL_ZH[i] + ' ' + ELTH[i] + '</span><i><b style="--w:' + (v / S.total * 100) + '%"></b></i><span>' + v + '</span></div>'; }).join('');
-    var sup = S.support / S.total * 100;
-    return '<div class="card"><h3>กำลังธาตุ <span class="pending">ตามเกณฑ์ของ Tommie</span></h3><p class="sub" style="margin-top:4px">ราศีล่างเดือน (ฤดูกาล) 2 คะแนน · ราศีล่างวัน 1.5 คะแนน · อักษรอื่น 1 คะแนน (รวมราศีบนของวัน) · รวม ' + S.total + ' คะแนน' + (P.h ? '' : ' (ไม่มีเสายาม)') + '</p>' +
+    var famOf = function (e) { return (e - dm + 5) % 5; };
+    cells.forEach(function (c) { var ch = P[c[0]][c[1]], e = c[1] === 0 ? elOfStem(ch) : elOfBr(ch), f = famOf(e); rows.push('<tr><td>' + (c[1] === 0 ? 'ราศีบน' : 'ราศีล่าง') + 'เสา' + PNAME[c[0]] + (c[0] === 'm' && c[1] === 1 ? ' <span class="sub">(ฤดูกาล)</span>' : '') + '</td><td class="kan ' + KEYS[e] + '" style="color:var(--c)">' + ch + '</td><td>' + ELTH[e] + '</td><td>' + FAM[f] + ' <span class="sub">' + FAMZH[f] + '</span></td><td style="text-align:right">' + c[2] + '</td></tr>'); });
+    var sup = S.support / S.total * 100, V = S.verdict;
+    // scale: 0 … total with Tommie's thresholds
+    var mark = function (v) { return (v / S.total * 100).toFixed(2) + '%'; };
+    var scale = '<div class="dscale"><div class="dtrack"><b class="z follow" style="left:0;width:' + mark(2) + '"></b><b class="z weak" style="left:' + mark(2) + ';width:calc(' + mark(4.5) + ' - ' + mark(2) + ')"></b><b class="z bal" style="left:' + mark(4.5) + ';width:calc(' + mark(5) + ' - ' + mark(4.5) + ')"></b><b class="z strong" style="left:' + mark(5) + ';width:calc(' + mark(Math.min(8, S.total)) + ' - ' + mark(5) + ')"></b>' + (S.total > 8 ? '<b class="z gold" style="left:' + mark(8) + ';right:0"></b>' : '') +
+      '<i class="pin" style="left:' + mark(S.support) + '"><span>' + S.support + '</span></i></div>' +
+      '<div class="dlab"><span style="left:' + mark(1) + '">ตามกระแส</span><span style="left:' + mark(3.25) + '">อ่อน</span><span style="left:' + mark(4.75) + '">สมดุล</span><span style="left:' + mark(6.5) + '">แข็ง</span>' + (S.total > 8 ? '<span style="left:' + mark((8 + S.total) / 2) + '">กระแสทอง</span>' : '') + '</div></div>';
+    return '<div class="card"><div class="formhead"><div><h3>ดิถีของธาตุประจำตัว</h3><p class="sub">ตัวเรา <span class="kan" style="color:var(--' + KEYS[dm] + ')">' + P.d[0] + '</span> ธาตุ' + ELTH[dm] + ' · คู่ธาตุ + ส่งเสริม = <b>' + S.support + '</b> จาก ' + S.total + ' คะแนน (' + sup.toFixed(0) + '%)</p></div><span class="verdict ' + V.k + '">' + V.th + '</span></div>' +
+      scale + '<p style="margin-top:12px">' + VERD[V.k] + '</p>' +
+      (P.h ? '' : '<p class="hint flag">ไม่ทราบเวลาเกิด คะแนนเต็มเหลือ ' + S.total + ' เกณฑ์ดิถีที่ตั้งไว้สำหรับ 9.5 คะแนนจึงอาจคลาด</p>') + '</div>' +
+      '<div class="card"><h3>กำลังธาตุ</h3><p class="sub" style="margin-top:4px">ราศีล่างเดือน (ฤดูกาล) 2 คะแนน · ราศีล่างวัน 1.5 คะแนน · อักษรอื่น 1 คะแนน · รวม ' + S.total + ' คะแนน</p>' +
       '<div style="margin-top:16px">' + TBZV.bars(S) + '</div>' +
-      '<h3 style="margin-top:22px">ตัวเรา <span class="kan" style="color:var(--' + KEYS[dm] + ')">' + P.d[0] + '</span> ' + ELTH[dm] + '</h3>' +
-      '<div class="meter" aria-label="ฝ่ายเสริม ' + sup.toFixed(0) + ' เปอร์เซ็นต์"><b style="width:' + sup + '%;background:linear-gradient(90deg,var(--' + KEYS[(dm + 4) % 5] + '),var(--' + KEYS[dm] + '))"></b><b style="flex:1;background:var(--ink-4)"></b></div>' +
-      '<p>ฝ่ายเสริม (คู่ธาตุ + ธาตุที่ให้กำเนิด) <b>' + S.support + '</b> คะแนน = <b>' + sup.toFixed(1) + '%</b> · ฝ่ายต้าน <b>' + S.oppose + '</b> คะแนน</p>' +
-      '<div class="grid g3" style="margin-top:10px">' + [['คู่ธาตุ 比劫', S.parts.same], ['ให้กำเนิด 印', S.parts.resource], ['เราให้กำเนิด 食傷', S.parts.output], ['เราข่ม 財', S.parts.wealth], ['ข่มเรา 官殺', S.parts.power]].map(function (x) { return '<div class="cell" style="text-align:left;padding:10px 12px"><span class="sub">' + x[0] + '</span><br><b style="font-size:18px">' + x[1] + '</b></div>'; }).join('') + '</div>' +
-      '<p class="hint">เส้นแบ่งว่าดวงแข็งหรืออ่อน (เช่น เกินครึ่งถือว่าแข็ง) ยังรอ Tommie กำหนด ตอนนี้แสดงเป็นคะแนนกับเปอร์เซ็นต์ไว้ก่อน</p></div>' +
-      '<div class="card"><h3>คะแนนรายอักษร</h3><div class="tw"><table class="t"><thead><tr><th>ตำแหน่ง</th><th>อักษร</th><th>ธาตุ</th><th>เทียบกับตัวเรา</th><th style="text-align:right">คะแนน</th></tr></thead><tbody>' + rows.join('') + '</tbody></table></div></div>';
+      '<div class="grid fam5" style="margin-top:14px">' + [0, 4, 1, 2, 3].map(function (f) { var e = (dm + f) % 5; return '<div class="cell ' + KEYS[e] + '" style="text-align:left;padding:10px 12px;border-left:3px solid var(--c)"><span class="sub">' + FAM[f] + ' ' + FAMZH[f] + '</span><br><b style="font-size:20px">' + S.scores[e] + '</b> <span class="sub">' + C.EL_ZH[e] + ' ' + ELTH[e] + '</span></div>'; }).join('') + '</div></div>' +
+      '<div class="card"><h3>คะแนนรายอักษร</h3><div class="tw"><table class="t"><thead><tr><th>ตำแหน่ง</th><th>อักษร</th><th>ธาตุ</th><th>กลุ่ม</th><th style="text-align:right">คะแนน</th></tr></thead><tbody>' + rows.join('') + '</tbody></table></div></div>';
   }
 
   /* --- tab: luck pillars --- */
-  function lkCell(g, dmI, top, bottom, now) {
-    var s = C.STEMS.indexOf(g[0]), e1 = C.EL_S[s], e2 = elOfBr(g[1]);
-    return '<div class="lk' + (now ? ' now' : '') + '" style="--c1:var(--' + KEYS[e1] + ');--c2:var(--' + KEYS[e2] + ')"><small>' + top + '</small><span class="kan s">' + g[0] + '</span><span class="kan b">' + g[1] + '</span><div class="god">' + godTH(C.god(dmI, s)) + '</div><small>' + bottom + '</small></div>';
-  }
+  var luckSel = null;
+  function nowTh() { return Date.now() + 7 * 3600000; }
+  function agesTxt(a) { var y = Math.floor(a), m = Math.floor((a - y) * 12 + 1e-9); return y + ' ปี' + (m ? ' ' + m + ' เดือน' : ''); }
   function tLuck(R) {
-    if (!cur.sex) return '<div class="card"><p>เลือกเพศ (ชาย / หญิง) ที่หัวข้อมูลลูกค้าก่อน ระบบจึงจะคำนวณทิศทางวัยจรได้</p></div>';
-    var L = R.L, P = R.P, dmI = C.STEMS.indexOf(P.d[0]), age = ageNow(cur);
-    var yang = C.STEMS.indexOf(P.y[0]) % 2 === 0;
-    var head = '<div class="card"><h3>วัยจร 10 ปี (大運)</h3><p style="margin-top:6px">' + cur.sex + ' · เกิดปี' + (yang ? 'หยาง' : 'หยิน') + ' (' + P.y[0] + ') → <b>วัยจร' + (L.forward ? 'เดินหน้า' : 'ถอยหลัง') + '</b></p>' +
-      '<p>นับจากเวลาเกิด' + (L.forward ? 'ไปถึง' : 'ย้อนไปถึง') + ' ' + L.boundary + (C.TERM_TH[L.boundary] ? ' (' + C.TERM_TH[L.boundary] + ')' : '') + ' ' + thDate(L.boundaryMs - 3600000, true) + ' = ' + L.days.toFixed(2) + ' วัน ÷ 3 → <b>เริ่มวัยจรอายุ ' + L.start.y + ' ปี ' + L.start.m + ' เดือน ' + L.start.d + ' วัน</b> (ราว ' + thDate(L.startDate.getTime()) + ')</p>' +
-      '<p class="hint">' + (P.system === 'std' ? 'ระบบทั่วไปนับถึงจุดเปลี่ยนเดือน (節)' : 'ระบบ อ.มาศ นับถึงจุดเปลี่ยนเดือนของระบบนี้ คือ 中氣') + ' · 3 วัน = 1 ปี, 1 วัน = 4 เดือน, 2 ชั่วโมง = 10 วัน <span class="pending">รอ Tommie ยืนยันว่าระบบ อ.มาศ นับถึง 中氣</span></p></div>';
+    if (!R.c.sex) return '<div class="card"><p>เลือกเพศ (ชาย / หญิง) แล้วกด “คำนวณใหม่” ระบบจึงจะคำนวณทิศทางวัยจรได้</p></div>';
+    var L = R.L, P = R.P, dmI = C.STEMS.indexOf(P.d[0]), yang = C.STEMS.indexOf(P.y[0]) % 2 === 0, now = nowTh();
+    var curI = -1; L.list.forEach(function (x, i) { if (now >= x.dateFrom.getTime() && now < x.dateTo.getTime()) curI = i; });
+    if (luckSel == null || luckSel >= L.list.length) luckSel = curI >= 0 ? curI : 0;
+    var st = L.start, birthMs = P.bjMs - 3600000;
+    var head = '<div class="card"><h3>วัยจร 10 ปี (大運)</h3><p style="margin-top:6px">' + R.c.sex + ' · เกิดปี' + (yang ? 'หยาง' : 'หยิน') + ' (' + P.y[0] + ') → <b>วัยจร' + (L.forward ? 'เดินหน้า' : 'ถอยหลัง') + '</b></p>' +
+      '<div class="tw"><table class="t calc"><tbody>' +
+      '<tr><td>เวลาเกิด</td><td>' + thDate(birthMs, true) + '</td></tr>' +
+      '<tr><td>' + (L.forward ? 'จุดเปลี่ยนเดือนถัดไป' : 'จุดเปลี่ยนเดือนก่อนหน้า') + '</td><td>' + L.boundary + (C.TERM_TH[L.boundary] ? ' (' + C.TERM_TH[L.boundary] + ')' : '') + ' · ' + thDate(L.boundaryMs - 3600000, true) + '</td></tr>' +
+      '<tr><td>ระยะห่าง</td><td>' + Math.round(L.diffMin).toLocaleString('th-TH') + ' นาที (' + L.days.toFixed(3) + ' วัน)</td></tr>' +
+      '<tr><td>เทียบสัดส่วน</td><td>' + Math.round(L.diffMin).toLocaleString('th-TH') + ' ÷ 4,320 นาที (3 วัน = 1 ปี) = <b>' + L.years.toFixed(4) + ' ปี</b> = ' + st.y + ' ปี ' + st.m + ' เดือน ' + st.d + ' วัน ' + st.h + ' ชั่วโมง ' + st.mi + ' นาที</td></tr>' +
+      '<tr><td>เปลี่ยนเข้าวัยจรแรก</td><td><b class="gold-t">' + thDate(L.startDate.getTime(), true) + '</b></td></tr>' +
+      '</tbody></table></div>' +
+      '<p class="hint">' + (P.system === 'std' ? 'ระบบทั่วไปนับถึงจุดเปลี่ยนเดือน (節)' : 'ระบบ อ.มาศ นับถึงจุดเปลี่ยนเดือนของระบบนี้ คือ 中氣') + ' · วัยจรถัดไปเปลี่ยนทุก 10 ปีนับจากวันเวลาเดียวกัน <span class="pending">รอ Tommie ยืนยันว่าระบบ อ.มาศ นับถึง 中氣</span></p></div>';
     var cells = L.list.map(function (x, i) {
-      var a0 = x.ageFrom, a1 = a0 + 10, now = age >= a0 && age < a1;
-      return lkCell(x.gz, dmI, 'อายุ ' + a0.toFixed(1).replace('.0', '') + '–' + a1.toFixed(1).replace('.0', ''), 'พ.ศ. ' + (x.yearFrom + 543), now);
+      var s = C.STEMS.indexOf(x.gz[0]), e1 = C.EL_S[s], e2 = elOfBr(x.gz[1]);
+      return '<button type="button" class="lk' + (i === curI ? ' now' : '') + (i === luckSel ? ' sel' : '') + '" data-lk="' + i + '" style="--c1:var(--' + KEYS[e1] + ');--c2:var(--' + KEYS[e2] + ')" aria-pressed="' + (i === luckSel) + '">' + (i === curI ? '<em class="nowtag">ปัจจุบัน</em>' : '') + '<small>' + Math.floor(x.ageFrom) + '–' + Math.floor(x.ageTo) + ' ปี</small><span class="kan s">' + x.gz[0] + '</span><span class="kan b">' + x.gz[1] + '</span><div class="god">' + godTH(C.god(dmI, s)) + '</div><small>' + thDate(x.dateFrom.getTime()).replace(/^\d+ /, '') + '</small></button>';
     }).join('');
-    var curL = L.list.filter(function (x) { return age >= x.ageFrom && age < x.ageFrom + 10; })[0];
-    var rel = curL ? C.relTo(P, curL.gz) : [];
-    return head + '<div class="card"><p class="sub" style="margin-bottom:10px">เรียงจากขวาไปซ้ายตามผัง กรอบทองคือวัยจรปัจจุบัน (อายุ ' + age.toFixed(1) + ' ปี)</p><div class="luck">' + cells + '</div></div>' +
-      (curL ? '<div class="card"><h3>วัยจรปัจจุบัน <span class="kan">' + curL.gz + '</span> กับผังเดิม</h3>' + relList(rel) + '</div>' : '');
+    var curTxt = curI >= 0 ? '<p class="nowline">วัยจรปัจจุบัน <b class="kan">' + L.list[curI].gz + '</b> · อายุ ' + agesTxt(L.list[curI].ageFrom) + ' ถึง ' + agesTxt(L.list[curI].ageTo) + ' (' + thDate(L.list[curI].dateFrom.getTime()) + ' – ' + thDate(L.list[curI].dateTo.getTime()) + ')</p>' : (now < L.startDate.getTime() ? '<p class="nowline">ยังไม่เข้าวัยจรแรก (เข้า ' + thDate(L.startDate.getTime(), true) + ')</p>' : '');
+    return head + '<div class="card">' + curTxt + '<p class="sub" style="margin:6px 0 10px">เรียงจากขวาไปซ้ายตามผัง กดที่วัยจรเพื่อดูรายละเอียด</p><div class="luck">' + cells + '</div></div>' + luckDetail(R, luckSel, curI);
   }
-  function relList(rel) { return rel.length ? '<div class="rels">' + rel.map(function (r) { return '<div class="rel"><span class="tag ' + r.t + '">' + r.t + '</span><span>' + r.x + '</span></div>'; }).join('') + '</div>' : '<p class="sub">ไม่มีการรวมหรือปะทะกับผังเดิม</p>'; }
+  function luckDetail(R, i, curI) {
+    var L = R.L, P = R.P, x = L.list[i], dmI = C.STEMS.indexOf(P.d[0]), s = C.STEMS.indexOf(x.gz[0]), b = C.BR.indexOf(x.gz[1]);
+    var hid = C.HIDDEN[b].split('').map(function (h) { return '<span class="' + KEYS[elOfStem(h)] + '"><b class="kan" style="color:var(--c)">' + h + '</b> ' + godTH(C.god(dmI, C.STEMS.indexOf(h))) + '</span>'; }).join(' · ');
+    var yrs = [], y0 = x.dateFrom.getUTCFullYear(), y1 = x.dateTo.getUTCFullYear();
+    for (var Y = y0; Y <= y1; Y++) {
+      var yg = C.yearGz(Y), rr = C.relTo(P, yg), rl = C.relPair(yg[1], x.gz[1]);
+      yrs.push('<tr><td>' + (Y + 543) + '</td><td class="kan" style="font-size:18px">' + yg + '</td><td>' + godTH(C.god(dmI, C.STEMS.indexOf(yg[0]))) + '</td><td>' + (rr.concat(rl.map(function (q) { return { t: q.t, x: q.x + ' กับวัยจร' }; })).map(function (q) { return '<div class="rx">' + chip(q.t) + '<span>' + q.x + '</span></div>'; }).join('') || '<span class="sub">–</span>') + '</td></tr>');
+    }
+    return '<div class="card"><div class="formhead"><div><h3>วัยจร <span class="kan">' + x.gz + '</span> ' + (i === curI ? '<span class="nowtag inl">ปัจจุบัน</span>' : '') + '</h3><p class="sub">ช่วงที่ ' + x.i + ' · อายุ ' + agesTxt(x.ageFrom) + ' ถึง ' + agesTxt(x.ageTo) + '</p></div></div>' +
+      '<div class="tw"><table class="t calc"><tbody>' +
+      '<tr><td>เริ่ม</td><td><b>' + thDate(x.dateFrom.getTime(), true) + '</b></td></tr><tr><td>สิ้นสุด</td><td>' + thDate(x.dateTo.getTime(), true) + '</td></tr>' +
+      '<tr><td>ราศีบน</td><td><b class="kan">' + x.gz[0] + '</b> ' + ELTH[C.EL_S[s]] + ' · ' + godTH(C.god(dmI, s)) + '</td></tr>' +
+      '<tr><td>ราศีล่าง</td><td><b class="kan">' + x.gz[1] + '</b> ' + C.BR_TH[b] + ' · ราศีแฝง ' + hid + '</td></tr>' +
+      '<tr><td>เชี่ยงแซของตัวเรา</td><td>' + C.STAGES_TH[C.stage(dmI, b)] + ' <span class="sub kan">' + C.STAGES[C.stage(dmI, b)] + '</span></td></tr></tbody></table></div>' +
+      '<h3 style="margin-top:16px;font-size:16px">ปฏิกิริยากับผังเดิม</h3>' + relList(C.relTo(P, x.gz)) +
+      '<h3 style="margin-top:16px;font-size:16px">ดวงปีในช่วงนี้</h3><div class="tw"><table class="t"><thead><tr><th>พ.ศ.</th><th>ปี</th><th>ฐานะ</th><th>ปฏิกิริยา</th></tr></thead><tbody>' + yrs.join('') + '</tbody></table></div></div>';
+  }
+  document.addEventListener('click', function (e) { var b = e.target.closest('[data-lk]'); if (!b) return; luckSel = +b.getAttribute('data-lk'); renderBody(); var d = document.querySelectorAll('#body .card'); if (d.length) d[d.length - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest' }); });
+  function relList(rel) { return rel.length ? '<div class="rels">' + rel.map(function (r) { return '<div class="rel">' + chip(r.t) + '<span>' + r.x + '</span></div>'; }).join('') + '</div>' : '<p class="sub">ไม่มีภาคี ชง เฮ้ง ไห่ หรือผั่วกับผังเดิม</p>'; }
 
   /* --- tab: year & months --- */
   function solarYearNow(sys) { var th = Date.now() + 7 * 3600000, y = new Date(th).getUTCFullYear(); try { if (sys === 'std') { if (th < C.months(y, sys)[0].startMs) return y - 1; } else if (th >= C.months(y + 1, sys)[0].startMs) return y + 1; } catch (e) {} return y; }
@@ -467,13 +534,13 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
     var sys = R.P.system, Y = yearSel || solarYearNow(sys), D = yearData(R, Y);
     var sel = '<label class="f" style="max-width:220px"><span>ปีที่ต้องการดู (พ.ศ.)</span><select id="ySel">' + opts(rng(Y - 10, Y + 10).map(function (y) { return [y, (y + 543) + ' · ' + C.yearGz(y)]; }), Y) + '</select></label>';
     var rows = D.months.map(function (x, i) {
-      var k = (Y + 543) + '-' + i, flags = (x.dayClash ? '<span class="tag 沖">沖 วัน</span> ' : '') + (x.dayHe ? '<span class="tag 合">合 วัน</span> ' : '');
+      var k = (Y + 543) + '-' + i, flags = (x.dayClash ? '<span class="tag 沖">ชงวัน</span> ' : '') + (x.dayHe ? '<span class="tag 合">ภาคีวัน</span> ' : '');
       return '<tr><td>' + thDate(x.m.startMs) + '<br><span class="sub">' + x.m.term + '</span></td><td class="kan" style="font-size:20px">' + x.m.gz + '</td><td>' + godTH(x.god) + '<br><span class="sub">ล่าง: ' + godTH(x.bgod) + '</span></td><td>' + flags + x.rel.map(function (r) { return '<div style="font-size:13px">' + r.x + '</div>'; }).join('') + '</td><td style="min-width:180px"><label class="f"><textarea data-mn="' + k + '" rows="2" style="min-height:52px" placeholder="โน้ตเดือนนี้ (ใส่ในรายงาน)">' + esc((cur.monthNotes || {})[k] || '') + '</textarea></label></td></tr>';
     }).join('');
     setTimeout(function () { var s = $('#ySel'); if (s) s.onchange = function () { yearSel = +s.value; renderBody(); }; }, 0);
     return '<div class="card"><div class="row" style="justify-content:space-between;align-items:end">' + sel + '<div><span class="sub">ดวงปี (流年)</span><div class="kan" style="font-size:40px;line-height:1.1">' + D.yg + '</div><span class="god">' + godTH(D.yGod) + '</span></div></div>' +
       '<p class="hint">' + (sys === 'std' ? 'ปีเริ่มที่ 立春' : 'ปี ' + (Y + 543) + ' ตามระบบ อ.มาศ เริ่มที่ 冬至 ' + thDate(D.months[0].m.startMs, true)) + '</p>' + relList(D.yRel) + '</div>' +
-      '<div class="card"><h3>ดวงเดือน (流月) และปฏิทินช่วงเวลาสำคัญ</h3><p class="sub">“沖 วัน” = เดือนที่ปะทะราศีล่างของวัน (ตำแหน่งคู่ครองและตัวเรา) · “合 วัน” = เดือนที่รวมกับราศีล่างของวัน</p><div class="tw"><table class="t"><thead><tr><th>เริ่ม</th><th>เดือน</th><th>ฐานะ</th><th>สัมพันธ์กับผัง</th><th>โน้ต</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+      '<div class="card"><h3>ดวงเดือน (流月) และปฏิทินช่วงเวลาสำคัญ</h3><p class="sub">“ชงวัน” = เดือนที่ชงราศีล่างของวัน (ตำแหน่งตัวเราและคู่ครอง) · “ภาคีวัน” = เดือนที่ภาคีกับราศีล่างของวัน</p><div class="tw"><table class="t"><thead><tr><th>เริ่ม</th><th>เดือน</th><th>ฐานะ</th><th>สัมพันธ์กับผัง</th><th>โน้ต</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
   }
 
   /* --- tab: compare --- */
@@ -555,7 +622,8 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
   function buildPrint() {
     var R = compute(cur), c = R.c, P = R.P, A = R.A, S = A.strength, Y = yearSel || solarYearNow(P.system), D = yearData(R, Y), rep = cur.report || {};
     var sup = (S.support / S.total * 100).toFixed(0), dmEl = ELTH[S.dm] + (C.STEMS.indexOf(P.d[0]) % 2 ? 'หยิน' : 'หยาง');
-    var luck = R.L ? '<section class="rp-sec"><h2><span class="kan">大運</span> วัยจร 10 ปี</h2><p>เริ่มวัยจรเมื่ออายุ ' + R.L.start.y + ' ปี ' + R.L.start.m + ' เดือน · วัยจร' + (R.L.forward ? 'เดินหน้า' : 'ถอยหลัง') + ' · กรอบสีทองคือช่วงปัจจุบัน</p><div class="rp-img">' + TBZV.luck(R.L, A.dm, ageNow(cur)) + '</div></section>' : '';
+    var luck = R.L ? '<section class="rp-sec"><h2><span class="kan">大運</span> วัยจร 10 ปี</h2><p>วัยจร' + (R.L.forward ? 'เดินหน้า' : 'ถอยหลัง') + ' · เข้าวัยจรแรกเมื่ออายุ ' + R.L.start.y + ' ปี ' + R.L.start.m + ' เดือน (' + thDate(R.L.startDate.getTime(), true) + ') · กรอบสีทองคือช่วงปัจจุบัน</p><div class="rp-img">' + TBZV.luck(R.L, A.dm, ageNow(cur)) + '</div>' +
+      '<table class="rp-tab" style="margin-top:3mm"><thead><tr><th>วัยจร</th><th>อายุ</th><th>เริ่ม</th><th>ฐานะ</th></tr></thead><tbody>' + R.L.list.slice(0, 9).map(function (x) { return '<tr><td class="kan" style="font-size:12.5pt">' + x.gz + '</td><td>' + Math.floor(x.ageFrom) + '–' + Math.floor(x.ageTo) + ' ปี</td><td>' + thDate(x.dateFrom.getTime(), true) + '</td><td>' + godTH(C.god(A.dm, C.STEMS.indexOf(x.gz[0]))) + '</td></tr>'; }).join('') + '</tbody></table></section>' : '';
     var cal = '<section class="rp-sec"><h2><span class="kan">流年</span> ปฏิทินช่วงเวลาสำคัญ ปี ' + (Y + 543) + '</h2><p>ดวงปี <b class="kan">' + D.yg + '</b> เป็นปี “' + godTH(D.yGod) + '” สำหรับคุณ</p><table class="rp-tab"><thead><tr><th style="width:34%">ช่วงเวลา</th><th style="width:12%">เดือน</th><th style="width:16%">ฐานะ</th><th>หมายเหตุ</th></tr></thead><tbody>' + D.months.map(function (x, i) {
       var note = (cur.monthNotes || {})[(Y + 543) + '-' + i] || '', f = x.dayClash ? '<span class="flag">ระวัง · ปะทะตำแหน่งตัวเรา</span><br>' : x.dayHe ? '<span class="ok">เดือนรวมตำแหน่งตัวเรา</span><br>' : '';
       return '<tr><td>' + thDate(x.m.startMs) + (x.m.endMs ? ' – ' + thDate(x.m.endMs - 60000) : '') + '</td><td class="kan" style="font-size:13pt">' + x.m.gz + '</td><td>' + godTH(x.god) + '</td><td>' + f + esc(note) + '</td></tr>';
@@ -567,7 +635,7 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
       '<div class="rp-cover-chart">' + TBZV.chart(P, A, { title: 'ผังของ ' + (cur.nick || cur.name || '') }) + '</div>' +
       '<p class="rp-by">จัดทำโดย Tommie BaZi · LINE @moo2moon · ' + thDate(Date.now() + 7 * 3600000) + '</p></div></section>' +
       '<section class="rp-sec"><h2><span class="kan">四柱</span> ผังสี่เสาของคุณ</h2><p>' + (P.system === 'std' ? 'ผูกดวงตามระบบทั่วไป' : 'ผูกดวงตามระบบ อ.มาศ') + (c.pv && !c.noTime ? ' · ใช้เวลาสุริยะจริงที่' + esc(placeName(c)) + ' คือ ' + pad(P.local[3]) + ':' + pad(P.local[4]) + ' น.' : '') + ' · ธาตุประจำตัวของคุณคือ <b class="kan">' + P.d[0] + '</b> ' + dmEl + '</p><div class="rp-img">' + TBZV.chart(P, A) + '</div></section>' +
-      '<section class="rp-sec"><h2><span class="kan">五行</span> กำลังธาตุ</h2><p>ฝ่ายเสริมธาตุประจำตัว (คู่ธาตุและธาตุที่ให้กำเนิด) มี ' + S.support + ' จาก ' + S.total + ' คะแนน หรือราว ' + sup + '%</p><div class="rp-img">' + TBZV.bars(S) + '</div></section>' +
+      '<section class="rp-sec"><h2><span class="kan">五行</span> กำลังธาตุ</h2><p>ธาตุประจำตัวของคุณเป็น<b>' + S.verdict.th + '</b> · คู่ธาตุและธาตุส่งเสริมรวม ' + S.support + ' จาก ' + S.total + ' คะแนน (ราว ' + sup + '%)</p><div class="rp-img">' + TBZV.bars(S) + '</div></section>' +
       secs + luck + cal +
       '<p class="rp-foot">ปาจื้อเป็นศาสตร์แห่งการตีความ ใช้เป็นแนวทางประกอบการตัดสินใจ · Tommie BaZi · tommiebazi.github.io · LINE @moo2moon</p></div>';
   }

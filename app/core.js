@@ -100,18 +100,18 @@
   var EL_FROM_ZH = { '木': 0, '火': 1, '土': 2, '金': 3, '水': 4 };
   function relPair(a, b) { // relations between two branches or two stems
     var out = [], k = a + b;
-    if (STEMS.indexOf(a) >= 0) { if (GANHE[k]) out.push({ t: '合', th: 'รวม', x: 'ราศีบนรวม (五合) เป็น' + EL_TH[EL_FROM_ZH[GANHE[k]]] }); if (GANCHONG[k]) out.push({ t: '沖', th: 'ปะทะ', x: 'ราศีบนปะทะ' }); return out; }
-    if (LIUHE[k]) out.push({ t: '合', th: 'รวม', x: 'หกรวม (六合) เป็น' + EL_TH[EL_FROM_ZH[LIUHE[k]]] });
-    if (CHONG[k]) out.push({ t: '沖', th: 'ปะทะ', x: 'ปะทะ (六沖)' });
-    if (XING[k]) out.push({ t: '刑', th: 'ลงโทษ', x: a === b ? 'ลงโทษตัวเอง (自刑)' : 'ลงโทษ (刑)' });
-    if (HAI[k]) out.push({ t: '害', th: 'ทำร้าย', x: 'ทำร้าย (害)' });
-    if (PO[k]) out.push({ t: '破', th: 'ทำลาย', x: 'ทำลาย (破)' });
+    if (STEMS.indexOf(a) >= 0) { if (GANHE[k]) out.push({ t: '合', th: 'ภาคี', x: 'ภาคีราศีบน ' + a + b + ' (五合) เป็นธาตุ' + EL_TH[EL_FROM_ZH[GANHE[k]]] }); if (GANCHONG[k]) out.push({ t: '沖', th: 'ชง', x: 'ชงราศีบน ' + a + b + ' (天干沖)' }); return out; }
+    if (LIUHE[k]) out.push({ t: '合', th: 'ภาคี', x: 'ภาคีราศีล่าง ' + a + b + ' (六合) เป็นธาตุ' + EL_TH[EL_FROM_ZH[LIUHE[k]]] });
+    if (CHONG[k]) out.push({ t: '沖', th: 'ชง', x: 'ชง ' + a + b + ' (六沖)' });
+    if (XING[k]) out.push({ t: '刑', th: 'เฮ้ง', x: a === b ? 'เฮ้งตัวเอง ' + a + b + ' (自刑)' : 'เฮ้ง ' + a + b + ' (刑)' });
+    if (HAI[k]) out.push({ t: '害', th: 'ไห่', x: 'ไห่ ' + a + b + ' (害)' });
+    if (PO[k]) out.push({ t: '破', th: 'ผั่ว', x: 'ผั่ว ' + a + b + ' (破)' });
     return out;
   }
   function groupRel(branches) { // 三合 / 三會 (full or half)
     var out = [], set = branches.join('');
-    SANHE.forEach(function (g) { var n = 0; for (var i = 0; i < 3; i++) if (set.indexOf(g[0][i]) >= 0) n++; if (n === 3) out.push({ t: '三合', x: 'สามประสาน (三合) ' + g[0] + ' เป็น' + EL_TH[EL_FROM_ZH[g[1]]] }); else if (n === 2 && set.indexOf(g[0][1]) >= 0) out.push({ t: '半合', x: 'ครึ่งสามประสาน ' + g[0] + ' (ขาด ' + g[0].split('').filter(function (c) { return set.indexOf(c) < 0; }).join('') + ')' }); });
-    SANHUI.forEach(function (g) { var n = 0; for (var i = 0; i < 3; i++) if (set.indexOf(g[0][i]) >= 0) n++; if (n === 3) out.push({ t: '三會', x: 'สามฤดูรวม (三會) ' + g[0] + ' เป็น' + EL_TH[EL_FROM_ZH[g[1]]] }); });
+    SANHE.forEach(function (g) { var n = 0; for (var i = 0; i < 3; i++) if (set.indexOf(g[0][i]) >= 0) n++; if (n === 3) out.push({ t: '三合', th: 'ภาคี 3', x: 'ภาคีสามประสาน ' + g[0] + ' (三合) เป็นธาตุ' + EL_TH[EL_FROM_ZH[g[1]]] }); else if (n === 2 && set.indexOf(g[0][1]) >= 0) out.push({ t: '半合', th: 'ครึ่งภาคี', x: 'ครึ่งภาคีสามประสาน ' + g[0] + ' (半合 ขาด ' + g[0].split('').filter(function (c) { return set.indexOf(c) < 0; }).join('') + ')' }); });
+    SANHUI.forEach(function (g) { var n = 0; for (var i = 0; i < 3; i++) if (set.indexOf(g[0][i]) >= 0) n++; if (n === 3) out.push({ t: '三會', th: 'ภาคีฤดู', x: 'ภาคีฤดู ' + g[0] + ' (三會) เป็นธาตุ' + EL_TH[EL_FROM_ZH[g[1]]] }); });
     return out;
   }
   /* strength — Tommie's weights: month branch (season) 2, day branch 1.5, every other character 1 (day stem included) */
@@ -122,7 +122,8 @@
     cells.forEach(function (c) { var ch = P[c[0]][c[1]], el = c[1] === 0 ? EL_S[STEMS.indexOf(ch)] : EL_B[BR.indexOf(ch)]; sc[el] += c[2]; total += c[2]; });
     var dm = EL_S[STEMS.indexOf(P.d[0])], res = (dm + 4) % 5;
     var support = sc[dm] + sc[res];
-    return { scores: sc, total: total, dm: dm, resource: res, support: support, oppose: total - support, pct: support / total * 100,
+    var verdict = support >= 8 ? { k: 'gold', th: 'ดิถีกระแสทอง' } : support >= 5 ? { k: 'strong', th: 'ดิถีแข็ง' } : support >= 4.5 ? { k: 'bal', th: 'ดิถีสมดุล' } : support >= 2 ? { k: 'weak', th: 'ดิถีอ่อน' } : { k: 'follow', th: 'ดิถีตามกระแส' };
+    return { scores: sc, total: total, dm: dm, resource: res, support: support, oppose: total - support, pct: support / total * 100, verdict: verdict,
       parts: { same: sc[dm], resource: sc[res], output: sc[(dm + 1) % 5], wealth: sc[(dm + 2) % 5], power: sc[(dm + 3) % 5] } };
   }
   function analyse(P) {
@@ -150,15 +151,19 @@
     var lun = Solar.fromYmdHms.apply(null, [new Date(P.bjMs).getUTCFullYear(), new Date(P.bjMs).getUTCMonth() + 1, new Date(P.bjMs).getUTCDate(), new Date(P.bjMs).getUTCHours(), new Date(P.bjMs).getUTCMinutes(), 0]).getLunar();
     var bound = P.system === 'std' ? (fwd ? lun.getNextJie(false) : lun.getPrevJie(false)) : (fwd ? lun.getNextQi(false) : lun.getPrevQi(false));
     var bms = solMs(bound.getSolar()), diffMin = Math.abs(bms - P.bjMs) / 60000;
-    var yearsF = diffMin / (3 * 1440), totalMonths = yearsF * 12;
-    var startY = Math.floor(yearsF), startMo = Math.floor(totalMonths - startY * 12), startD = Math.round((totalMonths - Math.floor(totalMonths)) * 30);
-    var birth = new Date(P.bjMs - 3600000), start = new Date(birth.getTime() + yearsF * 365.2422 * 864e5);
+    /* proportion: 3 days (4,320 min) of real time = 1 year of life, so every minute to the boundary = 1/4320 year */
+    var yearsF = diffMin / 4320;
+    var birth = new Date(P.bjMs - 3600000); // Thai wall clock (UTC fields)
+    var start = new Date(birth.getTime() + yearsF * 365.2422 * 864e5);
+    var ym = yearsF * 12, sy = Math.floor(yearsF), smo = Math.floor(ym - sy * 12), sd = (ym - Math.floor(ym)) * 30.436875, sdd = Math.floor(sd), shh = Math.floor((sd - sdd) * 24), smm = Math.round(((sd - sdd) * 24 - shh) * 60);
+    if (smm === 60) { smm = 0; shh++; }
+    var addYears = function (d, yrs) { var x = new Date(d.getTime()); x.setUTCFullYear(x.getUTCFullYear() + yrs); return x; };
     var mi = idx60(P.m), list = [];
     for (var k = 1; k <= n; k++) {
-      var g = gz(mi + (fwd ? k : -k)), from = new Date(start.getTime() + (k - 1) * 10 * 365.2422 * 864e5);
-      list.push({ gz: g, ageFrom: yearsF + (k - 1) * 10, yearFrom: from.getUTCFullYear(), dateFrom: from });
+      var g = gz(mi + (fwd ? k : -k)), from = addYears(start, (k - 1) * 10), to = addYears(start, k * 10);
+      list.push({ gz: g, i: k, ageFrom: yearsF + (k - 1) * 10, ageTo: yearsF + k * 10, yearFrom: from.getUTCFullYear(), dateFrom: from, dateTo: to });
     }
-    return { forward: fwd, boundary: bound.getName(), boundaryMs: bms, days: diffMin / 1440, start: { y: startY, m: startMo, d: startD }, startDate: start, list: list };
+    return { forward: fwd, boundary: bound.getName(), boundaryMs: bms, diffMin: diffMin, days: diffMin / 1440, years: yearsF, start: { y: sy, m: smo, d: sdd, h: shh, mi: smm }, startDate: start, list: list };
   }
   /* 流年 — amat year Y runs from 冬至 of Y-1; std year Y runs from 立春 of Y */
   function yearGz(Y) { return gz(Y - 4); }

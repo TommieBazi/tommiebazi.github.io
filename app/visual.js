@@ -50,7 +50,7 @@
     S.scores.forEach(function (v, i) {
       var y = 22 + i * row, w = (W - 266) * v / S.total;
       o += '<text x="28" y="' + (y + 14) + '" font-family=' + "'" + KAN + "'" + ' font-weight="900" font-size="18" fill="' + COL[i] + '">' + C.EL_ZH[i] + '</text>' +
-        '<text x="56" y="' + (y + 14) + '" font-family=' + "'" + UI + "'" + ' font-size="14" fill="#ecebe6">' + C.EL_TH[i] + (i === S.dm ? ' · ตัวเรา' : i === S.resource ? ' · ให้กำเนิด' : '') + '</text>' +
+        '<text x="56" y="' + (y + 14) + '" font-family=' + "'" + UI + "'" + ' font-size="14" fill="#ecebe6">' + C.EL_TH[i] + ' · ' + ['คู่ธาตุ', 'ถ่ายเท', 'โชคลาภ', 'อำนาจ', 'ส่งเสริม'][(i - S.dm + 5) % 5] + '</text>' +
         '<rect x="196" y="' + (y + 2) + '" width="' + (W - 266) + '" height="14" rx="7" fill="#1e2233"/>' +
         (w > 0 ? '<rect x="196" y="' + (y + 2) + '" width="' + w + '" height="14" rx="7" fill="' + COL[i] + '"/>' : '') +
         '<text x="' + (W - 28) + '" y="' + (y + 14) + '" text-anchor="end" font-family=' + "'" + UI + "'" + ' font-size="14" fill="#c9cbd8">' + v + '</text>';
