@@ -24,7 +24,7 @@
         col.hidden.map(function (h) { return h.s + '=' + C.GODS[h.god]; }).join(', ') + ' · เชี่ยงแซของตัวเรา: ' + C.STAGES_TH[col.stage]);
     });
     lines.push('ธาตุประจำตัว: ' + P.d[0] + ' ' + C.EL_TH[S.dm] + (C.STEMS.indexOf(P.d[0]) % 2 ? 'หยิน' : 'หยาง'));
-    lines.push('กำลังธาตุ (เกณฑ์ Tommie: ฤดูกาล 2, ราศีล่างวัน 1.5, อื่น 1): ' + S.scores.map(function (v, i) { return C.EL_TH[i] + ' ' + v; }).join(', ') + ' · ฝ่ายเสริม (คู่ธาตุ+ธาตุให้กำเนิด) ' + S.support + '/' + S.total + ' = ' + (S.support / S.total * 100).toFixed(0) + '%');
+    lines.push('กำลังธาตุ (เกณฑ์ Tommie: ฤดูกาล 2, ราศีล่างวัน 1.5, อื่น 1): ' + S.scores.map(function (v, i) { return C.EL_TH[i] + ' ' + v; }).join(', ') + ' · ฝ่ายเสริม (คู่ธาตุ+ธาตุให้กำเนิด) ' + S.support + '/' + S.total + ' = ' + (S.support / S.total * 100).toFixed(0) + '%' + (P.h ? ' → ' + S.verdict.th : ' (ไม่ทราบเวลาเกิด ห้ามสรุปว่าดิถีแข็งหรืออ่อน)'));
     var rel = A.rel.map(function (r) { return r.label + ' ' + r.x; }).concat(A.groups.map(function (g) { return g.x; }));
     lines.push('ความสัมพันธ์ในผัง: ' + (rel.length ? rel.join('; ') : 'ไม่มี'));
     if (R.L) {
