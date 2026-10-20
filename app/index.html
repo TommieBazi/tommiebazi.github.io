@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#07080d">
+<title>Tommie BaZi Studio</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@600;700&family=Prompt:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600&family=Noto+Serif+TC:wght@600;900&display=swap">
+<style>
+:root {
+  color-scheme: dark;
+  --ink: #07080d; --ink-2: #0e1018; --ink-3: #161927; --ink-4: #1e2233; --line: #272b3d;
+  --text: #ecebe6; --soft: #c9cbd8; --dim: #9a9db0;
+  --wood: #46eb82; --fire: #ff5c28; --earth: #d68e46; --gold: #ffd660; --water: #3ca5ff;
+  --f-head: "Noto Serif Thai", "Noto Serif TC", serif; --f-ui: "Prompt", "Noto Sans Thai", system-ui, sans-serif;
+  --f-body: "Noto Sans Thai", "Prompt", system-ui, sans-serif; --f-kan: "Noto Serif TC", "Noto Serif CJK TC", serif;
+  --gl: max(16px, env(safe-area-inset-left, 0px)); --gr: max(16px, env(safe-area-inset-right, 0px));
+}
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+body { margin: 0; background: var(--ink); color: var(--text); font: 16px/1.7 var(--f-body); -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.kan { font-family: var(--f-kan); font-weight: 900; }
+.wood { --c: var(--wood); } .fire { --c: var(--fire); } .earth { --c: var(--earth); } .gold { --c: var(--gold); } .water { --c: var(--water); }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* shell */
+.top { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 12px; padding: calc(10px + env(safe-area-inset-top, 0px)) var(--gr) 10px var(--gl); background: rgba(7,8,13,.86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 10px; font: 700 17px var(--f-ui); margin-right: auto; white-space: nowrap; }
+.seal { width: 32px; height: 32px; display: grid; place-items: center; border: 1.5px solid var(--gold); border-radius: 50%; color: var(--gold); font: 900 15px var(--f-kan); }
+.brand small { font-weight: 400; color: var(--dim); font-size: 13px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--ink-3); font: 500 14px var(--f-ui); cursor: pointer; text-decoration: none; white-space: nowrap; }
+.btn:hover { border-color: var(--soft); }
+.btn.pri { background: var(--gold); color: var(--ink); border-color: var(--gold); font-weight: 600; }
+.btn.sm { padding: 6px 12px; font-size: 13px; }
+.btn.danger { color: var(--fire); }
+.layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: calc(100vh - 60px); }
+aside { border-right: 1px solid var(--line); padding: 16px 14px 16px var(--gl); background: var(--ink-2); }
+aside input { width: 100%; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--ink-3); }
+.clist { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 6px; }
+.clist button { width: 100%; text-align: left; display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: center; padding: 9px 10px; border-radius: 12px; border: 1px solid transparent; background: transparent; cursor: pointer; }
+.clist button:hover { background: var(--ink-3); }
+.clist button.on { background: var(--ink-4); border-color: var(--line); }
+.clist .av { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; font: 900 20px var(--f-kan); color: var(--c); background: color-mix(in srgb, var(--c) 14%, var(--ink-3)); }
+.clist b { display: block; font: 500 15px var(--f-ui); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.clist small { color: var(--dim); font-size: 12.5px; }
+.empty { color: var(--dim); font-size: 14px; padding: 12px 4px; }
+main { min-width: 0; padding: 20px var(--gr) 60px 24px; }
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  aside { border-right: 0; border-bottom: 1px solid var(--line); padding-right: var(--gr); }
+  aside .clist { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 6px; }
+  aside .clist li { flex: 0 0 auto; }
+  aside .clist button { width: auto; min-width: 170px; }
+  main { padding-left: var(--gl); }
+  .brand small, .top .hide-m { display: none; }
+}
+
+/* cards & form */
+.card { border: 1px solid var(--line); border-radius: 18px; background: var(--ink-2); padding: clamp(16px, 2.4vw, 24px); min-width: 0; }
+.card + .card { margin-top: 16px; }
+h1, h2, h3 { font-family: var(--f-head); margin: 0; line-height: 1.3; }
+h2 { font-size: 22px; } h3 { font-size: 18px; }
+.sub { color: var(--dim); font-size: 14px; }
+.grid { display: grid; gap: 12px; }
+.g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } .g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } .g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 700px) { .g4, .g3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .g2 { grid-template-columns: minmax(0, 1fr); } .span-m { grid-column: 1 / -1; } }
+label.f { display: grid; gap: 5px; font: 500 13px var(--f-ui); color: var(--dim); min-width: 0; }
+.f input, .f select, .f textarea { width: 100%; min-width: 0; padding: 10px 12px; border-radius: 11px; border: 1px solid var(--line); background: var(--ink-3); color: var(--text); font: 400 15.5px var(--f-ui); }
+.f select { appearance: none; padding-right: 30px; background: var(--ink-3) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23ffd660' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 11px center; }
+.f textarea { min-height: 110px; line-height: 1.7; resize: vertical; font-family: var(--f-body); }
+.f input:focus, .f select:focus, .f textarea:focus { border-color: var(--gold); outline: none; }
+.chk { display: flex; align-items: center; gap: 8px; font: 400 14.5px var(--f-ui); color: var(--soft); cursor: pointer; padding-top: 22px; }
+.chk input { width: 18px; height: 18px; accent-color: var(--gold); }
+.seg { display: inline-flex; padding: 3px; gap: 3px; border: 1px solid var(--line); border-radius: 999px; background: var(--ink-3); }
+.seg label { cursor: pointer; } .seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg span { display: block; padding: 7px 16px; border-radius: 999px; font: 500 14px var(--f-ui); color: var(--dim); }
+.seg input:checked + span { background: var(--gold); color: var(--ink); }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.formhead { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: space-between; margin-bottom: 14px; }
+.meta { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: var(--ink-3); color: var(--soft); font-size: 14.5px; line-height: 1.8; }
+.meta b { color: var(--gold); font-weight: 600; }
+
+/* tabs */
+.tabs { display: flex; gap: 4px; overflow-x: auto; margin: 22px 0 16px; border-bottom: 1px solid var(--line); scrollbar-width: none; }
+.tabs button { appearance: none; border: 0; background: transparent; padding: 10px 14px; font: 500 15px var(--f-ui); color: var(--dim); border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; }
+.tabs button[aria-selected="true"] { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* chart grid */
+.chart { display: grid; grid-template-columns: 92px repeat(var(--n, 4), minmax(0, 1fr)); gap: 6px; }
+.chart .rh { display: flex; align-items: center; font: 500 13px var(--f-ui); color: var(--dim); line-height: 1.35; }
+.chart .ch { text-align: center; font: 500 14px var(--f-ui); color: var(--dim); }
+.chart .ch .kan { display: block; font-size: 20px; color: var(--text); }
+.cell { min-width: 0; border-radius: 12px; padding: 8px 6px; text-align: center; background: var(--ink-3); font-size: 13.5px; line-height: 1.45; }
+.cell.big { padding: 10px 4px 8px; border: 1.5px solid var(--c); background: linear-gradient(170deg, color-mix(in srgb, var(--c) 16%, var(--ink-2)), var(--ink-2) 85%); box-shadow: 0 0 26px -14px var(--c); }
+.cell.big .kan { display: block; font-size: clamp(34px, 5vw, 52px); line-height: 1.1; color: color-mix(in srgb, var(--c) 55%, #fff); }
+.cell.big small { color: var(--c); font: 500 12px var(--f-ui); }
+.cell.dm { box-shadow: 0 0 0 2px var(--ink-2), 0 0 0 3.5px var(--earth), 0 0 30px -10px var(--c); }
+.god { font: 600 13.5px var(--f-ui); color: var(--gold); } .god small { display: block; font-weight: 400; color: var(--dim); font-size: 11.5px; }
+.hid { display: flex; flex-direction: column; gap: 3px; }
+.hid span { display: flex; justify-content: center; gap: 6px; align-items: baseline; }
+.hid .kan { font-size: 17px; color: var(--c); }
+.hid em { font-style: normal; color: var(--soft); font-size: 12px; }
+@media (max-width: 560px) { .hid span { flex-direction: column; gap: 0; line-height: 1.25; } .hid { gap: 6px; } .chart { grid-template-columns: 62px repeat(var(--n, 4), minmax(0, 1fr)); gap: 4px; } .chart .rh { font-size: 11.5px; } .cell { font-size: 12px; padding: 6px 3px; } .hid em { font-size: 10.5px; } .god small { display: none; } }
+.rels { display: grid; gap: 6px; margin-top: 6px; }
+.rel { display: flex; gap: 10px; align-items: baseline; padding: 8px 12px; border-radius: 10px; background: var(--ink-3); font-size: 14.5px; }
+.tag { flex: none; min-width: 42px; text-align: center; padding: 1px 8px; border-radius: 999px; font: 600 12.5px var(--f-ui); background: var(--ink-4); color: var(--soft); }
+.tag.合, .tag.三合, .tag.半合, .tag.三會 { background: rgba(70,235,130,.15); color: var(--wood); }
+.tag.沖 { background: rgba(255,92,40,.16); color: var(--fire); }
+.tag.刑, .tag.害, .tag.破 { background: rgba(214,142,70,.16); color: var(--earth); }
+
+/* strength */
+.bars { display: grid; gap: 10px; }
+.bar { display: grid; grid-template-columns: 86px 1fr 52px; gap: 10px; align-items: center; font: 500 14.5px var(--f-ui); }
+.bar i { display: block; height: 12px; border-radius: 6px; background: var(--ink-4); overflow: hidden; }
+.bar i b { display: block; height: 100%; width: var(--w); background: var(--c); border-radius: 6px; }
+.bar span:last-child { text-align: right; color: var(--soft); font-variant-numeric: tabular-nums; }
+.meter { position: relative; height: 18px; border-radius: 9px; overflow: hidden; display: flex; margin: 12px 0 6px; }
+.meter b { display: block; height: 100%; }
+table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.t th, .t td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.t th { font: 500 13px var(--f-ui); color: var(--dim); }
+.t .kan { font-size: 18px; }
+.tw { overflow-x: auto; }
+
+/* luck */
+.luck { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(92px, 1fr); gap: 8px; overflow-x: auto; padding-bottom: 8px; direction: rtl; }
+.luck > div { direction: ltr; }
+.lk { border-radius: 14px; padding: 10px 6px; text-align: center; background: var(--ink-3); border: 1px solid var(--line); }
+.lk.now { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold), 0 0 30px -12px var(--gold); }
+.lk .kan { display: block; font-size: 30px; line-height: 1.2; }
+.lk .s { color: var(--c1); } .lk .b { color: var(--c2); }
+.lk small { display: block; font: 400 12px var(--f-ui); color: var(--dim); }
+.lk .god { font-size: 12px; }
+.flag { color: var(--fire); } .ok { color: var(--wood); }
+
+/* notes/report editor */
+.secs { display: grid; gap: 14px; }
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); padding: 10px 18px; border-radius: 999px; background: var(--ink-4); border: 1px solid var(--line); font: 500 14px var(--f-ui); z-index: 90; opacity: 0; transition: opacity .25s; pointer-events: none; }
+.toast.show { opacity: 1; }
+.hint { font-size: 13.5px; color: var(--dim); margin-top: 8px; line-height: 1.7; }
+.pending { display: inline-block; margin-left: 6px; padding: 0 8px; border-radius: 999px; font: 500 11.5px var(--f-ui); background: rgba(255,214,96,.14); color: var(--gold); }
+#printArea { display: none; }
+
+/* ---------- print report ---------- */
+@media print {
+  @page { size: A4; margin: 14mm 14mm 16mm; }
+  body { background: #fff; color: #1b1b22; font-size: 11pt; }
+  .top, .layout { display: none !important; }
+  #printArea { display: block; }
+  .rp { --ink: #fff; --c-ink: #1b1b22; }
+  .rp h1 { font-size: 26pt; } .rp h2 { font-size: 15pt; margin: 18pt 0 8pt; padding-bottom: 4pt; border-bottom: 1.5pt solid #c9a33b; color: #2a2418; break-after: avoid; }
+  .rp-cover { height: 250mm; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; break-after: page; border: 1.5pt solid #c9a33b; border-radius: 6mm; }
+  .rp-cover .seal { width: 22mm; height: 22mm; font-size: 30pt; border-width: 2pt; color: #b08a22; border-color: #b08a22; margin-bottom: 10mm; }
+  .rp-cover .five { font: 900 22pt var(--f-kan); letter-spacing: 6pt; margin: 6mm 0; }
+  .rp .wood { --c: #1f9b55; } .rp .fire { --c: #d6431a; } .rp .earth { --c: #a8662a; } .rp .gold { --c: #b08a22; } .rp .water { --c: #1f6fc4; }
+  .rp-pil { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 4mm; margin: 4mm 0; }
+  .rp-pil div { text-align: center; border: 1pt solid #ddd; border-radius: 3mm; padding: 3mm 1mm; break-inside: avoid; }
+  .rp-pil .kan { display: block; font-size: 30pt; line-height: 1.15; color: var(--c); }
+  .rp-pil small { display: block; color: #666; font-size: 8.5pt; }
+  .rp p, .rp li { line-height: 1.75; }
+  .rp .txt { white-space: pre-wrap; }
+  .rp table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+  .rp th, .rp td { border-bottom: .6pt solid #ddd; padding: 2.2mm 2mm; text-align: left; vertical-align: top; }
+  .rp th { color: #666; font-weight: 500; }
+  .rp tr { break-inside: avoid; }
+  .rp .kan { font-family: var(--f-kan); font-weight: 900; }
+  .rp .muted { color: #777; font-size: 9pt; }
+  .rp .bar i { background: #eee; height: 3mm; } .rp .bar { grid-template-columns: 22mm 1fr 14mm; font-size: 10pt; }
+  .rp .foot { margin-top: 12mm; padding-top: 4mm; border-top: .6pt solid #ddd; color: #777; font-size: 9pt; text-align: center; }
+  .rp .flag { color: #c0391a; } .rp .ok { color: #1f9b55; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="seal">八</span>Tommie BaZi Studio <small>· เครื่องมือผูกดวงส่วนตัว</small></div>
+  <button class="btn pri" id="bNew" type="button">+ ลูกค้าใหม่</button>
+  <button class="btn hide-m" id="bExport" type="button">สำรองข้อมูล</button>
+  <label class="btn hide-m" style="cursor:pointer">นำเข้า<input type="file" id="fImport" accept="application/json" hidden></label>
+</header>
+<div class="layout">
+  <aside>
+    <input id="q" type="search" placeholder="ค้นหาชื่อลูกค้า" aria-label="ค้นหาชื่อลูกค้า">
+    <ul class="clist" id="clist"></ul>
+    <div class="row hide-d" style="margin-top:10px;gap:8px" id="mobileTools"></div>
+  </aside>
+  <main id="main"></main>
+</div>
+<div id="printArea"></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="lunar.js"></script>
+<script src="core.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var C = TBZ, KEYS = C.EL_KEY, ELTH = C.EL_TH;
+  var MONTH = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+  var MON_S = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+  var PNAME = { y: 'ปี', m: 'เดือน', d: 'วัน', h: 'ยาม' }, PZH = { y: '年', m: '月', d: '日', h: '時' };
+  var REPORT = [['overview', 'ภาพรวมและนิสัย'], ['career', 'การงาน'], ['money', 'การเงิน'], ['love', 'ความรักและคู่ครอง'], ['health', 'สุขภาพ'], ['advice', 'คำแนะนำและธาตุที่ควรเสริม']];
+  var KEY = 'tbz.studio.v1';
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function toast(m) { var t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(function () { t.classList.remove('show'); }, 1800); }
+  function godTH(g) { return C.GODS[g] || g; } function godZH(g) { return C.GOD_TRAD[g] || g; }
+  function elOfStem(ch) { return C.EL_S[C.STEMS.indexOf(ch)]; } function elOfBr(ch) { return C.EL_B[C.BR.indexOf(ch)]; }
+  function thDate(ms, withTime) { var d = new Date(ms); return d.getUTCDate() + ' ' + MON_S[d.getUTCMonth()] + ' ' + (d.getUTCFullYear() + 543) + (withTime ? ' ' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ' น.' : ''); }
+
+  /* ---------- storage (this device only) ---------- */
+  var db = { clients: [] };
+  try { var raw = localStorage.getItem(KEY); if (raw) db = JSON.parse(raw); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) { toast('บันทึกไม่ได้ — พื้นที่ในเครื่องเต็มหรือถูกปิดไว้'); } }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  var cur = null, tab = 'chart', yearSel = null, cmpId = '';
+
+  /* ---------- places ---------- */
+  var PL = null;
+  fetch('../thai-places.json').then(function (r) { return r.json(); }).then(function (d) {
+    PL = d.sort(function (a, b) { return a[0] === 'กรุงเทพมหานคร' ? -1 : b[0] === 'กรุงเทพมหานคร' ? 1 : a[0].localeCompare(b[0], 'th'); });
+    if (cur) renderForm();
+  }).catch(function () {});
+
+  /* ---------- compute ---------- */
+  function compute(c) {
+    if (!c || !c.y) return null;
+    var P = C.pillars([c.y - 543, c.m, c.d, c.noTime ? 12 : c.h, c.noTime ? 0 : c.mi], { tz: 7, lon: c.lon == null || c.lon === '' ? null : +c.lon, system: c.system || 'amat', lateZi: c.lateZi || 'same', noTime: !!c.noTime });
+    var A = C.analyse(P), L = c.sex ? C.luck(P, c.sex, 10) : null;
+    return { P: P, A: A, L: L };
+  }
+  function ageNow(c) { var b = Date.UTC(c.y - 543, c.m - 1, c.d), n = Date.now(); return (n - b) / (365.2422 * 864e5); }
+
+  /* ---------- client list ---------- */
+  function renderList() {
+    var q = $('#q').value.trim().toLowerCase(), ul = $('#clist');
+    var list = db.clients.slice().sort(function (a, b) { return (b.updated || 0) - (a.updated || 0); }).filter(function (c) { return !q || (c.name + ' ' + (c.nick || '')).toLowerCase().indexOf(q) >= 0; });
+    if (!list.length) { ul.innerHTML = '<li class="empty">' + (db.clients.length ? 'ไม่พบชื่อนี้' : 'ยังไม่มีลูกค้า กด “+ ลูกค้าใหม่” เพื่อเริ่ม') + '</li>'; return; }
+    ul.innerHTML = list.map(function (c) {
+      var R = null; try { R = compute(c); } catch (e) {}
+      var dm = R ? R.P.d[0] : '？', k = R ? KEYS[elOfStem(dm)] : '';
+      return '<li><button type="button" class="' + (cur && cur.id === c.id ? 'on' : '') + '" data-id="' + c.id + '"><span class="av ' + k + '">' + dm + '</span><span><b>' + esc(c.name || 'ไม่มีชื่อ') + (c.nick ? ' (' + esc(c.nick) + ')' : '') + '</b><small>' + c.d + ' ' + MON_S[c.m - 1] + ' ' + c.y + (c.noTime ? '' : ' · ' + pad(c.h) + ':' + pad(c.mi)) + '</small></span></button></li>';
+    }).join('');
+  }
+  $('#clist').addEventListener('click', function (e) { var b = e.target.closest('button[data-id]'); if (!b) return; open(b.getAttribute('data-id')); });
+  $('#q').addEventListener('input', renderList);
+  function open(id) { cur = db.clients.filter(function (c) { return c.id === id; })[0] || null; yearSel = null; render(); }
+  $('#bNew').addEventListener('click', function () {
+    var c = { id: uid(), name: '', nick: '', sex: '', y: 2533, m: 1, d: 1, h: 12, mi: 0, noTime: false, pv: '', ap: '', tb: '', lon: '', system: 'amat', lateZi: 'same', contact: '', notes: '', report: {}, monthNotes: {}, created: Date.now(), updated: Date.now(), isNew: true };
+    db.clients.push(c); cur = c; tab = 'chart'; save(); render(); setTimeout(function () { var n = $('#fName'); if (n) n.focus(); }, 50);
+  });
+
+  /* ---------- form ---------- */
+  function opts(items, val) { return items.map(function (x) { return '<option value="' + esc(x[0]) + '"' + (String(x[0]) === String(val) ? ' selected' : '') + '>' + esc(x[1]) + '</option>'; }).join(''); }
+  function rng(a, b) { var o = []; for (var i = a; i <= b; i++) o.push(i); return o; }
+  function placeLists(c) {
+    if (!PL) return { pv: '<option value="">กำลังโหลด…</option>', ap: '', tb: '' };
+    var P = PL.filter(function (p) { return p[0] === c.pv; })[0], A = P && P[1].filter(function (a) { return a[0] === c.ap; })[0];
+    return {
+      pv: opts([['', 'ไม่ระบุ / ต่างประเทศ']].concat(PL.map(function (p) { return [p[0], p[0]]; })), c.pv),
+      ap: P ? opts([['', 'เลือกอำเภอ']].concat(P[1].map(function (a) { return [a[0], a[0]]; })), c.ap) : '<option value="">เลือกจังหวัดก่อน</option>',
+      tb: A ? opts([['', 'เลือกตำบล']].concat(A[1].map(function (t) { return [t[0], t[0]]; })), c.tb) : '<option value="">เลือกอำเภอก่อน</option>'
+    };
+  }
+  function resolveLon(c) {
+    if (!PL || !c.pv) return '';
+    var P = PL.filter(function (p) { return p[0] === c.pv; })[0]; if (!P) return '';
+    var avg = function (ts) { var s = 0; ts.forEach(function (t) { s += t[1]; }); return s / ts.length; };
+    var A = P[1].filter(function (a) { return a[0] === c.ap; })[0];
+    if (!A) return avg([].concat.apply([], P[1].map(function (a) { return a[1]; })));
+    var T = A[1].filter(function (t) { return t[0] === c.tb; })[0];
+    return T ? T[1] : avg(A[1]);
+  }
+  function placeName(c) { if (!c.pv) return ''; var bkk = c.pv === 'กรุงเทพมหานคร'; return (c.tb ? (bkk ? 'แขวง' : 'ต.') + c.tb + ' ' : '') + (c.ap ? (bkk ? 'เขต' : 'อ.') + c.ap + ' ' : '') + (bkk ? c.pv : 'จ.' + c.pv); }
+  function renderForm() {
+    var c = cur, pl = placeLists(c), f = $('#form'); if (!f) return;
+    f.innerHTML =
+      '<div class="formhead"><h2>' + (c.name ? esc(c.name) : 'ลูกค้าใหม่') + '</h2><div class="row"><span class="seg" role="radiogroup" aria-label="เพศ">' +
+      ['ชาย', 'หญิง'].map(function (s) { return '<label><input type="radio" name="sex" value="' + s + '"' + (c.sex === s ? ' checked' : '') + '><span>' + s + '</span></label>'; }).join('') + '</span>' +
+      '<button class="btn sm danger" type="button" id="bDel">ลบ</button></div></div>' +
+      '<div class="grid g4">' +
+      '<label class="f span-m"><span>ชื่อ–นามสกุล</span><input id="fName" value="' + esc(c.name) + '" data-k="name" autocomplete="off"></label>' +
+      '<label class="f"><span>ชื่อเล่น</span><input value="' + esc(c.nick) + '" data-k="nick" autocomplete="off"></label>' +
+      '<label class="f span-m"><span>ไลน์ / เบอร์โทร</span><input value="' + esc(c.contact) + '" data-k="contact" autocomplete="off"></label>' +
+      '<label class="f"><span>ระบบผูกดวง</span><select data-k="system">' + opts([['amat', 'ระบบ อ.มาศ'], ['std', 'ระบบทั่วไป (立春)']], c.system) + '</select></label>' +
+      '<label class="f"><span>วัน</span><select data-k="d" data-n>' + opts(rng(1, 31).map(function (i) { return [i, i]; }), c.d) + '</select></label>' +
+      '<label class="f"><span>เดือน</span><select data-k="m" data-n>' + opts(MONTH.map(function (m, i) { return [i + 1, m]; }), c.m) + '</select></label>' +
+      '<label class="f span-m"><span>ปี พ.ศ.</span><select data-k="y" data-n>' + opts(rng(2440, 2580).reverse().map(function (y) { return [y, y + ' · ' + (y - 543)]; }), c.y) + '</select></label>' +
+      '<label class="chk"><input type="checkbox" data-k="noTime"' + (c.noTime ? ' checked' : '') + '> ไม่ทราบเวลาเกิด</label>' +
+      '<label class="f"><span>ชั่วโมง</span><select data-k="h" data-n' + (c.noTime ? ' disabled' : '') + '>' + opts(rng(0, 23).map(function (h) { return [h, pad(h) + ' น.']; }), c.h) + '</select></label>' +
+      '<label class="f"><span>นาที</span><select data-k="mi" data-n' + (c.noTime ? ' disabled' : '') + '>' + opts(rng(0, 59).map(function (m) { return [m, pad(m)]; }), c.mi) + '</select></label>' +
+      (c.system === 'std' ? '<label class="f span-m"><span>23:00–24:00 น.</span><select data-k="lateZi">' + opts([['same', 'ยังนับเป็นวันเดิม'], ['next', 'นับเป็นวันถัดไป']], c.lateZi) + '</select></label>' : '<span></span>') +
+      '<span></span>' +
+      '<label class="f"><span>จังหวัดที่เกิด</span><select data-k="pv">' + pl.pv + '</select></label>' +
+      '<label class="f"><span>อำเภอ / เขต</span><select data-k="ap"' + (c.pv ? '' : ' disabled') + '>' + pl.ap + '</select></label>' +
+      '<label class="f span-m"><span>ตำบล / แขวง</span><select data-k="tb"' + (c.ap ? '' : ' disabled') + '>' + pl.tb + '</select></label>' +
+      '</div><div id="meta"></div>';
+  }
+  function onField(e) {
+    var el = e.target, k = el.getAttribute('data-k'); if (!k || !cur) return;
+    var v = el.type === 'checkbox' ? el.checked : el.hasAttribute('data-n') ? +el.value : el.value;
+    cur[k] = v;
+    if (k === 'pv') { cur.ap = ''; cur.tb = ''; } if (k === 'ap') cur.tb = '';
+    if (k === 'pv' || k === 'ap' || k === 'tb') cur.lon = resolveLon(cur);
+    cur.updated = Date.now(); delete cur.isNew; save();
+    var structural = ['pv', 'ap', 'noTime', 'system'].indexOf(k) >= 0;
+    if (structural) renderForm();
+    if (k !== 'name' && k !== 'nick' && k !== 'contact') renderBody(); else { var h = $('#form h2'); if (h && k === 'name') h.textContent = cur.name || 'ลูกค้าใหม่'; }
+    renderList();
+  }
+  document.addEventListener('change', function (e) {
+    if (e.target.name === 'sex' && cur) { cur.sex = e.target.value; cur.updated = Date.now(); save(); renderBody(); return; }
+    if (e.target.closest('#form')) onField(e);
+  });
+  document.addEventListener('input', function (e) {
+    if (e.target.matches('#form input[type=text], #form input:not([type])')) onField(e);
+    var rk = e.target.getAttribute('data-r'); if (rk && cur) { cur.report = cur.report || {}; cur.report[rk] = e.target.value; cur.updated = Date.now(); save(); }
+    var mk = e.target.getAttribute('data-mn'); if (mk && cur) { cur.monthNotes = cur.monthNotes || {}; cur.monthNotes[mk] = e.target.value; cur.updated = Date.now(); save(); }
+    if (e.target.id === 'fNotes' && cur) { cur.notes = e.target.value; cur.updated = Date.now(); save(); }
+  });
+  document.addEventListener('click', function (e) {
+    if (e.target.id === 'bDel' && cur) {
+      var b = e.target; if (!b.dataset.sure) { b.dataset.sure = 1; b.textContent = 'กดอีกครั้งเพื่อยืนยันลบ'; setTimeout(function () { b.textContent = 'ลบ'; delete b.dataset.sure; }, 3000); return; }
+      db.clients = db.clients.filter(function (c) { return c.id !== cur.id; }); cur = null; save(); render(); toast('ลบแล้ว');
+    }
+    var tb = e.target.closest('.tabs button'); if (tb) { tab = tb.getAttribute('data-t'); renderBody(); }
+    if (e.target.id === 'bPrint') { buildPrint(); setTimeout(function () { window.print(); }, 60); }
+  });
+
+  /* ---------- body ---------- */
+  function render() {
+    renderList();
+    var m = $('#main');
+    if (!cur) {
+      m.innerHTML = '<div class="card" style="max-width:640px"><h2>ยินดีต้อนรับสู่ Studio</h2><p class="sub" style="margin-top:8px">เลือกลูกค้าทางซ้าย หรือกด “+ ลูกค้าใหม่” เพื่อผูกดวง ข้อมูลทั้งหมดเก็บไว้ในเครื่องนี้เท่านั้น ไม่ส่งขึ้นอินเทอร์เน็ต อย่าลืมกด “สำรองข้อมูล” เป็นระยะ และเก็บไฟล์ไว้ในที่ปลอดภัย</p>' +
+        '<div class="row" style="margin-top:16px"><button class="btn" type="button" onclick="document.getElementById(\'bExport\').click()">สำรองข้อมูล</button><label class="btn" style="cursor:pointer">นำเข้าไฟล์สำรอง<input type="file" accept="application/json" hidden onchange="document.getElementById(\'fImport\').files=this.files;document.getElementById(\'fImport\').dispatchEvent(new Event(\'change\'))"></label></div></div>';
+      return;
+    }
+    m.innerHTML = '<div class="card" id="form"></div><nav class="tabs" role="tablist"></nav><div id="body"></div>';
+    renderForm(); renderBody();
+  }
+  var TABS = [['chart', 'ผังเต็ม'], ['power', 'กำลังธาตุ'], ['luck', 'วัยจร 10 ปี'], ['year', 'ดวงปี · เดือน'], ['compare', 'เทียบดวง'], ['report', 'รายงาน'], ['notes', 'โน้ต']];
+  function renderBody() {
+    $('.tabs').innerHTML = TABS.map(function (t) { return '<button type="button" role="tab" data-t="' + t[0] + '" aria-selected="' + (tab === t[0]) + '">' + t[1] + '</button>'; }).join('');
+    var R; try { R = compute(cur); } catch (e) { $('#body').innerHTML = '<div class="card flag">คำนวณไม่ได้: ' + esc(e.message) + '</div>'; return; }
+    var dim = new Date(Date.UTC(cur.y - 543, cur.m, 0)).getUTCDate();
+    if (cur.d > dim) { $('#body').innerHTML = '<div class="card flag">เดือน' + MONTH[cur.m - 1] + ' ปี ' + cur.y + ' มีแค่ ' + dim + ' วัน</div>'; $('#meta').innerHTML = ''; return; }
+    $('#meta').innerHTML = metaHTML(R);
+    var fn = { chart: tChart, power: tPower, luck: tLuck, year: tYear, compare: tCompare, report: tReport, notes: tNotes }[tab];
+    $('#body').innerHTML = fn(R);
+  }
+  function metaHTML(R) {
+    var P = R.P, c = cur, s = [];
+    s.push('ผัง (ปี เดือน วัน ยาม): <b class="kan" style="font-size:17px;letter-spacing:.06em">' + P.y + ' ' + P.m + ' ' + P.d + ' ' + (P.h || '？？') + '</b>');
+    if (c.pv && !c.noTime) {
+      var lonM = (c.lon - 105) * 4, eq = P.corr - lonM, sg = function (x) { return (x < 0 ? '−' : '+') + Math.abs(x).toFixed(1); };
+      s.push('เวลาสุริยะจริงที่ ' + esc(placeName(c)) + ' ≈ <b>' + pad(P.local[3]) + ':' + pad(P.local[4]) + ' น.</b> (เส้นแวง ' + sg(lonM) + ' · สมการเวลา ' + sg(eq) + ' นาที)');
+    } else if (!c.noTime) s.push('ใช้เวลานาฬิกา (ยังไม่ได้ระบุสถานที่เกิด)');
+    s.push((P.system === 'std' ? 'ระบบทั่วไป · เดือนเริ่มที่ ' : 'ระบบ อ.มาศ · เดือนเริ่มที่ ') + P.monthStart + (C.TERM_TH[P.monthStart] ? ' (' + C.TERM_TH[P.monthStart] + ')' : ''));
+    return '<div class="meta">' + s.join('<br>') + '</div>';
+  }
+
+  /* --- tab: full chart (right-to-left: 時 日 月 年) --- */
+  function pillarKeys(P) { return P.h ? ['h', 'd', 'm', 'y'] : ['d', 'm', 'y']; }
+  function tChart(R) {
+    var P = R.P, A = R.A, ks = pillarKeys(P), n = ks.length, row = function (label, f) { return '<div class="rh">' + label + '</div>' + ks.map(f).join(''); };
+    var h = '<div class="card"><div class="chart" style="--n:' + n + '">' +
+      '<div></div>' + ks.map(function (k) { return '<div class="ch"><span class="kan">' + PZH[k] + '</span>' + PNAME[k] + '</div>'; }).join('') +
+      row('ฐานะ<br>(十神)', function (k) { var g = A.cols[k].god; return '<div class="cell god">' + (g ? godTH(g) + '<small>' + godZH(g) + '</small>' : 'ตัวเรา<small>日主</small>') + '</div>'; }) +
+      row('ราศีบน<br>(天干)', function (k) { var s = A.cols[k].stem, e = elOfStem(s); return '<div class="cell big ' + KEYS[e] + (k === 'd' ? ' dm' : '') + '"><span class="kan">' + s + '</span><small>' + ELTH[e] + (C.STEMS.indexOf(s) % 2 ? 'หยิน' : 'หยาง') + '</small></div>'; }) +
+      row('ราศีล่าง<br>(地支)', function (k) { var b = A.cols[k].branch, e = elOfBr(b); return '<div class="cell big ' + KEYS[e] + '"><span class="kan">' + b + '</span><small>' + C.BR_TH[C.BR.indexOf(b)] + ' · ' + ELTH[e] + '</small></div>'; }) +
+      row('ราศีแฝง<br>(藏干)', function (k) { return '<div class="cell hid">' + A.cols[k].hidden.map(function (x) { return '<span class="' + KEYS[x.el] + '"><b class="kan">' + x.s + '</b><em>' + godTH(x.god) + '</em></span>'; }).join('') + '</div>'; }) +
+      row('ฉางเซิง<br>ของตัวเรา', function (k) { var s = A.cols[k].stage; return '<div class="cell">' + C.STAGES_TH[s] + '<br><span class="sub kan" style="font-size:13px">' + C.STAGES[s] + '</span></div>'; }) +
+      row('ฉางเซิง<br>นั่งตัวเอง', function (k) { var s = A.cols[k].selfStage; return '<div class="cell">' + C.STAGES_TH[s] + '<br><span class="sub kan" style="font-size:13px">' + C.STAGES[s] + '</span></div>'; }) +
+      row('เสียงธาตุ<br>(納音)', function (k) { var ny = A.cols[k].nayin; return '<div class="cell"><span class="kan" style="font-size:14px">' + ny + '</span></div>'; }) +
+      '</div></div>';
+    var rel = A.rel.concat(A.groups.map(function (g) { return { t: g.t, x: g.x, label: 'ทั้งผัง' }; }));
+    h += '<div class="card"><h3>ความสัมพันธ์ในผัง</h3>' + (rel.length ? '<div class="rels">' + rel.map(function (r) { return '<div class="rel"><span class="tag ' + r.t + '">' + r.t + '</span><span><b>' + r.label + '</b> · ' + r.x + '</span></div>'; }).join('') + '</div>' : '<p class="sub">ไม่มีการรวม ปะทะ ลงโทษ ทำร้าย หรือทำลายระหว่างเสา</p>') + '</div>';
+    return h;
+  }
+
+  /* --- tab: strength (Tommie weights) --- */
+  function tPower(R) {
+    var P = R.P, S = R.A.strength, dm = S.dm, rows = [];
+    var cells = [['y', 0, 1], ['y', 1, 1], ['m', 0, 1], ['m', 1, 2], ['d', 0, 1], ['d', 1, 1.5]]; if (P.h) cells.push(['h', 0, 1], ['h', 1, 1]);
+    var fam = function (e) { var r = (e - dm + 5) % 5; return ['ธาตุเดียวกัน (比劫)', 'ธาตุที่เราให้กำเนิด (食傷)', 'ธาตุที่เราข่ม (財)', 'ธาตุที่ข่มเรา (官殺)', 'ธาตุที่ให้กำเนิดเรา (印)'][r]; };
+    cells.forEach(function (c) { var ch = P[c[0]][c[1]], e = c[1] === 0 ? elOfStem(ch) : elOfBr(ch); rows.push('<tr><td>' + (c[1] === 0 ? 'ราศีบน' : 'ราศีล่าง') + 'เสา' + PNAME[c[0]] + (c[0] === 'm' && c[1] === 1 ? ' <span class="sub">(ฤดูกาล)</span>' : '') + '</td><td class="kan ' + KEYS[e] + '" style="color:var(--c)">' + ch + '</td><td>' + ELTH[e] + '</td><td>' + fam(e) + '</td><td style="text-align:right">' + c[2] + '</td></tr>'); });
+    var max = Math.max.apply(null, S.scores);
+    var bars = S.scores.map(function (v, i) { return '<div class="bar ' + KEYS[i] + '"><span>' + C.EL_ZH[i] + ' ' + ELTH[i] + '</span><i><b style="--w:' + (v / S.total * 100) + '%"></b></i><span>' + v + '</span></div>'; }).join('');
+    var sup = S.support / S.total * 100;
+    return '<div class="card"><h3>กำลังธาตุ <span class="pending">ตามเกณฑ์ของ Tommie</span></h3><p class="sub" style="margin-top:4px">ราศีล่างเดือน (ฤดูกาล) 2 คะแนน · ราศีล่างวัน 1.5 คะแนน · อักษรอื่น 1 คะแนน (รวมราศีบนของวัน) · รวม ' + S.total + ' คะแนน' + (P.h ? '' : ' (ไม่มีเสายาม)') + '</p>' +
+      '<div class="bars" style="margin-top:16px">' + bars + '</div>' +
+      '<h3 style="margin-top:22px">ตัวเรา <span class="kan" style="color:var(--' + KEYS[dm] + ')">' + P.d[0] + '</span> ' + ELTH[dm] + '</h3>' +
+      '<div class="meter" aria-label="ฝ่ายเสริม ' + sup.toFixed(0) + ' เปอร์เซ็นต์"><b style="width:' + sup + '%;background:linear-gradient(90deg,var(--' + KEYS[(dm + 4) % 5] + '),var(--' + KEYS[dm] + '))"></b><b style="flex:1;background:var(--ink-4)"></b></div>' +
+      '<p>ฝ่ายเสริม (ธาตุเดียวกัน + ธาตุที่ให้กำเนิด) <b>' + S.support + '</b> คะแนน = <b>' + sup.toFixed(1) + '%</b> · ฝ่ายต้าน <b>' + S.oppose + '</b> คะแนน</p>' +
+      '<div class="grid g3" style="margin-top:10px">' + [['เดียวกัน 比劫', S.parts.same], ['ให้กำเนิด 印', S.parts.resource], ['เราให้กำเนิด 食傷', S.parts.output], ['เราข่ม 財', S.parts.wealth], ['ข่มเรา 官殺', S.parts.power]].map(function (x) { return '<div class="cell" style="text-align:left;padding:10px 12px"><span class="sub">' + x[0] + '</span><br><b style="font-size:18px">' + x[1] + '</b></div>'; }).join('') + '</div>' +
+      '<p class="hint">เส้นแบ่งว่าดวงแข็งหรืออ่อน (เช่น เกินครึ่งถือว่าแข็ง) ยังรอ Tommie กำหนด ตอนนี้แสดงเป็นคะแนนกับเปอร์เซ็นต์ไว้ก่อน</p></div>' +
+      '<div class="card"><h3>คะแนนรายอักษร</h3><div class="tw"><table class="t"><thead><tr><th>ตำแหน่ง</th><th>อักษร</th><th>ธาตุ</th><th>เทียบกับตัวเรา</th><th style="text-align:right">คะแนน</th></tr></thead><tbody>' + rows.join('') + '</tbody></table></div></div>';
+  }
+
+  /* --- tab: luck pillars --- */
+  function lkCell(g, dmI, top, bottom, now) {
+    var s = C.STEMS.indexOf(g[0]), e1 = C.EL_S[s], e2 = elOfBr(g[1]);
+    return '<div class="lk' + (now ? ' now' : '') + '" style="--c1:var(--' + KEYS[e1] + ');--c2:var(--' + KEYS[e2] + ')"><small>' + top + '</small><span class="kan s">' + g[0] + '</span><span class="kan b">' + g[1] + '</span><div class="god">' + godTH(C.god(dmI, s)) + '</div><small>' + bottom + '</small></div>';
+  }
+  function tLuck(R) {
+    if (!cur.sex) return '<div class="card"><p>เลือกเพศ (ชาย / หญิง) ที่หัวข้อมูลลูกค้าก่อน ระบบจึงจะคำนวณทิศทางวัยจรได้</p></div>';
+    var L = R.L, P = R.P, dmI = C.STEMS.indexOf(P.d[0]), age = ageNow(cur);
+    var yang = C.STEMS.indexOf(P.y[0]) % 2 === 0;
+    var head = '<div class="card"><h3>วัยจร 10 ปี (大運)</h3><p style="margin-top:6px">' + cur.sex + ' · เกิดปี' + (yang ? 'หยาง' : 'หยิน') + ' (' + P.y[0] + ') → <b>วัยจร' + (L.forward ? 'เดินหน้า' : 'ถอยหลัง') + '</b></p>' +
+      '<p>นับจากเวลาเกิด' + (L.forward ? 'ไปถึง' : 'ย้อนไปถึง') + ' ' + L.boundary + (C.TERM_TH[L.boundary] ? ' (' + C.TERM_TH[L.boundary] + ')' : '') + ' ' + thDate(L.boundaryMs - 3600000, true) + ' = ' + L.days.toFixed(2) + ' วัน ÷ 3 → <b>เริ่มวัยจรอายุ ' + L.start.y + ' ปี ' + L.start.m + ' เดือน ' + L.start.d + ' วัน</b> (ราว ' + thDate(L.startDate.getTime()) + ')</p>' +
+      '<p class="hint">' + (P.system === 'std' ? 'ระบบทั่วไปนับถึงจุดเปลี่ยนเดือน (節)' : 'ระบบ อ.มาศ นับถึงจุดเปลี่ยนเดือนของระบบนี้ คือ 中氣') + ' · 3 วัน = 1 ปี, 1 วัน = 4 เดือน, 2 ชั่วโมง = 10 วัน <span class="pending">รอ Tommie ยืนยันว่าระบบ อ.มาศ นับถึง 中氣</span></p></div>';
+    var cells = L.list.map(function (x, i) {
+      var a0 = x.ageFrom, a1 = a0 + 10, now = age >= a0 && age < a1;
+      return lkCell(x.gz, dmI, 'อายุ ' + a0.toFixed(1).replace('.0', '') + '–' + a1.toFixed(1).replace('.0', ''), 'พ.ศ. ' + (x.yearFrom + 543), now);
+    }).join('');
+    var curL = L.list.filter(function (x) { return age >= x.ageFrom && age < x.ageFrom + 10; })[0];
+    var rel = curL ? C.relTo(P, curL.gz) : [];
+    return head + '<div class="card"><p class="sub" style="margin-bottom:10px">เรียงจากขวาไปซ้ายตามผัง กรอบทองคือวัยจรปัจจุบัน (อายุ ' + age.toFixed(1) + ' ปี)</p><div class="luck">' + cells + '</div></div>' +
+      (curL ? '<div class="card"><h3>วัยจรปัจจุบัน <span class="kan">' + curL.gz + '</span> กับผังเดิม</h3>' + relList(rel) + '</div>' : '');
+  }
+  function relList(rel) { return rel.length ? '<div class="rels">' + rel.map(function (r) { return '<div class="rel"><span class="tag ' + r.t + '">' + r.t + '</span><span>' + r.x + '</span></div>'; }).join('') + '</div>' : '<p class="sub">ไม่มีการรวมหรือปะทะกับผังเดิม</p>'; }
+
+  /* --- tab: year & months --- */
+  function solarYearNow(sys) { var th = Date.now() + 7 * 3600000, y = new Date(th).getUTCFullYear(); try { if (sys === 'std') { if (th < C.months(y, sys)[0].startMs) return y - 1; } else if (th >= C.months(y + 1, sys)[0].startMs) return y + 1; } catch (e) {} return y; }
+  function yearData(R, Y) {
+    var P = R.P, dmI = C.STEMS.indexOf(P.d[0]), yg = C.yearGz(Y), ms = C.months(Y, P.system);
+    return { Y: Y, yg: yg, yGod: C.god(dmI, C.STEMS.indexOf(yg[0])), yRel: C.relTo(P, yg), months: ms.map(function (m) {
+      var r = C.relTo(P, m.gz), dayClash = r.some(function (x) { return x.t === '沖' && x.k === 'd' && x.on === 'branch'; }), dayHe = r.some(function (x) { return x.t === '合' && x.k === 'd' && x.on === 'branch'; });
+      return { m: m, god: C.god(dmI, C.STEMS.indexOf(m.gz[0])), bgod: C.god(dmI, C.STEMS.indexOf(C.HIDDEN[C.BR.indexOf(m.gz[1])][0])), rel: r, dayClash: dayClash, dayHe: dayHe };
+    }) };
+  }
+  function tYear(R) {
+    var sys = R.P.system, Y = yearSel || solarYearNow(sys), D = yearData(R, Y);
+    var sel = '<label class="f" style="max-width:220px"><span>ปีที่ต้องการดู (พ.ศ.)</span><select id="ySel">' + opts(rng(Y - 10, Y + 10).map(function (y) { return [y, (y + 543) + ' · ' + C.yearGz(y)]; }), Y) + '</select></label>';
+    var rows = D.months.map(function (x, i) {
+      var k = (Y + 543) + '-' + i, flags = (x.dayClash ? '<span class="tag 沖">沖 วัน</span> ' : '') + (x.dayHe ? '<span class="tag 合">合 วัน</span> ' : '');
+      return '<tr><td>' + thDate(x.m.startMs) + '<br><span class="sub">' + x.m.term + '</span></td><td class="kan" style="font-size:20px">' + x.m.gz + '</td><td>' + godTH(x.god) + '<br><span class="sub">ล่าง: ' + godTH(x.bgod) + '</span></td><td>' + flags + x.rel.map(function (r) { return '<div style="font-size:13px">' + r.x + '</div>'; }).join('') + '</td><td style="min-width:180px"><label class="f"><textarea data-mn="' + k + '" rows="2" style="min-height:52px" placeholder="โน้ตเดือนนี้ (ใส่ในรายงาน)">' + esc((cur.monthNotes || {})[k] || '') + '</textarea></label></td></tr>';
+    }).join('');
+    setTimeout(function () { var s = $('#ySel'); if (s) s.onchange = function () { yearSel = +s.value; renderBody(); }; }, 0);
+    return '<div class="card"><div class="row" style="justify-content:space-between;align-items:end">' + sel + '<div><span class="sub">ดวงปี (流年)</span><div class="kan" style="font-size:40px;line-height:1.1">' + D.yg + '</div><span class="god">' + godTH(D.yGod) + '</span></div></div>' +
+      '<p class="hint">' + (sys === 'std' ? 'ปีเริ่มที่ 立春' : 'ปี ' + (Y + 543) + ' ตามระบบ อ.มาศ เริ่มที่ 冬至 ' + thDate(D.months[0].m.startMs, true)) + '</p>' + relList(D.yRel) + '</div>' +
+      '<div class="card"><h3>ดวงเดือน (流月) และปฏิทินช่วงเวลาสำคัญ</h3><p class="sub">“沖 วัน” = เดือนที่ปะทะราศีล่างของวัน (ตำแหน่งคู่ครองและตัวเรา) · “合 วัน” = เดือนที่รวมกับราศีล่างของวัน</p><div class="tw"><table class="t"><thead><tr><th>เริ่ม</th><th>เดือน</th><th>ฐานะ</th><th>สัมพันธ์กับผัง</th><th>โน้ต</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+  }
+
+  /* --- tab: compare --- */
+  function tCompare(R) {
+    var others = db.clients.filter(function (c) { return c.id !== cur.id; });
+    if (!others.length) return '<div class="card"><p>ต้องมีลูกค้าอย่างน้อย 2 คนจึงจะเทียบดวงได้</p></div>';
+    if (!cmpId || !others.some(function (c) { return c.id === cmpId; })) cmpId = others[0].id;
+    var o = others.filter(function (c) { return c.id === cmpId; })[0], R2; try { R2 = compute(o); } catch (e) { return '<div class="card flag">คำนวณดวงคู่เทียบไม่ได้</div>'; }
+    var A = R.P, B = R2.P, out = [];
+    [['d', 'd', 'วัน–วัน'], ['y', 'y', 'ปี–ปี'], ['m', 'm', 'เดือน–เดือน'], ['d', 'y', 'วันของ ' + (cur.nick || cur.name || 'ลูกค้า') + ' – ปีของ ' + (o.nick || o.name)], ['y', 'd', 'ปีของ ' + (cur.nick || cur.name || 'ลูกค้า') + ' – วันของ ' + (o.nick || o.name)]].forEach(function (p) {
+      C.relPair(A[p[0]][0], B[p[1]][0]).forEach(function (x) { out.push({ t: x.t, x: '<b>' + p[2] + '</b> · ราศีบน ' + A[p[0]][0] + '–' + B[p[1]][0] + ' ' + x.x }); });
+      C.relPair(A[p[0]][1], B[p[1]][1]).forEach(function (x) { out.push({ t: x.t, x: '<b>' + p[2] + '</b> · ราศีล่าง ' + A[p[0]][1] + '–' + B[p[1]][1] + ' ' + x.x }); });
+    });
+    var SA = R.A.strength, SB = R2.A.strength;
+    var mini = function (P) { return pillarKeys(P).map(function (k) { return '<span class="kan" style="font-size:22px;color:var(--' + KEYS[elOfStem(P[k][0])] + ')">' + P[k][0] + '</span><span class="kan" style="font-size:22px;color:var(--' + KEYS[elOfBr(P[k][1])] + ')">' + P[k][1] + '</span>'; }).join(' &nbsp; '); };
+    var godAB = C.god(C.STEMS.indexOf(A.d[0]), C.STEMS.indexOf(B.d[0])), godBA = C.god(C.STEMS.indexOf(B.d[0]), C.STEMS.indexOf(A.d[0]));
+    return '<div class="card"><label class="f" style="max-width:320px"><span>เทียบกับ</span><select id="cmpSel">' + opts(others.map(function (c) { return [c.id, (c.name || 'ไม่มีชื่อ') + (c.nick ? ' (' + c.nick + ')' : '')]; }), cmpId) + '</select></label>' +
+      '<div class="grid g2" style="margin-top:14px"><div class="cell" style="text-align:left;padding:12px"><span class="sub">' + esc(cur.name || 'ลูกค้า') + '</span><br>' + mini(A) + '</div><div class="cell" style="text-align:left;padding:12px"><span class="sub">' + esc(o.name) + '</span><br>' + mini(B) + '</div></div>' +
+      '<p style="margin-top:12px">ราศีบนวันของ ' + esc(o.nick || o.name) + ' (' + B.d[0] + ') เป็น <b class="god">' + godTH(godAB) + '</b> ของ ' + esc(cur.nick || cur.name || 'ลูกค้า') + ' · กลับกันเป็น <b class="god">' + godTH(godBA) + '</b></p></div>' +
+      '<div class="card"><h3>ความสัมพันธ์ระหว่างสองผัง</h3>' + relList(out) + '</div>' +
+      '<div class="card"><h3>ธาตุเสริมกัน</h3><div class="tw"><table class="t"><thead><tr><th>ธาตุ</th><th>' + esc(cur.nick || cur.name || 'ลูกค้า') + '</th><th>' + esc(o.nick || o.name) + '</th></tr></thead><tbody>' + SA.scores.map(function (v, i) { return '<tr><td style="color:var(--' + KEYS[i] + ')">' + C.EL_ZH[i] + ' ' + ELTH[i] + '</td><td>' + v + '</td><td>' + SB.scores[i] + '</td></tr>'; }).join('') + '</tbody></table></div></div>';
+  }
+  document.addEventListener('change', function (e) { if (e.target.id === 'cmpSel') { cmpId = e.target.value; renderBody(); } });
+
+  /* --- tab: report editor --- */
+  function tReport(R) {
+    return '<div class="card"><div class="formhead"><div><h3>รายงานสำหรับลูกค้า</h3><p class="sub">เขียนคำอ่านแต่ละหัวข้อ ระบบจะรวมกับผัง กำลังธาตุ วัยจร และปฏิทินรายเดือนของปีที่เลือกไว้ในแท็บ “ดวงปี · เดือน” เป็นเอกสาร A4</p></div><button class="btn pri" id="bPrint" type="button">พิมพ์ / บันทึก PDF</button></div>' +
+      '<div class="secs">' + REPORT.map(function (r) { return '<label class="f"><span>' + r[1] + '</span><textarea data-r="' + r[0] + '" rows="5">' + esc((cur.report || {})[r[0]] || '') + '</textarea></label>'; }).join('') + '</div>' +
+      '<p class="hint">กด “พิมพ์ / บันทึก PDF” แล้วเลือกปลายทางเป็น “บันทึกเป็น PDF” · ข้อความบันทึกอัตโนมัติทุกครั้งที่พิมพ์</p></div>';
+  }
+  function tNotes() {
+    return '<div class="card"><label class="f"><span>โน้ตส่วนตัว (ไม่แสดงในรายงาน)</span><textarea id="fNotes" rows="12">' + esc(cur.notes || '') + '</textarea></label><p class="hint">สร้างเมื่อ ' + thDate(cur.created + 7 * 3600000, true) + ' · แก้ไขล่าสุด ' + thDate(cur.updated + 7 * 3600000, true) + '</p></div>';
+  }
+
+  /* ---------- printable report ---------- */
+  function buildPrint() {
+    var R = compute(cur), P = R.P, A = R.A, S = A.strength, ks = pillarKeys(P), Y = yearSel || solarYearNow(P.system), D = yearData(R, Y), rep = cur.report || {};
+    var pil = '<div class="rp-pil" style="--n:' + ks.length + '">' + ks.map(function (k) {
+      var s = P[k][0], b = P[k][1], g = A.cols[k].god;
+      return '<div><small>' + PZH[k] + ' ' + PNAME[k] + '</small><small>' + (g ? godTH(g) : 'ตัวเรา') + '</small><span class="kan ' + KEYS[elOfStem(s)] + '">' + s + '</span><span class="kan ' + KEYS[elOfBr(b)] + '">' + b + '</span><small>' + A.cols[k].hidden.map(function (x) { return x.s; }).join(' ') + '</small><small>' + A.cols[k].nayin + '</small></div>';
+    }).join('') + '</div>';
+    var bars = S.scores.map(function (v, i) { return '<div class="bar ' + KEYS[i] + '" style="display:grid;gap:3mm;align-items:center;margin:1.5mm 0"><span>' + C.EL_ZH[i] + ' ' + ELTH[i] + '</span><i style="display:block;border-radius:2mm;overflow:hidden"><b style="display:block;height:100%;width:' + (v / S.total * 100) + '%;background:var(--c)"></b></i><span style="text-align:right">' + v + '</span></div>'; }).join('');
+    var luck = R.L ? '<h2>วัยจร 10 ปี</h2><p>เริ่มวัยจรอายุ ' + R.L.start.y + ' ปี ' + R.L.start.m + ' เดือน · วัยจร' + (R.L.forward ? 'เดินหน้า' : 'ถอยหลัง') + '</p><table><thead><tr><th>อายุ</th><th>พ.ศ.</th><th>วัยจร</th><th>ฐานะ</th></tr></thead><tbody>' + R.L.list.slice(0, 9).map(function (x) { return '<tr><td>' + x.ageFrom.toFixed(1).replace('.0', '') + '–' + (x.ageFrom + 10).toFixed(1).replace('.0', '') + '</td><td>' + (x.yearFrom + 543) + '</td><td class="kan" style="font-size:13pt">' + x.gz + '</td><td>' + godTH(C.god(A.dm, C.STEMS.indexOf(x.gz[0]))) + '</td></tr>'; }).join('') + '</tbody></table>' : '';
+    var cal = '<h2>ปฏิทินช่วงเวลาสำคัญ ปี ' + (Y + 543) + ' (' + D.yg + ')</h2><table><thead><tr><th>ช่วงเวลา</th><th>เดือน</th><th>ฐานะ</th><th>หมายเหตุ</th></tr></thead><tbody>' + D.months.map(function (x, i) {
+      var note = (cur.monthNotes || {})[(Y + 543) + '-' + i] || '', f = x.dayClash ? '<span class="flag">ระวัง: ปะทะตำแหน่งตัวเรา</span> ' : x.dayHe ? '<span class="ok">เดือนรวมตำแหน่งตัวเรา</span> ' : '';
+      return '<tr><td>' + thDate(x.m.startMs) + (x.m.endMs ? ' – ' + thDate(x.m.endMs - 60000) : '') + '</td><td class="kan" style="font-size:12pt">' + x.m.gz + '</td><td>' + godTH(x.god) + '</td><td>' + f + esc(note) + '</td></tr>';
+    }).join('') + '</tbody></table>';
+    var secs = REPORT.filter(function (r) { return (rep[r[0]] || '').trim(); }).map(function (r) { return '<h2>' + r[1] + '</h2><p class="txt">' + esc(rep[r[0]]) + '</p>'; }).join('');
+    $('#printArea').innerHTML = '<div class="rp">' +
+      '<section class="rp-cover"><span class="seal">八</span><div class="muted">Tommie BaZi · รายงานผังสี่เสาหลักแห่งชะตา</div><h1 style="margin-top:6mm">' + esc(cur.name || '') + '</h1>' +
+      '<p>เกิด ' + cur.d + ' ' + MONTH[cur.m - 1] + ' ' + cur.y + (cur.noTime ? '' : ' เวลา ' + pad(cur.h) + ':' + pad(cur.mi) + ' น.') + (cur.pv ? '<br>' + esc(placeName(cur)) : '') + '</p>' +
+      '<div class="five"><span class="wood" style="color:var(--c)">木</span><span class="fire" style="color:var(--c)">火</span><span class="earth" style="color:var(--c)">土</span><span class="gold" style="color:var(--c)">金</span><span class="water" style="color:var(--c)">水</span></div>' +
+      '<p class="muted">จัดทำโดย Tommie BaZi · LINE @moo2moon · ' + thDate(Date.now() + 7 * 3600000) + '</p></section>' +
+      '<h2>ผังสี่เสา</h2><p class="muted">' + (P.system === 'std' ? 'ระบบทั่วไป' : 'ระบบ อ.มาศ') + (cur.pv && !cur.noTime ? ' · เวลาสุริยะจริง ' + pad(P.local[3]) + ':' + pad(P.local[4]) + ' น.' : '') + '</p>' + pil +
+      '<h2>ธาตุประจำตัวและกำลังธาตุ</h2><p>ตัวเรา (日主) คือ <b class="kan">' + P.d[0] + '</b> ธาตุ' + ELTH[S.dm] + (C.STEMS.indexOf(P.d[0]) % 2 ? 'หยิน' : 'หยาง') + ' · ฝ่ายเสริม ' + (S.support / S.total * 100).toFixed(0) + '%</p>' + bars +
+      secs + luck + cal +
+      '<p class="foot">ปาจื้อเป็นศาสตร์แห่งการตีความ ใช้เป็นแนวทางประกอบการตัดสินใจ · Tommie BaZi · tommiebazi.github.io</p></div>';
+  }
+
+  /* ---------- backup ---------- */
+  $('#bExport').addEventListener('click', function () {
+    var blob = new Blob([JSON.stringify(db, null, 1)], { type: 'application/json' }), a = document.createElement('a'), d = new Date();
+    a.href = URL.createObjectURL(blob); a.download = 'tommiebazi-backup-' + (d.getFullYear() + 543) + pad(d.getMonth() + 1) + pad(d.getDate()) + '.json'; document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    toast('ดาวน์โหลดไฟล์สำรองแล้ว');
+  });
+  $('#fImport').addEventListener('change', function () {
+    var f = this.files && this.files[0]; if (!f) return; var rd = new FileReader();
+    rd.onload = function () {
+      try { var d = JSON.parse(rd.result); if (!d.clients) throw 0; var have = {}; db.clients.forEach(function (c) { have[c.id] = c; }); var n = 0;
+        d.clients.forEach(function (c) { if (!have[c.id] || (c.updated || 0) > (have[c.id].updated || 0)) { if (have[c.id]) db.clients = db.clients.filter(function (x) { return x.id !== c.id; }); db.clients.push(c); n++; } });
+        save(); render(); toast('นำเข้า ' + n + ' รายการ');
+      } catch (e) { toast('ไฟล์นี้ไม่ใช่ไฟล์สำรองของ Studio'); }
+    };
+    rd.readAsText(f); this.value = '';
+  });
+  var mt = $('#mobileTools'); mt.innerHTML = '<button class="btn sm" type="button" onclick="document.getElementById(\'bExport\').click()">สำรองข้อมูล</button><label class="btn sm" style="cursor:pointer">นำเข้า<input type="file" accept="application/json" hidden onchange="var i=document.getElementById(\'fImport\');i.files=this.files;i.dispatchEvent(new Event(\'change\'))"></label>';
+  var st = document.createElement('style'); st.textContent = '@media (min-width: 901px){.hide-d{display:none!important}}'; document.head.appendChild(st);
+
+  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(function () {});
+  render();
+})();
+</script>
+</body>
+</html>
