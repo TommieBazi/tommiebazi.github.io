@@ -150,32 +150,41 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
 
 /* ---------- print report ---------- */
 @media print {
-  @page { size: A4; margin: 14mm 14mm 16mm; }
-  body { background: #fff; color: #1b1b22; font-size: 11pt; }
-  .top, .layout { display: none !important; }
+  @page { size: A4; margin: 20mm 20mm 20mm 22mm; }
+  @page :first { margin: 12mm; }
+  :root { color-scheme: light; }
+  html, body { background: #fff !important; width: auto !important; }
+  .rp { margin: 0; }
+  body { color: #23222b; font: 11.5pt/1.85 var(--f-body); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .top, .layout, .toast { display: none !important; }
   #printArea { display: block; }
-  .rp { --ink: #fff; --c-ink: #1b1b22; }
-  .rp h1 { font-size: 26pt; } .rp h2 { font-size: 15pt; margin: 18pt 0 8pt; padding-bottom: 4pt; border-bottom: 1.5pt solid #c9a33b; color: #2a2418; break-after: avoid; }
-  .rp-cover { height: 250mm; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; break-after: page; border: 1.5pt solid #c9a33b; border-radius: 6mm; }
-  .rp-cover .seal { width: 22mm; height: 22mm; font-size: 30pt; border-width: 2pt; color: #b08a22; border-color: #b08a22; margin-bottom: 10mm; }
-  .rp-cover .five { font: 900 22pt var(--f-kan); letter-spacing: 6pt; margin: 6mm 0; }
-  .rp .wood { --c: #1f9b55; } .rp .fire { --c: #d6431a; } .rp .earth { --c: #a8662a; } .rp .gold { --c: #b08a22; } .rp .water { --c: #1f6fc4; }
-  .rp-pil { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 4mm; margin: 4mm 0; }
-  .rp-pil div { text-align: center; border: 1pt solid #ddd; border-radius: 3mm; padding: 3mm 1mm; break-inside: avoid; }
-  .rp-pil .kan { display: block; font-size: 30pt; line-height: 1.15; color: var(--c); }
-  .rp-pil small { display: block; color: #666; font-size: 8.5pt; }
-  .rp p, .rp li { line-height: 1.75; }
-  .rp .txt { white-space: pre-wrap; }
-  .rp table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
-  .rp th, .rp td { border-bottom: .6pt solid #ddd; padding: 2.2mm 2mm; text-align: left; vertical-align: top; }
-  .rp th { color: #666; font-weight: 500; }
-  .rp tr { break-inside: avoid; }
   .rp .kan { font-family: var(--f-kan); font-weight: 900; }
-  .rp .muted { color: #777; font-size: 9pt; }
-  .rp .bar i { background: #eee; height: 3mm; } .rp .bar { grid-template-columns: 22mm 1fr 14mm; font-size: 10pt; }
-  .rp .foot { margin-top: 12mm; padding-top: 4mm; border-top: .6pt solid #ddd; color: #777; font-size: 9pt; text-align: center; }
-  .rp .flag { color: #c0391a; } .rp .ok { color: #1f9b55; }
+  .rp-cover { height: 268mm; break-after: page; background: #07080d; border-radius: 6mm; color: #ecebe6; display: flex; }
+  .rp-cover-in { margin: auto; width: 100%; padding: 0 16mm; text-align: center; }
+  .rp-cover .seal { width: 20mm; height: 20mm; margin: 0 auto 8mm; font-size: 28pt; border-width: 2pt; }
+  .rp-eyebrow { font: 500 10.5pt var(--f-ui); color: #b9bccb; letter-spacing: .04em; }
+  .rp-cover h1 { font: 700 28pt var(--f-head); color: #fff; margin: 4mm 0 3mm; }
+  .rp-birth { font: 400 11.5pt var(--f-ui); color: #c9cbd8; margin: 0 0 9mm; }
+  .rp-cover-chart { margin: 0 auto; max-width: 150mm; }
+  .rp-by { margin-top: 9mm; font: 400 9.5pt var(--f-ui); color: #9a9db0; }
+  .rp-sec { margin: 0 0 9mm; }
+  .rp-sec h2 { display: flex; align-items: baseline; gap: 3mm; font: 700 15.5pt var(--f-head); color: #1c1a22; margin: 0 0 3.5mm; padding-bottom: 2mm; border-bottom: 1.2pt solid #c9a33b; break-after: avoid; }
+  .rp-sec h2 .kan { font-size: 13pt; color: #b08a22; letter-spacing: .08em; }
+  .rp-sec p { margin: 0 0 3mm; text-align: left; }
+  .rp-sec p b.kan { font-size: 13pt; }
+  .rp-text p { text-indent: 8mm; }
+  .rp-img { margin: 3mm 0 1mm; break-inside: avoid; }
+  .rp-img svg { display: block; width: 100%; height: auto; }
+  .rp-tab { width: 100%; border-collapse: collapse; font-size: 10.5pt; line-height: 1.6; }
+  .rp-tab th { text-align: left; font: 500 9.5pt var(--f-ui); color: #6b6a75; border-bottom: 1pt solid #c9a33b; padding: 2mm 2.5mm; }
+  .rp-tab td { border-bottom: .5pt solid #e3e1da; padding: 2.4mm 2.5mm; vertical-align: top; }
+  .rp-tab tr:nth-child(even) td { background: #faf8f2; }
+  .rp-tab tr { break-inside: avoid; }
+  .rp .flag { color: #c0391a; font-weight: 600; } .rp .ok { color: #1f8a4c; font-weight: 600; }
+  .rp-foot { margin-top: 10mm; padding-top: 3mm; border-top: .5pt solid #ddd; color: #85848e; font-size: 9pt; text-align: center; }
 }
+.rsec + .rsec { padding-top: 14px; border-top: 1px dashed var(--line); }
+.btn:disabled { opacity: .45; cursor: default; }
 </style>
 </head>
 <body>
@@ -198,6 +207,8 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
 
 <script src="lunar.js"></script>
 <script src="core.js"></script>
+<script src="visual.js"></script>
+<script src="ai.js"></script>
 <script>
 (function () {
   'use strict';
@@ -230,13 +241,17 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
   }).catch(function () {});
 
   /* ---------- compute ---------- */
-  function compute(c) {
-    if (!c || !c.y) return null;
+  var CALC_KEYS = ['y', 'm', 'd', 'h', 'mi', 'noTime', 'lon', 'system', 'lateZi', 'sex', 'pv', 'ap', 'tb'];
+  function snap(c) { var o = {}; CALC_KEYS.forEach(function (k) { o[k] = c[k]; }); return o; }
+  function dirty(c) { if (!c.calc) return true; return CALC_KEYS.some(function (k) { return String(c.calc[k]) !== String(c[k]); }); }
+  db.clients.forEach(function (c) { if (!c.calc && c.y && !c.isNew) c.calc = snap(c); });
+  function compute(c0) {
+    var c = c0 && c0.calc; if (!c || !c.y) return null;
     var P = C.pillars([c.y - 543, c.m, c.d, c.noTime ? 12 : c.h, c.noTime ? 0 : c.mi], { tz: 7, lon: c.lon == null || c.lon === '' ? null : +c.lon, system: c.system || 'amat', lateZi: c.lateZi || 'same', noTime: !!c.noTime });
     var A = C.analyse(P), L = c.sex ? C.luck(P, c.sex, 10) : null;
-    return { P: P, A: A, L: L };
+    return { P: P, A: A, L: L, c: c };
   }
-  function ageNow(c) { var b = Date.UTC(c.y - 543, c.m - 1, c.d), n = Date.now(); return (n - b) / (365.2422 * 864e5); }
+  function ageNow(c0) { var c = c0.calc || c0, b = Date.UTC(c.y - 543, c.m - 1, c.d), n = Date.now(); return (n - b) / (365.2422 * 864e5); }
 
   /* ---------- client list ---------- */
   function renderList() {
@@ -301,7 +316,14 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
       '<label class="f"><span>จังหวัดที่เกิด</span><select data-k="pv">' + pl.pv + '</select></label>' +
       '<label class="f"><span>อำเภอ / เขต</span><select data-k="ap"' + (c.pv ? '' : ' disabled') + '>' + pl.ap + '</select></label>' +
       '<label class="f span-m"><span>ตำบล / แขวง</span><select data-k="tb"' + (c.ap ? '' : ' disabled') + '>' + pl.tb + '</select></label>' +
-      '</div><div id="meta"></div>';
+      '</div><div class="row" style="margin-top:16px;justify-content:space-between"><span id="dirtyNote" class="sub"></span><button class="btn pri" type="button" id="bCalc" style="padding:11px 28px;font-size:15.5px">คำนวณผัง</button></div><div id="meta"></div>';
+    markDirty();
+  }
+  function markDirty() {
+    var n = $('#dirtyNote'), b = $('#bCalc'); if (!n || !cur) return;
+    var d = dirty(cur);
+    n.innerHTML = !cur.calc ? 'กรอกข้อมูลเกิดให้ครบ แล้วกด “คำนวณผัง”' : d ? '<span class="flag">ข้อมูลเกิดเปลี่ยนแล้ว กด “คำนวณใหม่” เพื่ออัปเดตผัง</span>' : 'ผังตรงกับข้อมูลล่าสุดแล้ว';
+    b.textContent = cur.calc ? (d ? 'คำนวณใหม่' : 'คำนวณอีกครั้ง') : 'คำนวณผัง';
   }
   function onField(e) {
     var el = e.target, k = el.getAttribute('data-k'); if (!k || !cur) return;
@@ -311,12 +333,12 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
     if (k === 'pv' || k === 'ap' || k === 'tb') cur.lon = resolveLon(cur);
     cur.updated = Date.now(); delete cur.isNew; save();
     var structural = ['pv', 'ap', 'noTime', 'system'].indexOf(k) >= 0;
-    if (structural) renderForm();
-    if (k !== 'name' && k !== 'nick' && k !== 'contact') renderBody(); else { var h = $('#form h2'); if (h && k === 'name') h.textContent = cur.name || 'ลูกค้าใหม่'; }
+    if (structural) renderForm(); else markDirty();
+    var h = $('#form h2'); if (h && k === 'name') h.textContent = cur.name || 'ลูกค้าใหม่';
     renderList();
   }
   document.addEventListener('change', function (e) {
-    if (e.target.name === 'sex' && cur) { cur.sex = e.target.value; cur.updated = Date.now(); save(); renderBody(); return; }
+    if (e.target.name === 'sex' && cur) { cur.sex = e.target.value; cur.updated = Date.now(); save(); markDirty(); return; }
     if (e.target.closest('#form')) onField(e);
   });
   document.addEventListener('input', function (e) {
@@ -331,6 +353,12 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
       db.clients = db.clients.filter(function (c) { return c.id !== cur.id; }); cur = null; save(); render(); toast('ลบแล้ว');
     }
     var tb = e.target.closest('.tabs button'); if (tb) { tab = tb.getAttribute('data-t'); renderBody(); }
+    if (e.target.id === 'bCalc' && cur) {
+      var dim = new Date(Date.UTC(cur.y - 543, cur.m, 0)).getUTCDate();
+      if (cur.d > dim) { toast('เดือน' + MONTH[cur.m - 1] + ' ปี ' + cur.y + ' มีแค่ ' + dim + ' วัน'); return; }
+      cur.calc = snap(cur); delete cur.isNew; cur.updated = Date.now(); save(); markDirty(); renderBody(); renderList();
+      var t = $('.tabs'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); toast('คำนวณผังแล้ว'); return;
+    }
     if (e.target.id === 'bPrint') { buildPrint(); setTimeout(function () { window.print(); }, 60); }
   });
 
@@ -350,14 +378,13 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
   function renderBody() {
     $('.tabs').innerHTML = TABS.map(function (t) { return '<button type="button" role="tab" data-t="' + t[0] + '" aria-selected="' + (tab === t[0]) + '">' + t[1] + '</button>'; }).join('');
     var R; try { R = compute(cur); } catch (e) { $('#body').innerHTML = '<div class="card flag">คำนวณไม่ได้: ' + esc(e.message) + '</div>'; return; }
-    var dim = new Date(Date.UTC(cur.y - 543, cur.m, 0)).getUTCDate();
-    if (cur.d > dim) { $('#body').innerHTML = '<div class="card flag">เดือน' + MONTH[cur.m - 1] + ' ปี ' + cur.y + ' มีแค่ ' + dim + ' วัน</div>'; $('#meta').innerHTML = ''; return; }
+    if (!R) { $('#meta').innerHTML = ''; $('#body').innerHTML = '<div class="card"><p>ยังไม่มีผัง กรอกวัน เดือน ปี เวลา สถานที่เกิด และเพศ แล้วกด <b>“คำนวณผัง”</b></p></div>'; return; }
     $('#meta').innerHTML = metaHTML(R);
     var fn = { chart: tChart, power: tPower, luck: tLuck, year: tYear, compare: tCompare, report: tReport, notes: tNotes }[tab];
     $('#body').innerHTML = fn(R);
   }
   function metaHTML(R) {
-    var P = R.P, c = cur, s = [];
+    var P = R.P, c = R.c, s = [];
     s.push('ผัง (ปี เดือน วัน ยาม): <b class="kan" style="font-size:17px;letter-spacing:.06em">' + P.y + ' ' + P.m + ' ' + P.d + ' ' + (P.h || '？？') + '</b>');
     if (c.pv && !c.noTime) {
       var lonM = (c.lon - 105) * 4, eq = P.corr - lonM, sg = function (x) { return (x < 0 ? '−' : '+') + Math.abs(x).toFixed(1); };
@@ -377,9 +404,8 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
       row('ราศีบน<br>(天干)', function (k) { var s = A.cols[k].stem, e = elOfStem(s); return '<div class="cell big ' + KEYS[e] + (k === 'd' ? ' dm' : '') + '"><span class="kan">' + s + '</span><small>' + ELTH[e] + (C.STEMS.indexOf(s) % 2 ? 'หยิน' : 'หยาง') + '</small></div>'; }) +
       row('ราศีล่าง<br>(地支)', function (k) { var b = A.cols[k].branch, e = elOfBr(b); return '<div class="cell big ' + KEYS[e] + '"><span class="kan">' + b + '</span><small>' + C.BR_TH[C.BR.indexOf(b)] + ' · ' + ELTH[e] + '</small></div>'; }) +
       row('ราศีแฝง<br>(藏干)', function (k) { return '<div class="cell hid">' + A.cols[k].hidden.map(function (x) { return '<span class="' + KEYS[x.el] + '"><b class="kan">' + x.s + '</b><em>' + godTH(x.god) + '</em></span>'; }).join('') + '</div>'; }) +
-      row('ฉางเซิง<br>ของตัวเรา', function (k) { var s = A.cols[k].stage; return '<div class="cell">' + C.STAGES_TH[s] + '<br><span class="sub kan" style="font-size:13px">' + C.STAGES[s] + '</span></div>'; }) +
-      row('ฉางเซิง<br>นั่งตัวเอง', function (k) { var s = A.cols[k].selfStage; return '<div class="cell">' + C.STAGES_TH[s] + '<br><span class="sub kan" style="font-size:13px">' + C.STAGES[s] + '</span></div>'; }) +
-      row('เสียงธาตุ<br>(納音)', function (k) { var ny = A.cols[k].nayin; return '<div class="cell"><span class="kan" style="font-size:14px">' + ny + '</span></div>'; }) +
+      row('เชี่ยงแซ<br>ของตัวเรา', function (k) { var s = A.cols[k].stage; return '<div class="cell">' + C.STAGES_TH[s] + '<br><span class="sub kan" style="font-size:13px">' + C.STAGES[s] + '</span></div>'; }) +
+      row('เชี่ยงแซ<br>นั่งตัวเอง', function (k) { var s = A.cols[k].selfStage; return '<div class="cell">' + C.STAGES_TH[s] + '<br><span class="sub kan" style="font-size:13px">' + C.STAGES[s] + '</span></div>'; }) +
       '</div></div>';
     var rel = A.rel.concat(A.groups.map(function (g) { return { t: g.t, x: g.x, label: 'ทั้งผัง' }; }));
     h += '<div class="card"><h3>ความสัมพันธ์ในผัง</h3>' + (rel.length ? '<div class="rels">' + rel.map(function (r) { return '<div class="rel"><span class="tag ' + r.t + '">' + r.t + '</span><span><b>' + r.label + '</b> · ' + r.x + '</span></div>'; }).join('') + '</div>' : '<p class="sub">ไม่มีการรวม ปะทะ ลงโทษ ทำร้าย หรือทำลายระหว่างเสา</p>') + '</div>';
@@ -390,17 +416,17 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
   function tPower(R) {
     var P = R.P, S = R.A.strength, dm = S.dm, rows = [];
     var cells = [['y', 0, 1], ['y', 1, 1], ['m', 0, 1], ['m', 1, 2], ['d', 0, 1], ['d', 1, 1.5]]; if (P.h) cells.push(['h', 0, 1], ['h', 1, 1]);
-    var fam = function (e) { var r = (e - dm + 5) % 5; return ['ธาตุเดียวกัน (比劫)', 'ธาตุที่เราให้กำเนิด (食傷)', 'ธาตุที่เราข่ม (財)', 'ธาตุที่ข่มเรา (官殺)', 'ธาตุที่ให้กำเนิดเรา (印)'][r]; };
+    var fam = function (e) { var r = (e - dm + 5) % 5; return ['คู่ธาตุ (比劫)', 'ธาตุที่เราให้กำเนิด (食傷)', 'ธาตุที่เราข่ม (財)', 'ธาตุที่ข่มเรา (官殺)', 'ธาตุที่ให้กำเนิดเรา (印)'][r]; };
     cells.forEach(function (c) { var ch = P[c[0]][c[1]], e = c[1] === 0 ? elOfStem(ch) : elOfBr(ch); rows.push('<tr><td>' + (c[1] === 0 ? 'ราศีบน' : 'ราศีล่าง') + 'เสา' + PNAME[c[0]] + (c[0] === 'm' && c[1] === 1 ? ' <span class="sub">(ฤดูกาล)</span>' : '') + '</td><td class="kan ' + KEYS[e] + '" style="color:var(--c)">' + ch + '</td><td>' + ELTH[e] + '</td><td>' + fam(e) + '</td><td style="text-align:right">' + c[2] + '</td></tr>'); });
     var max = Math.max.apply(null, S.scores);
     var bars = S.scores.map(function (v, i) { return '<div class="bar ' + KEYS[i] + '"><span>' + C.EL_ZH[i] + ' ' + ELTH[i] + '</span><i><b style="--w:' + (v / S.total * 100) + '%"></b></i><span>' + v + '</span></div>'; }).join('');
     var sup = S.support / S.total * 100;
     return '<div class="card"><h3>กำลังธาตุ <span class="pending">ตามเกณฑ์ของ Tommie</span></h3><p class="sub" style="margin-top:4px">ราศีล่างเดือน (ฤดูกาล) 2 คะแนน · ราศีล่างวัน 1.5 คะแนน · อักษรอื่น 1 คะแนน (รวมราศีบนของวัน) · รวม ' + S.total + ' คะแนน' + (P.h ? '' : ' (ไม่มีเสายาม)') + '</p>' +
-      '<div class="bars" style="margin-top:16px">' + bars + '</div>' +
+      '<div style="margin-top:16px">' + TBZV.bars(S) + '</div>' +
       '<h3 style="margin-top:22px">ตัวเรา <span class="kan" style="color:var(--' + KEYS[dm] + ')">' + P.d[0] + '</span> ' + ELTH[dm] + '</h3>' +
       '<div class="meter" aria-label="ฝ่ายเสริม ' + sup.toFixed(0) + ' เปอร์เซ็นต์"><b style="width:' + sup + '%;background:linear-gradient(90deg,var(--' + KEYS[(dm + 4) % 5] + '),var(--' + KEYS[dm] + '))"></b><b style="flex:1;background:var(--ink-4)"></b></div>' +
-      '<p>ฝ่ายเสริม (ธาตุเดียวกัน + ธาตุที่ให้กำเนิด) <b>' + S.support + '</b> คะแนน = <b>' + sup.toFixed(1) + '%</b> · ฝ่ายต้าน <b>' + S.oppose + '</b> คะแนน</p>' +
-      '<div class="grid g3" style="margin-top:10px">' + [['เดียวกัน 比劫', S.parts.same], ['ให้กำเนิด 印', S.parts.resource], ['เราให้กำเนิด 食傷', S.parts.output], ['เราข่ม 財', S.parts.wealth], ['ข่มเรา 官殺', S.parts.power]].map(function (x) { return '<div class="cell" style="text-align:left;padding:10px 12px"><span class="sub">' + x[0] + '</span><br><b style="font-size:18px">' + x[1] + '</b></div>'; }).join('') + '</div>' +
+      '<p>ฝ่ายเสริม (คู่ธาตุ + ธาตุที่ให้กำเนิด) <b>' + S.support + '</b> คะแนน = <b>' + sup.toFixed(1) + '%</b> · ฝ่ายต้าน <b>' + S.oppose + '</b> คะแนน</p>' +
+      '<div class="grid g3" style="margin-top:10px">' + [['คู่ธาตุ 比劫', S.parts.same], ['ให้กำเนิด 印', S.parts.resource], ['เราให้กำเนิด 食傷', S.parts.output], ['เราข่ม 財', S.parts.wealth], ['ข่มเรา 官殺', S.parts.power]].map(function (x) { return '<div class="cell" style="text-align:left;padding:10px 12px"><span class="sub">' + x[0] + '</span><br><b style="font-size:18px">' + x[1] + '</b></div>'; }).join('') + '</div>' +
       '<p class="hint">เส้นแบ่งว่าดวงแข็งหรืออ่อน (เช่น เกินครึ่งถือว่าแข็ง) ยังรอ Tommie กำหนด ตอนนี้แสดงเป็นคะแนนกับเปอร์เซ็นต์ไว้ก่อน</p></div>' +
       '<div class="card"><h3>คะแนนรายอักษร</h3><div class="tw"><table class="t"><thead><tr><th>ตำแหน่ง</th><th>อักษร</th><th>ธาตุ</th><th>เทียบกับตัวเรา</th><th style="text-align:right">คะแนน</th></tr></thead><tbody>' + rows.join('') + '</tbody></table></div></div>';
   }
@@ -468,43 +494,82 @@ table.t { width: 100%; border-collapse: collapse; font-size: 14.5px; }
       '<div class="grid g2" style="margin-top:14px"><div class="cell" style="text-align:left;padding:12px"><span class="sub">' + esc(cur.name || 'ลูกค้า') + '</span><br>' + mini(A) + '</div><div class="cell" style="text-align:left;padding:12px"><span class="sub">' + esc(o.name) + '</span><br>' + mini(B) + '</div></div>' +
       '<p style="margin-top:12px">ราศีบนวันของ ' + esc(o.nick || o.name) + ' (' + B.d[0] + ') เป็น <b class="god">' + godTH(godAB) + '</b> ของ ' + esc(cur.nick || cur.name || 'ลูกค้า') + ' · กลับกันเป็น <b class="god">' + godTH(godBA) + '</b></p></div>' +
       '<div class="card"><h3>ความสัมพันธ์ระหว่างสองผัง</h3>' + relList(out) + '</div>' +
+      '<div class="card"><h3>เทียบสัดส่วนธาตุ</h3><div style="display:grid;place-items:center;margin-top:8px">' + TBZV.radar(SA, SB, cur.nick || cur.name || 'ลูกค้า', o.nick || o.name || 'คู่เทียบ') + '</div><p class="hint">เส้นทองทึบคือ ' + esc(cur.nick || cur.name || 'ลูกค้า') + ' · เส้นฟ้าประคือ ' + esc(o.nick || o.name) + ' · ยิ่งยื่นออกไปมาก ธาตุนั้นยิ่งมีสัดส่วนมากในผัง</p></div>' +
       '<div class="card"><h3>ธาตุเสริมกัน</h3><div class="tw"><table class="t"><thead><tr><th>ธาตุ</th><th>' + esc(cur.nick || cur.name || 'ลูกค้า') + '</th><th>' + esc(o.nick || o.name) + '</th></tr></thead><tbody>' + SA.scores.map(function (v, i) { return '<tr><td style="color:var(--' + KEYS[i] + ')">' + C.EL_ZH[i] + ' ' + ELTH[i] + '</td><td>' + v + '</td><td>' + SB.scores[i] + '</td></tr>'; }).join('') + '</tbody></table></div></div>';
   }
   document.addEventListener('change', function (e) { if (e.target.id === 'cmpSel') { cmpId = e.target.value; renderBody(); } });
 
   /* --- tab: report editor --- */
   function tReport(R) {
-    return '<div class="card"><div class="formhead"><div><h3>รายงานสำหรับลูกค้า</h3><p class="sub">เขียนคำอ่านแต่ละหัวข้อ ระบบจะรวมกับผัง กำลังธาตุ วัยจร และปฏิทินรายเดือนของปีที่เลือกไว้ในแท็บ “ดวงปี · เดือน” เป็นเอกสาร A4</p></div><button class="btn pri" id="bPrint" type="button">พิมพ์ / บันทึก PDF</button></div>' +
-      '<div class="secs">' + REPORT.map(function (r) { return '<label class="f"><span>' + r[1] + '</span><textarea data-r="' + r[0] + '" rows="5">' + esc((cur.report || {})[r[0]] || '') + '</textarea></label>'; }).join('') + '</div>' +
-      '<p class="hint">กด “พิมพ์ / บันทึก PDF” แล้วเลือกปลายทางเป็น “บันทึกเป็น PDF” · ข้อความบันทึกอัตโนมัติทุกครั้งที่พิมพ์</p></div>';
+    var ai = TBZAI.cfg(), hist = cur.reportHist || {};
+    return '<div class="card"><div class="formhead"><div><h3>รายงานสำหรับลูกค้า</h3><p class="sub">เขียนคำอ่านเอง หรือกด “✦ ให้ AI ร่าง” ในแต่ละหัวข้อ แล้วแก้ต่อได้ ระบบจะรวมกับภาพผัง กำลังธาตุ วัยจร และปฏิทินรายเดือนของปีที่เลือกในแท็บ “ดวงปี · เดือน” เป็นเอกสาร A4</p></div><button class="btn pri" id="bPrint" type="button">พิมพ์ / บันทึก PDF</button></div>' +
+      '<div class="secs">' + REPORT.map(function (r) {
+        var h = (hist[r[0]] || []).length;
+        return '<div class="rsec"><div class="row" style="justify-content:space-between;margin-bottom:6px"><b style="font:600 15px var(--f-ui)">' + r[1] + '</b><span class="row" style="gap:6px">' +
+          '<button class="btn sm" type="button" data-ai="' + r[0] + '">✦ ให้ AI ร่าง</button>' +
+          '<button class="btn sm" type="button" data-undo="' + r[0] + '"' + (h ? '' : ' disabled') + ' title="ย้อนกลับไปฉบับก่อนหน้า">↶ ย้อนกลับ' + (h ? ' (' + h + ')' : '') + '</button></span></div>' +
+          '<label class="f"><textarea data-r="' + r[0] + '" rows="6" aria-label="' + r[1] + '">' + esc((cur.report || {})[r[0]] || '') + '</textarea></label><p class="hint" data-st="' + r[0] + '" hidden></p></div>';
+      }).join('') + '</div>' +
+      '<details class="card" style="margin-top:16px;padding:14px 18px"><summary style="cursor:pointer;font:500 15px var(--f-ui)">ตั้งค่า AI ' + (ai.key ? '<span class="pending" style="background:rgba(70,235,130,.15);color:var(--wood)">เชื่อมต่อแล้ว</span>' : '<span class="pending">ยังไม่ได้ใส่คีย์</span>') + '</summary>' +
+      '<div class="grid g2" style="margin-top:12px"><label class="f"><span>Claude API key (เก็บไว้ในเครื่องนี้เท่านั้น)</span><input id="aiKey" type="password" autocomplete="off" placeholder="sk-ant-..." value="' + esc(ai.key || '') + '"></label>' +
+      '<label class="f"><span>รุ่นโมเดล</span><select id="aiModel">' + opts([['claude-sonnet-5-5', 'Claude Sonnet 5.5 (แนะนำ · เร็ว คุ้มค่า)'], ['claude-opus-5-5', 'Claude Opus 5.5 (ละเอียดกว่า · แพงกว่า)']], ai.model || 'claude-sonnet-5-5') + '</select></label></div>' +
+      '<div class="row" style="margin-top:10px"><button class="btn sm pri" type="button" id="aiSave">บันทึกการตั้งค่า</button><button class="btn sm" type="button" id="aiClear">ลบคีย์</button></div>' +
+      '<p class="hint">สมัครและสร้างคีย์ได้ที่ console.anthropic.com (คิดค่าใช้ตามจำนวนที่ใช้) ระบบจะส่งข้อมูลผัง เพศ อายุ และโน้ตส่วนตัวในแท็บ “โน้ต” ไปที่ Anthropic เฉพาะตอนกด “ให้ AI ร่าง” เท่านั้น ไม่ส่งชื่อ เบอร์ หรือไลน์ของลูกค้า · ถ้ายังไม่ใส่คีย์ ปุ่ม “ให้ AI ร่าง” จะคัดลอกคำสั่งไว้ให้นำไปวางในแอป Claude แทน</p></details>';
   }
+  function setStatus(k, msg, bad) { var p = document.querySelector('[data-st="' + k + '"]'); if (!p) return; p.hidden = !msg; p.innerHTML = msg || ''; p.style.color = bad ? 'var(--fire)' : ''; }
+  function pushHist(k, val) { cur.reportHist = cur.reportHist || {}; var h = cur.reportHist[k] = cur.reportHist[k] || []; if (h[h.length - 1] !== val) h.push(val); if (h.length > 15) h.shift(); }
+  function refreshUndo(k) { var b = document.querySelector('[data-undo="' + k + '"]'), n = ((cur.reportHist || {})[k] || []).length; if (b) { b.disabled = !n; b.textContent = '↶ ย้อนกลับ' + (n ? ' (' + n + ')' : ''); } }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('[data-ai]'), u = e.target.closest('[data-undo]');
+    if (e.target.id === 'aiSave') { TBZAI.setCfg({ key: $('#aiKey').value.trim(), model: $('#aiModel').value }); toast('บันทึกการตั้งค่า AI แล้ว'); renderBody(); return; }
+    if (e.target.id === 'aiClear') { TBZAI.setCfg({ model: $('#aiModel').value }); toast('ลบคีย์แล้ว'); renderBody(); return; }
+    if (u && cur) {
+      var k = u.getAttribute('data-undo'), h = (cur.reportHist || {})[k] || []; if (!h.length) return;
+      var ta = document.querySelector('[data-r="' + k + '"]'), prev = h.pop();
+      cur.report = cur.report || {}; cur.report[k] = prev; ta.value = prev; cur.updated = Date.now(); save(); refreshUndo(k); setStatus(k, 'ย้อนกลับเป็นฉบับก่อนหน้าแล้ว'); return;
+    }
+    if (a && cur) {
+      var key = a.getAttribute('data-ai'), R = compute(cur); if (!R) return;
+      var Y = yearSel || solarYearNow(R.P.system), context = TBZAI.ctx(cur, R, { age: ageNow(cur), year: yearData(R, Y) }), ta2 = document.querySelector('[data-r="' + key + '"]'), before = ta2.value;
+      if (!TBZAI.cfg().key) {
+        var txt = TBZAI.manualPrompt(key, context, before), done = function () { setStatus(key, 'ยังไม่ได้ใส่ API key จึงคัดลอกคำสั่งไว้ให้แล้ว นำไปวางในแอป Claude แล้วคัดลอกคำตอบกลับมาวางในช่องนี้ (ตั้งค่าคีย์ได้ที่ “ตั้งค่า AI” ด้านล่าง)'); };
+        try { navigator.clipboard.writeText(txt).then(done, function () { setStatus(key, 'คัดลอกไม่ได้ กรุณาใส่ API key ที่ “ตั้งค่า AI”', true); }); } catch (x) { setStatus(key, 'คัดลอกไม่ได้ กรุณาใส่ API key ที่ “ตั้งค่า AI”', true); }
+        return;
+      }
+      a.disabled = true; var label = a.textContent;
+      TBZAI.generate(key, context, before, function (st) { a.textContent = st === 'draft' ? 'กำลังร่าง…' : 'กำลังเกลาภาษา…'; setStatus(key, st === 'draft' ? 'ขั้น 1/2 · AI กำลังอ่านผังและร่างเนื้อหา' : 'ขั้น 2/2 · กำลังเกลาภาษาตามกฎ humanizer ให้อ่านเป็นธรรมชาติ'); })
+        .then(function (out) {
+          pushHist(key, before); cur.report = cur.report || {}; cur.report[key] = out; cur.updated = Date.now(); save();
+          var t3 = document.querySelector('[data-r="' + key + '"]'); if (t3) t3.value = out; refreshUndo(key);
+          setStatus(key, 'ร่างเสร็จแล้ว ตรวจและแก้ให้เป็นคำของคุณก่อนส่งลูกค้า · กด “↶ ย้อนกลับ” ถ้าอยากได้ฉบับเดิม');
+        })
+        .catch(function (err) { setStatus(key, 'สร้างไม่สำเร็จ: ' + esc(err.message === 'nokey' ? 'ยังไม่ได้ใส่ API key' : err.message), true); })
+        .then(function () { a.disabled = false; a.textContent = label; });
+    }
+  });
   function tNotes() {
     return '<div class="card"><label class="f"><span>โน้ตส่วนตัว (ไม่แสดงในรายงาน)</span><textarea id="fNotes" rows="12">' + esc(cur.notes || '') + '</textarea></label><p class="hint">สร้างเมื่อ ' + thDate(cur.created + 7 * 3600000, true) + ' · แก้ไขล่าสุด ' + thDate(cur.updated + 7 * 3600000, true) + '</p></div>';
   }
 
   /* ---------- printable report ---------- */
   function buildPrint() {
-    var R = compute(cur), P = R.P, A = R.A, S = A.strength, ks = pillarKeys(P), Y = yearSel || solarYearNow(P.system), D = yearData(R, Y), rep = cur.report || {};
-    var pil = '<div class="rp-pil" style="--n:' + ks.length + '">' + ks.map(function (k) {
-      var s = P[k][0], b = P[k][1], g = A.cols[k].god;
-      return '<div><small>' + PZH[k] + ' ' + PNAME[k] + '</small><small>' + (g ? godTH(g) : 'ตัวเรา') + '</small><span class="kan ' + KEYS[elOfStem(s)] + '">' + s + '</span><span class="kan ' + KEYS[elOfBr(b)] + '">' + b + '</span><small>' + A.cols[k].hidden.map(function (x) { return x.s; }).join(' ') + '</small><small>' + A.cols[k].nayin + '</small></div>';
-    }).join('') + '</div>';
-    var bars = S.scores.map(function (v, i) { return '<div class="bar ' + KEYS[i] + '" style="display:grid;gap:3mm;align-items:center;margin:1.5mm 0"><span>' + C.EL_ZH[i] + ' ' + ELTH[i] + '</span><i style="display:block;border-radius:2mm;overflow:hidden"><b style="display:block;height:100%;width:' + (v / S.total * 100) + '%;background:var(--c)"></b></i><span style="text-align:right">' + v + '</span></div>'; }).join('');
-    var luck = R.L ? '<h2>วัยจร 10 ปี</h2><p>เริ่มวัยจรอายุ ' + R.L.start.y + ' ปี ' + R.L.start.m + ' เดือน · วัยจร' + (R.L.forward ? 'เดินหน้า' : 'ถอยหลัง') + '</p><table><thead><tr><th>อายุ</th><th>พ.ศ.</th><th>วัยจร</th><th>ฐานะ</th></tr></thead><tbody>' + R.L.list.slice(0, 9).map(function (x) { return '<tr><td>' + x.ageFrom.toFixed(1).replace('.0', '') + '–' + (x.ageFrom + 10).toFixed(1).replace('.0', '') + '</td><td>' + (x.yearFrom + 543) + '</td><td class="kan" style="font-size:13pt">' + x.gz + '</td><td>' + godTH(C.god(A.dm, C.STEMS.indexOf(x.gz[0]))) + '</td></tr>'; }).join('') + '</tbody></table>' : '';
-    var cal = '<h2>ปฏิทินช่วงเวลาสำคัญ ปี ' + (Y + 543) + ' (' + D.yg + ')</h2><table><thead><tr><th>ช่วงเวลา</th><th>เดือน</th><th>ฐานะ</th><th>หมายเหตุ</th></tr></thead><tbody>' + D.months.map(function (x, i) {
-      var note = (cur.monthNotes || {})[(Y + 543) + '-' + i] || '', f = x.dayClash ? '<span class="flag">ระวัง: ปะทะตำแหน่งตัวเรา</span> ' : x.dayHe ? '<span class="ok">เดือนรวมตำแหน่งตัวเรา</span> ' : '';
-      return '<tr><td>' + thDate(x.m.startMs) + (x.m.endMs ? ' – ' + thDate(x.m.endMs - 60000) : '') + '</td><td class="kan" style="font-size:12pt">' + x.m.gz + '</td><td>' + godTH(x.god) + '</td><td>' + f + esc(note) + '</td></tr>';
-    }).join('') + '</tbody></table>';
-    var secs = REPORT.filter(function (r) { return (rep[r[0]] || '').trim(); }).map(function (r) { return '<h2>' + r[1] + '</h2><p class="txt">' + esc(rep[r[0]]) + '</p>'; }).join('');
+    var R = compute(cur), c = R.c, P = R.P, A = R.A, S = A.strength, Y = yearSel || solarYearNow(P.system), D = yearData(R, Y), rep = cur.report || {};
+    var sup = (S.support / S.total * 100).toFixed(0), dmEl = ELTH[S.dm] + (C.STEMS.indexOf(P.d[0]) % 2 ? 'หยิน' : 'หยาง');
+    var luck = R.L ? '<section class="rp-sec"><h2><span class="kan">大運</span> วัยจร 10 ปี</h2><p>เริ่มวัยจรเมื่ออายุ ' + R.L.start.y + ' ปี ' + R.L.start.m + ' เดือน · วัยจร' + (R.L.forward ? 'เดินหน้า' : 'ถอยหลัง') + ' · กรอบสีทองคือช่วงปัจจุบัน</p><div class="rp-img">' + TBZV.luck(R.L, A.dm, ageNow(cur)) + '</div></section>' : '';
+    var cal = '<section class="rp-sec"><h2><span class="kan">流年</span> ปฏิทินช่วงเวลาสำคัญ ปี ' + (Y + 543) + '</h2><p>ดวงปี <b class="kan">' + D.yg + '</b> เป็นปี “' + godTH(D.yGod) + '” สำหรับคุณ</p><table class="rp-tab"><thead><tr><th style="width:34%">ช่วงเวลา</th><th style="width:12%">เดือน</th><th style="width:16%">ฐานะ</th><th>หมายเหตุ</th></tr></thead><tbody>' + D.months.map(function (x, i) {
+      var note = (cur.monthNotes || {})[(Y + 543) + '-' + i] || '', f = x.dayClash ? '<span class="flag">ระวัง · ปะทะตำแหน่งตัวเรา</span><br>' : x.dayHe ? '<span class="ok">เดือนรวมตำแหน่งตัวเรา</span><br>' : '';
+      return '<tr><td>' + thDate(x.m.startMs) + (x.m.endMs ? ' – ' + thDate(x.m.endMs - 60000) : '') + '</td><td class="kan" style="font-size:13pt">' + x.m.gz + '</td><td>' + godTH(x.god) + '</td><td>' + f + esc(note) + '</td></tr>';
+    }).join('') + '</tbody></table></section>';
+    var secs = REPORT.filter(function (r) { return (rep[r[0]] || '').trim(); }).map(function (r) { return '<section class="rp-sec rp-text"><h2>' + r[1] + '</h2>' + esc(rep[r[0]]).split(/\n{2,}/).map(function (p) { return '<p>' + p.replace(/\n/g, '<br>') + '</p>'; }).join('') + '</section>'; }).join('');
     $('#printArea').innerHTML = '<div class="rp">' +
-      '<section class="rp-cover"><span class="seal">八</span><div class="muted">Tommie BaZi · รายงานผังสี่เสาหลักแห่งชะตา</div><h1 style="margin-top:6mm">' + esc(cur.name || '') + '</h1>' +
-      '<p>เกิด ' + cur.d + ' ' + MONTH[cur.m - 1] + ' ' + cur.y + (cur.noTime ? '' : ' เวลา ' + pad(cur.h) + ':' + pad(cur.mi) + ' น.') + (cur.pv ? '<br>' + esc(placeName(cur)) : '') + '</p>' +
-      '<div class="five"><span class="wood" style="color:var(--c)">木</span><span class="fire" style="color:var(--c)">火</span><span class="earth" style="color:var(--c)">土</span><span class="gold" style="color:var(--c)">金</span><span class="water" style="color:var(--c)">水</span></div>' +
-      '<p class="muted">จัดทำโดย Tommie BaZi · LINE @moo2moon · ' + thDate(Date.now() + 7 * 3600000) + '</p></section>' +
-      '<h2>ผังสี่เสา</h2><p class="muted">' + (P.system === 'std' ? 'ระบบทั่วไป' : 'ระบบ อ.มาศ') + (cur.pv && !cur.noTime ? ' · เวลาสุริยะจริง ' + pad(P.local[3]) + ':' + pad(P.local[4]) + ' น.' : '') + '</p>' + pil +
-      '<h2>ธาตุประจำตัวและกำลังธาตุ</h2><p>ตัวเรา (日主) คือ <b class="kan">' + P.d[0] + '</b> ธาตุ' + ELTH[S.dm] + (C.STEMS.indexOf(P.d[0]) % 2 ? 'หยิน' : 'หยาง') + ' · ฝ่ายเสริม ' + (S.support / S.total * 100).toFixed(0) + '%</p>' + bars +
+      '<section class="rp-cover"><div class="rp-cover-in"><span class="seal">八</span><div class="rp-eyebrow">Tommie BaZi · รายงานผังสี่เสาหลักแห่งชะตา</div><h1>' + esc(cur.name || '') + '</h1>' +
+      '<p class="rp-birth">เกิด ' + c.d + ' ' + MONTH[c.m - 1] + ' ' + c.y + (c.noTime ? '' : ' เวลา ' + pad(c.h) + ':' + pad(c.mi) + ' น.') + (c.pv ? '<br>' + esc(placeName(c)) : '') + '</p>' +
+      '<div class="rp-cover-chart">' + TBZV.chart(P, A, { title: 'ผังของ ' + (cur.nick || cur.name || '') }) + '</div>' +
+      '<p class="rp-by">จัดทำโดย Tommie BaZi · LINE @moo2moon · ' + thDate(Date.now() + 7 * 3600000) + '</p></div></section>' +
+      '<section class="rp-sec"><h2><span class="kan">四柱</span> ผังสี่เสาของคุณ</h2><p>' + (P.system === 'std' ? 'ผูกดวงตามระบบทั่วไป' : 'ผูกดวงตามระบบ อ.มาศ') + (c.pv && !c.noTime ? ' · ใช้เวลาสุริยะจริงที่' + esc(placeName(c)) + ' คือ ' + pad(P.local[3]) + ':' + pad(P.local[4]) + ' น.' : '') + ' · ธาตุประจำตัวของคุณคือ <b class="kan">' + P.d[0] + '</b> ' + dmEl + '</p><div class="rp-img">' + TBZV.chart(P, A) + '</div></section>' +
+      '<section class="rp-sec"><h2><span class="kan">五行</span> กำลังธาตุ</h2><p>ฝ่ายเสริมธาตุประจำตัว (คู่ธาตุและธาตุที่ให้กำเนิด) มี ' + S.support + ' จาก ' + S.total + ' คะแนน หรือราว ' + sup + '%</p><div class="rp-img">' + TBZV.bars(S) + '</div></section>' +
       secs + luck + cal +
-      '<p class="foot">ปาจื้อเป็นศาสตร์แห่งการตีความ ใช้เป็นแนวทางประกอบการตัดสินใจ · Tommie BaZi · tommiebazi.github.io</p></div>';
+      '<p class="rp-foot">ปาจื้อเป็นศาสตร์แห่งการตีความ ใช้เป็นแนวทางประกอบการตัดสินใจ · Tommie BaZi · tommiebazi.github.io · LINE @moo2moon</p></div>';
   }
 
   /* ---------- backup ---------- */
