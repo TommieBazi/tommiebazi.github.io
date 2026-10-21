@@ -573,23 +573,53 @@ button.lk.sel { background: var(--ink-4); border-color: var(--soft); }
       '<div class="secs">' + REPORT.map(function (r) {
         var h = (hist[r[0]] || []).length;
         return '<div class="rsec"><div class="row" style="justify-content:space-between;margin-bottom:6px"><b style="font:600 15px var(--f-ui)">' + r[1] + '</b><span class="row" style="gap:6px">' +
-          '<button class="btn sm" type="button" data-ai="' + r[0] + '">✦ ให้ AI ร่าง</button>' +
+          '<button class="btn sm" type="button" data-ai="' + r[0] + '">' + (TBZAI.ready(ai) ? '✦ ให้ AI ร่าง' : '✦ คัดลอกคำสั่ง AI') + '</button>' +
           '<button class="btn sm" type="button" data-undo="' + r[0] + '"' + (h ? '' : ' disabled') + ' title="ย้อนกลับไปฉบับก่อนหน้า">↶ ย้อนกลับ' + (h ? ' (' + h + ')' : '') + '</button></span></div>' +
           '<label class="f"><textarea data-r="' + r[0] + '" rows="6" aria-label="' + r[1] + '">' + esc((cur.report || {})[r[0]] || '') + '</textarea></label><p class="hint" data-st="' + r[0] + '" hidden></p></div>';
       }).join('') + '</div>' +
-      '<details class="card" style="margin-top:16px;padding:14px 18px"><summary style="cursor:pointer;font:500 15px var(--f-ui)">ตั้งค่า AI ' + (ai.key ? '<span class="pending" style="background:rgba(70,235,130,.15);color:var(--wood)">เชื่อมต่อแล้ว</span>' : '<span class="pending">ยังไม่ได้ใส่คีย์</span>') + '</summary>' +
-      '<div class="grid g2" style="margin-top:12px"><label class="f"><span>Claude API key (เก็บไว้ในเครื่องนี้เท่านั้น)</span><input id="aiKey" type="password" autocomplete="off" placeholder="sk-ant-..." value="' + esc(ai.key || '') + '"></label>' +
-      '<label class="f"><span>รุ่นโมเดล</span><select id="aiModel">' + opts([['claude-sonnet-5-5', 'Claude Sonnet 5.5 (แนะนำ · เร็ว คุ้มค่า)'], ['claude-opus-5-5', 'Claude Opus 5.5 (ละเอียดกว่า · แพงกว่า)']], ai.model || 'claude-sonnet-5-5') + '</select></label></div>' +
-      '<div class="row" style="margin-top:10px"><button class="btn sm pri" type="button" id="aiSave">บันทึกการตั้งค่า</button><button class="btn sm" type="button" id="aiClear">ลบคีย์</button></div>' +
-      '<p class="hint">สมัครและสร้างคีย์ได้ที่ console.anthropic.com (คิดค่าใช้ตามจำนวนที่ใช้) ระบบจะส่งข้อมูลผัง เพศ อายุ และโน้ตส่วนตัวในแท็บ “โน้ต” ไปที่ Anthropic เฉพาะตอนกด “ให้ AI ร่าง” เท่านั้น ไม่ส่งชื่อ เบอร์ หรือไลน์ของลูกค้า · ถ้ายังไม่ใส่คีย์ ปุ่ม “ให้ AI ร่าง” จะคัดลอกคำสั่งไว้ให้นำไปวางในแอป Claude แทน</p></details>';
+      aiSettings(ai);
   }
+  function aiSettings(ai) {
+    var gem = ai.provider === 'gemini', ok = TBZAI.ready(ai);
+    var gm = ai.gmodels || (ai.gmodel ? [{ id: ai.gmodel, label: ai.gmodel }] : []);
+    return '<details class="card" style="margin-top:16px;padding:14px 18px"' + (ok ? '' : ' open') + '><summary style="cursor:pointer;font:500 15px var(--f-ui)">ตั้งค่า AI ' + (ok ? '<span class="pending" style="background:rgba(70,235,130,.15);color:var(--wood)">เชื่อมต่อแล้ว · ' + (gem ? 'Gemini' : 'Claude') + '</span>' : '<span class="pending">ยังไม่ได้ใส่คีย์</span>') + '</summary>' +
+      '<div class="row" style="margin-top:12px"><span class="seg" role="radiogroup" aria-label="ผู้ให้บริการ AI"><label><input type="radio" name="aiProv" value="claude"' + (gem ? '' : ' checked') + '><span>Claude</span></label><label><input type="radio" name="aiProv" value="gemini"' + (gem ? ' checked' : '') + '><span>Gemini</span></label></span></div>' +
+      '<div id="aiClaude"' + (gem ? ' hidden' : '') + '><div class="grid g2" style="margin-top:12px"><label class="f"><span>Claude API key (จาก console.anthropic.com)</span><input id="aiKey" type="password" autocomplete="off" placeholder="sk-ant-..." value="' + esc(ai.key || '') + '"></label>' +
+      '<label class="f"><span>รุ่นโมเดล</span><select id="aiModel">' + opts([['claude-sonnet-5-5', 'Claude Sonnet 5.5 (แนะนำ)'], ['claude-opus-5-5', 'Claude Opus 5.5 (ละเอียดกว่า · แพงกว่า)']], ai.model || 'claude-sonnet-5-5') + '</select></label></div></div>' +
+      '<div id="aiGemini"' + (gem ? '' : ' hidden') + '><div class="grid g2" style="margin-top:12px"><label class="f"><span>Gemini API key (จาก aistudio.google.com)</span><input id="aiGKey" type="password" autocomplete="off" placeholder="AIza..." value="' + esc(ai.gkey || '') + '"></label>' +
+      '<label class="f"><span>รุ่นโมเดล</span><select id="aiGModel">' + (gm.length ? opts(gm.map(function (m) { return [m.id, m.label + ' · ' + m.id]; }), ai.gmodel) : '<option value="">กด “โหลดรายชื่อรุ่น” ก่อน</option>') + '</select></label></div>' +
+      '<div class="row" style="margin-top:8px"><button class="btn sm" type="button" id="aiGList">โหลดรายชื่อรุ่นจากคีย์นี้</button><span class="sub" id="aiGMsg"></span></div></div>' +
+      '<div class="row" style="margin-top:12px"><button class="btn sm pri" type="button" id="aiSave">บันทึกการตั้งค่า</button><button class="btn sm" type="button" id="aiClear">ลบคีย์ทั้งหมด</button></div>' +
+      '<p class="hint">คีย์เก็บไว้ในเครื่องนี้เท่านั้น ระบบจะส่งข้อมูลผัง เพศ อายุ และโน้ตส่วนตัวในแท็บ “โน้ต” ไปยังผู้ให้บริการที่เลือก เฉพาะตอนกด “ให้ AI ร่าง” ไม่ส่งชื่อ เบอร์ หรือไลน์ของลูกค้า · ถ้ายังไม่ได้ตั้งค่า ปุ่ม “ให้ AI ร่าง” จะคัดลอกคำสั่งไว้ให้นำไปวางในแอป Claude หรือ Gemini แทน</p></details>';
+  }
+  function readAiForm() {
+    var c = TBZAI.cfg(), p = (document.querySelector('input[name=aiProv]:checked') || {}).value || 'claude';
+    c.provider = p;
+    if ($('#aiKey')) c.key = $('#aiKey').value.trim(); if ($('#aiModel')) c.model = $('#aiModel').value;
+    if ($('#aiGKey')) c.gkey = $('#aiGKey').value.trim(); if ($('#aiGModel') && $('#aiGModel').value) c.gmodel = $('#aiGModel').value;
+    return c;
+  }
+  document.addEventListener('change', function (e) {
+    if (e.target.name === 'aiProv') { $('#aiClaude').hidden = e.target.value !== 'claude'; $('#aiGemini').hidden = e.target.value !== 'gemini'; }
+  });
   function setStatus(k, msg, bad) { var p = document.querySelector('[data-st="' + k + '"]'); if (!p) return; p.hidden = !msg; p.innerHTML = msg || ''; p.style.color = bad ? 'var(--fire)' : ''; }
   function pushHist(k, val) { cur.reportHist = cur.reportHist || {}; var h = cur.reportHist[k] = cur.reportHist[k] || []; if (h[h.length - 1] !== val) h.push(val); if (h.length > 15) h.shift(); }
   function refreshUndo(k) { var b = document.querySelector('[data-undo="' + k + '"]'), n = ((cur.reportHist || {})[k] || []).length; if (b) { b.disabled = !n; b.textContent = '↶ ย้อนกลับ' + (n ? ' (' + n + ')' : ''); } }
   document.addEventListener('click', function (e) {
     var a = e.target.closest('[data-ai]'), u = e.target.closest('[data-undo]');
-    if (e.target.id === 'aiSave') { TBZAI.setCfg({ key: $('#aiKey').value.trim(), model: $('#aiModel').value }); toast('บันทึกการตั้งค่า AI แล้ว'); renderBody(); return; }
-    if (e.target.id === 'aiClear') { TBZAI.setCfg({ model: $('#aiModel').value }); toast('ลบคีย์แล้ว'); renderBody(); return; }
+    if (e.target.id === 'aiSave') { var c = readAiForm(); if (c.provider === 'gemini' && c.gkey && !c.gmodel) { toast('กด “โหลดรายชื่อรุ่น” แล้วเลือกรุ่นก่อน'); return; } TBZAI.setCfg(c); toast('บันทึกการตั้งค่า AI แล้ว'); renderBody(); return; }
+    if (e.target.id === 'aiClear') { var c2 = TBZAI.cfg(); TBZAI.setCfg({ provider: c2.provider, model: c2.model, gmodel: c2.gmodel, gmodels: c2.gmodels }); toast('ลบคีย์แล้ว'); renderBody(); return; }
+    if (e.target.id === 'aiGList') {
+      var k = $('#aiGKey').value.trim(), msg = $('#aiGMsg'); if (!k) { msg.textContent = 'ใส่ Gemini API key ก่อน'; return; }
+      msg.textContent = 'กำลังโหลด…';
+      TBZAI.geminiModels(k).then(function (list) {
+        if (!list.length) { msg.textContent = 'คีย์นี้ไม่มีรุ่นที่ใช้เขียนข้อความได้'; return; }
+        var pick = (list.filter(function (m) { return /pro/i.test(m.id) && !/preview|exp/i.test(m.id); })[0] || list.filter(function (m) { return /pro/i.test(m.id); })[0] || list[0]).id;
+        var c = readAiForm(); c.provider = 'gemini'; c.gkey = k; c.gmodels = list; c.gmodel = c.gmodel && list.some(function (m) { return m.id === c.gmodel; }) ? c.gmodel : pick; TBZAI.setCfg(c);
+        renderBody(); toast('โหลดได้ ' + list.length + ' รุ่น เลือกให้แล้ว: ' + c.gmodel);
+      }).catch(function (err) { msg.textContent = 'โหลดไม่ได้: ' + err.message; msg.style.color = 'var(--fire)'; });
+      return;
+    }
     if (u && cur) {
       var k = u.getAttribute('data-undo'), h = (cur.reportHist || {})[k] || []; if (!h.length) return;
       var ta = document.querySelector('[data-r="' + k + '"]'), prev = h.pop();
@@ -598,8 +628,8 @@ button.lk.sel { background: var(--ink-4); border-color: var(--soft); }
     if (a && cur) {
       var key = a.getAttribute('data-ai'), R = compute(cur); if (!R) return;
       var Y = yearSel || solarYearNow(R.P.system), context = TBZAI.ctx(cur, R, { age: ageNow(cur), year: yearData(R, Y) }), ta2 = document.querySelector('[data-r="' + key + '"]'), before = ta2.value;
-      if (!TBZAI.cfg().key) {
-        var txt = TBZAI.manualPrompt(key, context, before), done = function () { setStatus(key, 'ยังไม่ได้ใส่ API key จึงคัดลอกคำสั่งไว้ให้แล้ว นำไปวางในแอป Claude แล้วคัดลอกคำตอบกลับมาวางในช่องนี้ (ตั้งค่าคีย์ได้ที่ “ตั้งค่า AI” ด้านล่าง)'); };
+      if (!TBZAI.ready()) {
+        var txt = TBZAI.manualPrompt(key, context, before), done = function () { setStatus(key, 'ยังไม่ได้ใส่ API key จึงคัดลอกคำสั่งไว้ให้แล้ว นำไปวางในแอป Claude หรือ Gemini แล้วคัดลอกคำตอบกลับมาวางในช่องนี้ (ตั้งค่าคีย์ได้ที่ “ตั้งค่า AI” ด้านล่าง)'); };
         try { navigator.clipboard.writeText(txt).then(done, function () { setStatus(key, 'คัดลอกไม่ได้ กรุณาใส่ API key ที่ “ตั้งค่า AI”', true); }); } catch (x) { setStatus(key, 'คัดลอกไม่ได้ กรุณาใส่ API key ที่ “ตั้งค่า AI”', true); }
         return;
       }

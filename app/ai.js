@@ -61,28 +61,57 @@
     'จากนั้นถามตัวเองเงียบๆ ว่า "อะไรยังทำให้ข้อความนี้ดูเป็น AI" แล้วแก้ซ้ำอีกรอบ\n' +
     'รักษาน้ำเสียงครูอธิบายลูกศิษย์ อบอุ่นและเห็นใจ สะกดและวรรณยุกต์ไทยต้องถูกต้อง ห้ามเพิ่มกลอนสรุป\n' +
     'ตอบกลับเฉพาะข้อความฉบับสุดท้ายเท่านั้น ไม่ต้องอธิบายว่าแก้อะไร';
-  function call(key, model, system, user, maxTok) {
+  function callClaude(key, model, system, user, maxTok) {
     return fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
       body: JSON.stringify({ model: model, max_tokens: maxTok || 1600, system: system, messages: [{ role: 'user', content: user }] })
     }).then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error((j.error && j.error.message) || ('HTTP ' + r.status)); return (j.content || []).filter(function (b) { return b.type === 'text'; }).map(function (b) { return b.text; }).join('\n').trim(); }); });
   }
+  var GEM = 'https://generativelanguage.googleapis.com/v1beta/';
+  function callGemini(key, model, system, user) {
+    var id = String(model).replace(/^models\//, '');
+    return fetch(GEM + 'models/' + encodeURIComponent(id) + ':generateContent', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-goog-api-key': key },
+      body: JSON.stringify({ systemInstruction: { parts: [{ text: system }] }, contents: [{ role: 'user', parts: [{ text: user }] }], generationConfig: { maxOutputTokens: 8192, temperature: 0.8 } })
+    }).then(function (r) { return r.json().then(function (j) {
+      if (!r.ok) throw new Error((j.error && j.error.message) || ('HTTP ' + r.status));
+      var c = (j.candidates || [])[0];
+      if (!c) throw new Error((j.promptFeedback && j.promptFeedback.blockReason) ? 'Gemini ปฏิเสธคำขอ (' + j.promptFeedback.blockReason + ')' : 'Gemini ไม่ตอบกลับ');
+      var t = ((c.content && c.content.parts) || []).filter(function (p) { return p.text && !p.thought; }).map(function (p) { return p.text; }).join('').trim();
+      if (!t) throw new Error('Gemini ตอบกลับว่าง (' + (c.finishReason || 'ไม่ทราบสาเหตุ') + ')');
+      return t;
+    }); });
+  }
+  /* list models this key can use for generateContent (newest-looking first) */
+  function geminiModels(key) {
+    return fetch(GEM + 'models?pageSize=200', { headers: { 'x-goog-api-key': key } }).then(function (r) { return r.json().then(function (j) {
+      if (!r.ok) throw new Error((j.error && j.error.message) || ('HTTP ' + r.status));
+      return (j.models || []).filter(function (m) { return (m.supportedGenerationMethods || []).indexOf('generateContent') >= 0 && /gemini/i.test(m.name) && !/embedding|image|tts|audio|live|vision/i.test(m.name); })
+        .map(function (m) { return { id: m.name.replace(/^models\//, ''), label: m.displayName || m.name }; })
+        .sort(function (a, b) { return b.id.localeCompare(a.id, 'en', { numeric: true }); });
+    }); });
+  }
+  function call(c, system, user, maxTok) {
+    if (c.provider === 'gemini') return callGemini(c.gkey, c.gmodel, system, user);
+    return callClaude(c.key, c.model || 'claude-sonnet-5-5', system, user, maxTok);
+  }
+  function ready(c) { c = c || cfg(); return c.provider === 'gemini' ? !!(c.gkey && c.gmodel) : !!c.key; }
   function draftPrompt(section, context, current) {
     return 'ข้อมูลผังของลูกค้า:\n' + context + '\n\nหัวข้อที่ต้องเขียน: ' + SECTION[section] + (current && current.trim() ? '\n\nร่างหรือโน้ตเดิมของ Tommie ในหัวข้อนี้ (ใช้เป็นแนวทางและเก็บประเด็นของเขาไว้):\n' + current.trim() : '') + '\n\nเขียนคำอ่านหัวข้อนี้';
   }
   /* returns Promise<string>; onStage('draft'|'human') */
   function generate(section, context, current, onStage) {
-    var c = cfg(); if (!c.key) return Promise.reject(new Error('nokey'));
-    var model = c.model || 'claude-sonnet-5-5';
+    var c = cfg(); if (!ready(c)) return Promise.reject(new Error('nokey'));
     onStage && onStage('draft');
-    return call(c.key, model, SYS_DRAFT, draftPrompt(section, context, current)).then(function (draft) {
+    return call(c, SYS_DRAFT, draftPrompt(section, context, current)).then(function (draft) {
       onStage && onStage('human');
-      return call(c.key, model, SYS_HUMAN, 'เกลาข้อความนี้:\n\n' + draft);
+      return call(c, SYS_HUMAN, 'เกลาข้อความนี้:\n\n' + draft);
     });
   }
   function manualPrompt(section, context, current) { // for pasting into the Claude app when no API key is set
     return SYS_DRAFT + '\n\n' + draftPrompt(section, context, current) + '\n\nเมื่อเขียนเสร็จ ให้เกลาภาษาอีกรอบตามกฎนี้ก่อนตอบ:\n' + SYS_HUMAN;
   }
-  root.TBZAI = { cfg: cfg, setCfg: setCfg, ctx: ctx, generate: generate, manualPrompt: manualPrompt, SECTION: SECTION };
+  root.TBZAI = { cfg: cfg, setCfg: setCfg, ready: ready, geminiModels: geminiModels, ctx: ctx, generate: generate, manualPrompt: manualPrompt, SECTION: SECTION };
 })(this);
