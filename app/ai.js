@@ -113,5 +113,21 @@
   function manualPrompt(section, context, current) { // for pasting into the Claude app when no API key is set
     return SYS_DRAFT + '\n\n' + draftPrompt(section, context, current) + '\n\nเมื่อเขียนเสร็จ ให้เกลาภาษาอีกรอบตามกฎนี้ก่อนตอบ:\n' + SYS_HUMAN;
   }
-  root.TBZAI = { cfg: cfg, setCfg: setCfg, ready: ready, geminiModels: geminiModels, ctx: ctx, generate: generate, manualPrompt: manualPrompt, SECTION: SECTION };
+  var NAMES = { overview: 'ภาพรวมและนิสัย', career: 'การงาน', money: 'การเงิน', love: 'ความรักและคู่ครอง', health: 'สุขภาพ', advice: 'คำแนะนำและธาตุที่ควรเสริม' };
+  /* one prompt for all six sections; answer comes back with === heading === markers so the app can split it */
+  function manualPromptAll(context, currents) {
+    var keys = Object.keys(NAMES);
+    return SYS_DRAFT.replace('ความยาวราว 150–260 คำ', 'แต่ละหัวข้อยาวราว 150–260 คำ') + '\n\nข้อมูลผังของลูกค้า:\n' + context +
+      '\n\nเขียนคำอ่านครบ 6 หัวข้อต่อไปนี้ ตามลำดับ:\n' + keys.map(function (k, i) { return (i + 1) + '. ' + SECTION[k]; }).join('\n') +
+      keys.filter(function (k) { return currents && (currents[k] || '').trim(); }).map(function (k) { return '\n\nร่างหรือโน้ตเดิมของ Tommie หัวข้อ ' + NAMES[k] + ' (ใช้เป็นแนวทาง):\n' + currents[k].trim(); }).join('') +
+      '\n\nรูปแบบคำตอบ: ขึ้นต้นแต่ละหัวข้อด้วยบรรทัดหัวข้อแบบนี้เท่านั้น แล้วตามด้วยเนื้อหา ห้ามมีข้อความอื่นนอกหัวข้อ\n' + keys.map(function (k) { return '=== ' + NAMES[k] + ' ==='; }).join('\n') +
+      '\n\nเมื่อเขียนครบแล้ว ให้เกลาภาษาทุกหัวข้ออีกรอบตามกฎนี้ก่อนตอบ (คงบรรทัด === หัวข้อ === ไว้):\n' + SYS_HUMAN.replace('ตอบกลับเฉพาะข้อความฉบับสุดท้ายเท่านั้น ไม่ต้องอธิบายว่าแก้อะไร', 'ตอบเฉพาะฉบับสุดท้ายในรูปแบบ === หัวข้อ === ข้างต้น');
+  }
+  function splitAll(text) { // → {key: text}
+    var out = {}, inv = {}; Object.keys(NAMES).forEach(function (k) { inv[NAMES[k]] = k; });
+    var parts = String(text).split(/^\s*(?:={2,}|#{1,3}|\*\*)\s*(ภาพรวมและนิสัย|การงาน|การเงิน|ความรักและคู่ครอง|สุขภาพ|คำแนะนำและธาตุที่ควรเสริม)\s*(?:={2,}|\*\*)?\s*$/m);
+    for (var i = 1; i < parts.length; i += 2) { var k = inv[parts[i]]; if (k) out[k] = parts[i + 1].trim(); }
+    return out;
+  }
+  root.TBZAI = { manualPromptAll: manualPromptAll, splitAll: splitAll, NAMES: NAMES, cfg: cfg, setCfg: setCfg, ready: ready, geminiModels: geminiModels, ctx: ctx, generate: generate, manualPrompt: manualPrompt, SECTION: SECTION };
 })(this);

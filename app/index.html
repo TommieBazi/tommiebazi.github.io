@@ -203,6 +203,17 @@ button.lk.sel { background: var(--ink-4); border-color: var(--soft); }
 .luck { padding-top: 12px; }
 .nowline { font: 500 15.5px var(--f-ui); } .nowline b { color: var(--gold); font-size: 20px; }
 .t.calc td:first-child { color: var(--dim); white-space: nowrap; width: 1%; padding-right: 18px; } .gold-t { color: var(--gold); }
+.btn.ai-run { background: linear-gradient(135deg, #8b5cf6, #6d3fe0); border-color: #8b5cf6; color: #fff; font-weight: 600; }
+.btn.ai-run:hover { box-shadow: 0 0 0 4px rgba(139,92,246,.2); border-color: #a78bfa; }
+.btn.ai-run[data-need] { background: transparent; color: #b9a2ff; border-color: #6d4fc4; }
+.btn.ai-copy { background: rgba(60,165,255,.14); border-color: #3ca5ff; color: #8fcbff; font-weight: 600; }
+.btn.ai-copy:hover { box-shadow: 0 0 0 4px rgba(60,165,255,.18); }
+.btn.big { padding: 11px 20px; font-size: 15px; }
+.aibar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 4px 0 6px; padding: 14px; border-radius: 14px; background: var(--ink-3); border: 1px solid var(--line); }
+.aibar-note { flex-basis: 100%; }
+.pasteall { margin: 10px 0 16px; padding: 10px 14px; border: 1px dashed #3ca5ff; border-radius: 12px; }
+.pasteall summary { cursor: pointer; font: 500 14.5px var(--f-ui); color: #8fcbff; }
+@media (max-width: 560px) { .aibar .btn.big { flex: 1 1 100%; } .rsec .row .btn.sm { padding: 6px 10px; font-size: 12.5px; } }
 .rsec + .rsec { padding-top: 14px; border-top: 1px dashed var(--line); }
 .btn:disabled { opacity: .45; cursor: default; }
 </style>
@@ -569,11 +580,17 @@ button.lk.sel { background: var(--ink-4); border-color: var(--soft); }
   /* --- tab: report editor --- */
   function tReport(R) {
     var ai = TBZAI.cfg(), hist = cur.reportHist || {};
-    return '<div class="card"><div class="formhead"><div><h3>รายงานสำหรับลูกค้า</h3><p class="sub">เขียนคำอ่านเอง หรือกด “✦ ให้ AI ร่าง” ในแต่ละหัวข้อ แล้วแก้ต่อได้ ระบบจะรวมกับภาพผัง กำลังธาตุ วัยจร และปฏิทินรายเดือนของปีที่เลือกในแท็บ “ดวงปี · เดือน” เป็นเอกสาร A4</p></div><button class="btn pri" id="bPrint" type="button">พิมพ์ / บันทึก PDF</button></div>' +
+    var ok = TBZAI.ready(ai);
+    return '<div class="card"><div class="formhead"><div><h3>รายงานสำหรับลูกค้า</h3><p class="sub">เขียนคำอ่านเอง หรือใช้ปุ่ม AI ทีละหัวข้อหรือทั้งหมดพร้อมกัน แล้วแก้ต่อได้ ระบบจะรวมกับภาพผัง กำลังธาตุ วัยจร และปฏิทินรายเดือนของปีที่เลือกในแท็บ “ดวงปี · เดือน” เป็นเอกสาร A4</p></div><button class="btn pri" id="bPrint" type="button">พิมพ์ / บันทึก PDF</button></div>' +
+      '<div class="aibar"><button class="btn ai-run big" type="button" id="aiAll"' + (ok ? '' : ' data-need="1"') + '>✦ ให้ AI วิเคราะห์ทั้งหมด</button><button class="btn ai-copy big" type="button" id="cpAll">⧉ คัดลอกคำสั่ง AI ทั้งหมด</button>' +
+      '<span class="sub aibar-note">' + (ok ? 'เชื่อมต่อ ' + (ai.provider === 'gemini' ? 'Gemini' : 'Claude') + ' แล้ว' : 'ปุ่มสีม่วงต้องตั้งค่า API key ก่อน · ปุ่มสีฟ้าใช้ได้เลย') + '</span></div>' +
+      '<p class="hint" id="stAll" hidden></p>' +
+      '<details class="pasteall" id="pasteAll"><summary>วางคำตอบรวมจาก AI แล้วแยกใส่ทุกหัวข้ออัตโนมัติ</summary><label class="f" style="margin-top:10px"><textarea id="pasteText" rows="6" placeholder="วางคำตอบทั้งหมดจากแอป Gemini หรือ Claude ที่มีหัวข้อ === ภาพรวมและนิสัย === ฯลฯ"></textarea></label><div class="row" style="margin-top:8px"><button class="btn sm ai-copy" type="button" id="pasteGo">แยกใส่ทุกหัวข้อ</button><span class="sub" id="pasteMsg"></span></div></details>' +
       '<div class="secs">' + REPORT.map(function (r) {
         var h = (hist[r[0]] || []).length;
         return '<div class="rsec"><div class="row" style="justify-content:space-between;margin-bottom:6px"><b style="font:600 15px var(--f-ui)">' + r[1] + '</b><span class="row" style="gap:6px">' +
-          '<button class="btn sm" type="button" data-ai="' + r[0] + '">' + (TBZAI.ready(ai) ? '✦ ให้ AI ร่าง' : '✦ คัดลอกคำสั่ง AI') + '</button>' +
+          '<button class="btn sm ai-run" type="button" data-ai="' + r[0] + '"' + (ok ? '' : ' data-need="1"') + '>✦ ให้ AI วิเคราะห์</button>' +
+          '<button class="btn sm ai-copy" type="button" data-copy="' + r[0] + '">⧉ คัดลอกคำสั่ง</button>' +
           '<button class="btn sm" type="button" data-undo="' + r[0] + '"' + (h ? '' : ' disabled') + ' title="ย้อนกลับไปฉบับก่อนหน้า">↶ ย้อนกลับ' + (h ? ' (' + h + ')' : '') + '</button></span></div>' +
           '<label class="f"><textarea data-r="' + r[0] + '" rows="6" aria-label="' + r[1] + '">' + esc((cur.report || {})[r[0]] || '') + '</textarea></label><p class="hint" data-st="' + r[0] + '" hidden></p></div>';
       }).join('') + '</div>' +
@@ -625,25 +642,49 @@ button.lk.sel { background: var(--ink-4); border-color: var(--soft); }
       var ta = document.querySelector('[data-r="' + k + '"]'), prev = h.pop();
       cur.report = cur.report || {}; cur.report[k] = prev; ta.value = prev; cur.updated = Date.now(); save(); refreshUndo(k); setStatus(k, 'ย้อนกลับเป็นฉบับก่อนหน้าแล้ว'); return;
     }
-    if (a && cur) {
-      var key = a.getAttribute('data-ai'), R = compute(cur); if (!R) return;
-      var Y = yearSel || solarYearNow(R.P.system), context = TBZAI.ctx(cur, R, { age: ageNow(cur), year: yearData(R, Y) }), ta2 = document.querySelector('[data-r="' + key + '"]'), before = ta2.value;
-      if (!TBZAI.ready()) {
-        var txt = TBZAI.manualPrompt(key, context, before), done = function () { setStatus(key, 'ยังไม่ได้ใส่ API key จึงคัดลอกคำสั่งไว้ให้แล้ว นำไปวางในแอป Claude หรือ Gemini แล้วคัดลอกคำตอบกลับมาวางในช่องนี้ (ตั้งค่าคีย์ได้ที่ “ตั้งค่า AI” ด้านล่าง)'); };
-        try { navigator.clipboard.writeText(txt).then(done, function () { setStatus(key, 'คัดลอกไม่ได้ กรุณาใส่ API key ที่ “ตั้งค่า AI”', true); }); } catch (x) { setStatus(key, 'คัดลอกไม่ได้ กรุณาใส่ API key ที่ “ตั้งค่า AI”', true); }
+    var cp = e.target.closest('[data-copy]');
+    if ((a || cp || e.target.id === 'aiAll' || e.target.id === 'cpAll' || e.target.id === 'pasteGo') && cur) {
+      var R = compute(cur); if (!R) return;
+      var Y = yearSel || solarYearNow(R.P.system), context = TBZAI.ctx(cur, R, { age: ageNow(cur), year: yearData(R, Y) });
+      var copy = function (txt, ok, fail) { try { navigator.clipboard.writeText(txt).then(ok, fail); } catch (x) { fail(); } };
+      var needKey = function (where) { (where ? setStatus(where, 'ยังไม่ได้ตั้งค่า API key · ใส่คีย์ที่ “ตั้งค่า AI” ด้านล่าง หรือใช้ปุ่มสีฟ้า “คัดลอกคำสั่ง” แทน', true) : allStatus('ยังไม่ได้ตั้งค่า API key · ใส่คีย์ที่ “ตั้งค่า AI” ด้านล่าง หรือใช้ปุ่มสีฟ้า “คัดลอกคำสั่ง AI ทั้งหมด” แทน', true)); var d = document.querySelector('#body details.card'); if (d) { d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'center' }); } };
+      if (cp) {
+        var k1 = cp.getAttribute('data-copy'), t1 = document.querySelector('[data-r="' + k1 + '"]').value;
+        copy(TBZAI.manualPrompt(k1, context, t1), function () { setStatus(k1, 'คัดลอกคำสั่งแล้ว · เปิดแอป Gemini หรือ Claude แชตใหม่ วาง แล้วส่ง จากนั้นคัดลอกคำตอบกลับมาวางในช่องนี้'); }, function () { setStatus(k1, 'คัดลอกไม่ได้ในเบราว์เซอร์นี้', true); });
         return;
       }
-      a.disabled = true; var label = a.textContent;
-      TBZAI.generate(key, context, before, function (st) { a.textContent = st === 'draft' ? 'กำลังร่าง…' : 'กำลังเกลาภาษา…'; setStatus(key, st === 'draft' ? 'ขั้น 1/2 · AI กำลังอ่านผังและร่างเนื้อหา' : 'ขั้น 2/2 · กำลังเกลาภาษาตามกฎ humanizer ให้อ่านเป็นธรรมชาติ'); })
-        .then(function (out) {
-          pushHist(key, before); cur.report = cur.report || {}; cur.report[key] = out; cur.updated = Date.now(); save();
-          var t3 = document.querySelector('[data-r="' + key + '"]'); if (t3) t3.value = out; refreshUndo(key);
-          setStatus(key, 'ร่างเสร็จแล้ว ตรวจและแก้ให้เป็นคำของคุณก่อนส่งลูกค้า · กด “↶ ย้อนกลับ” ถ้าอยากได้ฉบับเดิม');
-        })
-        .catch(function (err) { setStatus(key, 'สร้างไม่สำเร็จ: ' + esc(err.message === 'nokey' ? 'ยังไม่ได้ใส่ API key' : err.message), true); })
-        .then(function () { a.disabled = false; a.textContent = label; });
+      if (e.target.id === 'cpAll') {
+        var curTxt = {}; REPORT.forEach(function (r) { curTxt[r[0]] = document.querySelector('[data-r="' + r[0] + '"]').value; });
+        copy(TBZAI.manualPromptAll(context, curTxt), function () { allStatus('คัดลอกคำสั่งทั้งหมดแล้ว · วางในแอป Gemini หรือ Claude แชตใหม่ แล้วนำคำตอบทั้งก้อนมาวางในช่อง “วางคำตอบรวม” ด้านล่าง ระบบจะแยกใส่ทุกหัวข้อให้'); $('#pasteAll').open = true; }, function () { allStatus('คัดลอกไม่ได้ในเบราว์เซอร์นี้', true); });
+        return;
+      }
+      if (e.target.id === 'pasteGo') {
+        var parts = TBZAI.splitAll($('#pasteText').value), ks = Object.keys(parts);
+        if (!ks.length) { $('#pasteMsg').textContent = 'ไม่พบหัวข้อ === ... === ในข้อความที่วาง'; $('#pasteMsg').style.color = 'var(--fire)'; return; }
+        ks.forEach(function (k) { var ta = document.querySelector('[data-r="' + k + '"]'); pushHist(k, ta.value); cur.report = cur.report || {}; cur.report[k] = parts[k]; ta.value = parts[k]; refreshUndo(k); setStatus(k, 'ใส่จากคำตอบรวมแล้ว · กด “↶ ย้อนกลับ” ถ้าอยากได้ฉบับเดิม'); });
+        cur.updated = Date.now(); save(); $('#pasteText').value = ''; $('#pasteMsg').style.color = ''; $('#pasteMsg').textContent = 'ใส่แล้ว ' + ks.length + ' หัวข้อ'; return;
+      }
+      if (!TBZAI.ready()) { needKey(a ? a.getAttribute('data-ai') : null); return; }
+      var runOne = function (key, btn) {
+        var ta2 = document.querySelector('[data-r="' + key + '"]'), before = ta2.value, label = btn && btn.textContent; if (btn) btn.disabled = true;
+        return TBZAI.generate(key, context, before, function (st) { if (btn) btn.textContent = st === 'draft' ? 'กำลังร่าง…' : 'กำลังเกลาภาษา…'; setStatus(key, st === 'draft' ? 'ขั้น 1/2 · AI กำลังอ่านผังและร่างเนื้อหา' : 'ขั้น 2/2 · กำลังเกลาภาษาตามกฎ humanizer ให้อ่านเป็นธรรมชาติ'); })
+          .then(function (out) {
+            pushHist(key, before); cur.report = cur.report || {}; cur.report[key] = out; cur.updated = Date.now(); save();
+            var t3 = document.querySelector('[data-r="' + key + '"]'); if (t3) t3.value = out; refreshUndo(key);
+            setStatus(key, 'วิเคราะห์เสร็จแล้ว ตรวจและแก้ให้เป็นคำของคุณก่อนส่งลูกค้า · กด “↶ ย้อนกลับ” ถ้าอยากได้ฉบับเดิม'); return true;
+          })
+          .catch(function (err) { setStatus(key, 'สร้างไม่สำเร็จ: ' + esc(err.message), true); return false; })
+          .then(function (r) { if (btn) { btn.disabled = false; btn.textContent = label; } return r; });
+      };
+      if (a) { runOne(a.getAttribute('data-ai'), a); return; }
+      // analyse all, one section after another
+      var allBtn = $('#aiAll'), lbl = allBtn.textContent, keys = REPORT.map(function (r) { return r[0]; }), okN = 0;
+      allBtn.disabled = true; $('#cpAll').disabled = true;
+      keys.reduce(function (p, k, i) { return p.then(function () { allBtn.textContent = 'กำลังวิเคราะห์ ' + (i + 1) + '/' + keys.length + '…'; allStatus('กำลังวิเคราะห์หัวข้อ “' + REPORT[i][1] + '” (' + (i + 1) + '/' + keys.length + ')'); return runOne(k, document.querySelector('[data-ai="' + k + '"]')).then(function (r) { if (r) okN++; }); }); }, Promise.resolve())
+        .then(function () { allBtn.disabled = false; $('#cpAll').disabled = false; allBtn.textContent = lbl; allStatus('วิเคราะห์เสร็จ ' + okN + '/' + keys.length + ' หัวข้อ · ตรวจแก้แต่ละหัวข้อก่อนส่งลูกค้า', okN < keys.length); });
     }
   });
+  function allStatus(msg, bad) { var p = $('#stAll'); if (!p) return; p.hidden = !msg; p.innerHTML = msg; p.style.color = bad ? 'var(--fire)' : ''; }
   function tNotes() {
     return '<div class="card"><label class="f"><span>โน้ตส่วนตัว (ไม่แสดงในรายงาน)</span><textarea id="fNotes" rows="12">' + esc(cur.notes || '') + '</textarea></label><p class="hint">สร้างเมื่อ ' + thDate(cur.created + 7 * 3600000, true) + ' · แก้ไขล่าสุด ' + thDate(cur.updated + 7 * 3600000, true) + '</p></div>';
   }
