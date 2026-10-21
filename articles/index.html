@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07080d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Ccircle cx=%2732%27 cy=%2732%27 r=%2729%27 fill=%27%2307080d%27 stroke=%27%23ffd660%27 stroke-width=%273%27/%3E%3Ctext x=%2732%27 y=%2744%27 font-size=%2734%27 text-anchor=%27middle%27 fill=%27%23ffd660%27 font-family=%27serif%27 font-weight=%27700%27%3E%E5%85%AB%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@600;700&family=Prompt:wght@500;700;800&family=Noto+Sans+Thai:wght@400;500&family=Noto+Serif+TC:wght@900&display=swap">
+<link rel="stylesheet" href="style.css">
+<title>บทความ · Tommie BaZi</title>
+<meta name="description" content="บทความความรู้ปาจื้อ ห้าธาตุ และดวงจีน จาก Tommie BaZi">
+</head>
+<body>
+<header><div class="wrap bar"><a class="brand" href="../"><span class="seal">八</span>Tommie BaZi</a><nav class="links"><a href="../#calc">ผูกดวงฟรี</a><a href="../#reel">วิดีโอแนะนำ</a><a href="./">บทความ</a><a href="../#services">บริการและราคา</a></nav><a class="btn" href="https://line.me/R/ti/p/@moo2moon" target="_blank" rel="noopener">ขอดูดวงของฉัน</a></div></header>
+<main class="wrap">
+  <div class="eyebrow">บทความ · 文章</div>
+  <h1>ความรู้ปาจื้อและห้าธาตุ</h1>
+  <div class="list" id="list"><p style="color:var(--dim)">กำลังโหลด…</p></div>
+</main>
+<footer><div class="wrap">Tommie BaZi · รับดูดวงจีนปาจื้อ สี่เสาหลักแห่งชะตา · LINE @moo2moon</div></footer>
+<script>
+(function () {
+  var EL = ['wood', 'fire', 'earth', 'gold', 'water'];
+  fetch('index.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (list) {
+    list = list.filter(function (a) { return !a.draft; }).sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); });
+    document.getElementById('list').innerHTML = list.length ? list.map(function (a, i) {
+      var d = new Date(a.date + 'T00:00:00'), th = isNaN(d) ? '' : d.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+      return '<a class="art" href="read.html?a=' + encodeURIComponent(a.slug) + '" style="--c:var(--' + EL[i % 5] + ')"><div class="cv">' + (a.cover ? '<img src="' + a.cover + '" alt="" loading="lazy">' : (a.kanji || '文')) + '</div><div class="bd"><time>' + th + '</time><h3>' + a.title + '</h3><p>' + (a.excerpt || '') + '</p></div></a>';
+    }).join('') : '<p style="color:var(--dim)">บทความแรกกำลังจะมาเร็วๆ นี้</p>';
+  }).catch(function () { document.getElementById('list').innerHTML = '<p style="color:var(--dim)">โหลดรายการบทความไม่ได้</p>'; });
+})();
+</script>
+</body>
+</html>

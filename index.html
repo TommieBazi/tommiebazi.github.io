@@ -80,9 +80,22 @@ header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; back
 .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
 .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-family: var(--f-display); font-weight: 800; font-size: 18px; letter-spacing: .02em; }
 .seal { width: 34px; height: 34px; display: grid; place-items: center; border: 1.5px solid var(--gold); border-radius: 50%; font-family: var(--f-kanji); font-weight: 900; font-size: 16px; color: var(--gold); }
-.nav ul { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; }
-.nav ul a { text-decoration: none; color: var(--dim); font-size: 14.5px; transition: color .2s; }
-.nav ul a:hover { color: var(--text); }
+.nav ul { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.nav ul a { position: relative; display: block; padding: 8px 14px; border-radius: 999px; text-decoration: none; color: #c9cbd8; font: 500 16.5px var(--f-display); transition: color .2s, background .2s, transform .2s, box-shadow .2s; }
+.nav ul a::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: 3px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, var(--wood), var(--fire), var(--earth), var(--gold), var(--water)); transform: scaleX(0); transform-origin: 50% 50%; transition: transform .25s ease; }
+.nav ul a:hover, .nav ul a:focus-visible { color: var(--gold); background: rgba(255,214,96,.09); transform: translateY(-2px); box-shadow: 0 6px 18px -8px rgba(255,214,96,.45); }
+.nav ul a:hover::after, .nav ul a.on::after { transform: scaleX(1); }
+.nav ul a.on { color: var(--text); }
+.brand { transition: transform .2s; } .brand:hover { transform: translateY(-1px); } .brand:hover .seal { box-shadow: 0 0 0 4px rgba(255,214,96,.15), 0 0 20px rgba(255,214,96,.35); }
+.mnav { display: none; }
+@media (max-width: 1060px) { .nav ul a { padding: 8px 10px; font-size: 15.5px; } }
+@media (max-width: 960px) {
+  .nav ul { display: none !important; }
+  .mnav { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 0 var(--gutr) 10px var(--gut); }
+  .mnav::-webkit-scrollbar { display: none; }
+  .mnav a { flex: none; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--ink-2); color: #c9cbd8; text-decoration: none; font: 500 14.5px var(--f-display); }
+  .mnav a:active, .mnav a.on { color: var(--gold); border-color: var(--gold); }
+}
 .btn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; border-radius: 999px; text-decoration: none; font-family: var(--f-display); font-weight: 700; font-size: 15px; border: 1.5px solid var(--gold); color: var(--ink); background: var(--gold); transition: transform .2s, box-shadow .2s; will-change: transform; }
 .btn:hover { box-shadow: 0 0 0 6px rgba(255,214,96,.14), 0 10px 40px rgba(255,214,96,.25); }
 .btn.ghosty { background: transparent; color: var(--text); border-color: var(--line); }
@@ -222,6 +235,18 @@ h1 em { font-style: normal; background: linear-gradient(95deg, var(--wood), var(
 .step p { color: #b4b7c9; font-size: 16px; }
 @media (max-width: 860px) { .steps { grid-template-columns: minmax(0, 1fr); gap: 34px; } .rail { left: 27px; right: auto; top: 0; bottom: 0; width: 2px; height: auto; } .rail i { transform: scaleY(var(--p, 0)); transform-origin: 50% 0; } .step { padding: 0 0 0 80px; min-height: 56px; } }
 
+/* articles */
+.arts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.art { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: var(--ink-2); text-decoration: none; color: inherit; transition: transform .25s, border-color .25s, box-shadow .25s; }
+.art:hover { transform: translateY(-4px); border-color: var(--gold); box-shadow: 0 22px 60px -30px rgba(255,214,96,.5); }
+.art .cv { aspect-ratio: 16 / 9; background: linear-gradient(135deg, #10131f, #07080d); display: grid; place-items: center; font-family: var(--f-kanji); font-weight: 900; font-size: 64px; color: var(--c, var(--gold)); }
+.art .cv img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.art .bd { padding: 18px 20px 22px; display: grid; gap: 8px; }
+.art time { font: 500 13px var(--f-display); color: var(--dim); }
+.art h3 { font-size: 20px; line-height: 1.4; }
+.art p { color: #b4b7c9; font-size: 15.5px; line-height: 1.7; }
+@media (max-width: 900px) { .arts { grid-template-columns: minmax(0, 1fr); } }
+
 /* about + faq */
 .about-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(28px, 6vw, 80px); align-items: center; }
 .orbit { position: relative; width: 100%; max-width: 380px; aspect-ratio: 1; margin: 0 auto; }
@@ -330,13 +355,15 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     <a class="brand" href="#top" aria-label="Tommie BaZi"><span class="seal">八</span>Tommie BaZi</a>
     <ul>
       <li><a href="#calc">ผูกดวงฟรี</a></li>
-      <li><a href="#reel">รีลห้าธาตุ</a></li>
+      <li><a href="#reel">วิดีโอแนะนำ</a></li>
+      <li><a href="#articles">บทความ</a></li>
       <li><a href="#services">บริการและราคา</a></li>
       <li><a href="#process">ขั้นตอน</a></li>
       <li><a href="#faq">คำถามที่พบบ่อย</a></li>
     </ul>
     <a class="btn" href="https://line.me/R/ti/p/@moo2moon" target="_blank" rel="noopener" data-mag>ขอดูดวงของฉัน</a>
   </div>
+  <nav class="mnav" aria-label="เมนู"><a href="#calc">ผูกดวงฟรี</a><a href="#reel">วิดีโอแนะนำ</a><a href="#articles">บทความ</a><a href="#services">บริการและราคา</a><a href="#process">ขั้นตอน</a><a href="#faq">คำถามที่พบบ่อย</a></nav>
 </header>
 
 <main id="top">
@@ -381,11 +408,11 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <section id="reel">
     <div class="wrap">
       <div class="reel-head rv">
-        <div><span class="mono">Five Elements Showreel</span><h2 style="margin-top:10px">ห้าธาตุ ใน 15 วินาที</h2></div>
+        <div><span class="mono">วิดีโอแนะนำ</span><h2 style="margin-top:10px">รู้จัก Tommie BaZi และห้าธาตุ</h2></div>
         <p>ไม้ ไฟ ดิน ทอง น้ำ ทีละธาตุ ก่อนมารวมกันเป็นวงจรเดียว แตะที่ตัวอักษรด้านล่างเพื่อข้ามไปดูธาตุที่ต้องการ</p>
       </div>
       <div class="player rv" id="player">
-        <video id="rv" src="reel.mp4" poster="poster.jpg" muted loop playsinline preload="metadata" aria-label="รีลห้าธาตุของ Tommie BaZi ความยาว 15 วินาที"></video>
+        <video id="rv" src="reel.mp4" poster="poster.jpg" muted loop playsinline preload="metadata" aria-label="วิดีโอแนะนำ Tommie BaZi"></video>
                 <div class="ctrl">
           <button id="pp" type="button" aria-label="เล่นหรือหยุด">หยุด</button>
           <div class="chapters" id="chap"></div>
@@ -543,6 +570,16 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         <p class="rv">ศึกษาปาจื้อตามสายตำราจีนที่สืบทอดผ่านซินแส เน้นการอ่านผังตามหลักจริง ไม่ใช้การเดาหรือคำทำนายกว้างๆ ที่ใช้ได้กับทุกคน สิ่งที่ให้ความสำคัญที่สุดคือการอธิบายให้คุณเข้าใจ “ทำไม” — ทำไมช่วงนี้ถึงหนัก ทำไมงานสายนี้ถึงเหมาะ เพราะดวงที่อ่านแล้วเข้าใจ คือดวงที่เอาไปใช้ตัดสินใจได้จริง</p>
         <p class="note rv">ผมไม่รับปากว่าจะทำนายถูกทุกเรื่อง แต่รับปากว่าจะอ่านผังของคุณอย่างตั้งใจ และบอกตามที่ผังบอก</p>
       </div>
+    </div>
+  </section>
+
+  <section id="articles">
+    <div class="wrap">
+      <div class="reel-head rv">
+        <div><span class="mono">บทความ · 文章</span><h2 style="margin-top:10px">ความรู้ปาจื้อและห้าธาตุ</h2></div>
+        <a class="btn ghosty" href="articles/">ดูบทความทั้งหมด ▸</a>
+      </div>
+      <div class="arts" id="arts"><p class="sub" style="color:var(--dim)">กำลังโหลดบทความ…</p></div>
     </div>
   </section>
 
@@ -739,6 +776,28 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   $('#mGen').addEventListener('click', function () { mode = 'gen'; $('#mGen').setAttribute('aria-pressed', 'true'); $('#mCtl').setAttribute('aria-pressed', 'false'); build(); });
   $('#mCtl').addEventListener('click', function () { mode = 'ctl'; $('#mCtl').setAttribute('aria-pressed', 'true'); $('#mGen').setAttribute('aria-pressed', 'false'); build(); });
   build();
+
+  /* latest articles */
+  (function () {
+    var box = $('#arts'); if (!box) return;
+    var EL = ['wood', 'fire', 'earth', 'gold', 'water'];
+    fetch('articles/index.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (list) {
+      list = (list || []).filter(function (a) { return !a.draft; }).sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); }).slice(0, 3);
+      if (!list.length) { box.innerHTML = '<p style="color:var(--dim)">บทความแรกกำลังจะมาเร็วๆ นี้</p>'; return; }
+      box.innerHTML = list.map(function (a, i) {
+        var d = new Date(a.date + 'T00:00:00'), th = isNaN(d) ? '' : d.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+        return '<a class="art rv in" href="articles/read.html?a=' + encodeURIComponent(a.slug) + '" style="--c:var(--' + EL[i % 5] + ')"><div class="cv">' + (a.cover ? '<img src="articles/' + a.cover + '" alt="" loading="lazy">' : (a.kanji || '文')) + '</div><div class="bd"><time>' + th + '</time><h3>' + a.title + '</h3><p>' + (a.excerpt || '') + '</p></div></a>';
+      }).join('');
+    }).catch(function () { box.innerHTML = '<p style="color:var(--dim)">บทความแรกกำลังจะมาเร็วๆ นี้</p>'; });
+  })();
+  /* highlight the nav item of the section on screen */
+  (function () {
+    if (!('IntersectionObserver' in window)) return;
+    var links = $$('.nav ul a, .mnav a'), map = {};
+    links.forEach(function (a) { var id = a.getAttribute('href').slice(1); (map[id] = map[id] || []).push(a); });
+    var io2 = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { links.forEach(function (a) { a.classList.remove('on'); }); (map[e.target.id] || []).forEach(function (a) { a.classList.add('on'); }); } }); }, { rootMargin: '-45% 0px -50% 0px' });
+    Object.keys(map).forEach(function (id) { var el = document.getElementById(id); if (el) io2.observe(el); });
+  })();
 
   /* copy LINE id */
   $('#cp').addEventListener('click', function () {

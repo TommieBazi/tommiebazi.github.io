@@ -1,0 +1,42 @@
+:root { color-scheme: dark; --ink: #07080d; --ink-2: #0e1018; --line: #262a3b; --text: #ecebe6; --soft: #c6c8d6; --dim: #9a9db0; --gold: #ffd660;
+  --wood: #46eb82; --fire: #ff5c28; --earth: #d68e46; --water: #3ca5ff;
+  --f-head: "Noto Serif Thai", "Noto Serif TC", serif; --f-ui: "Prompt", "Noto Sans Thai", system-ui, sans-serif; --f-body: "Noto Sans Thai", "Prompt", system-ui, sans-serif; --f-kan: "Noto Serif TC", serif; }
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+body { margin: 0; background: var(--ink); color: var(--text); font: 18px/1.9 var(--f-body); -webkit-font-smoothing: antialiased; }
+a { color: var(--gold); }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header { position: sticky; top: 0; z-index: 10; background: rgba(7,8,13,.8); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,.06); }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 14px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font: 800 18px var(--f-ui); }
+.seal { width: 34px; height: 34px; display: grid; place-items: center; border: 1.5px solid var(--gold); border-radius: 50%; color: var(--gold); font: 900 16px var(--f-kan); }
+.links { display: flex; gap: 6px; }
+.links a { padding: 8px 14px; border-radius: 999px; color: #c9cbd8; text-decoration: none; font: 500 16px var(--f-ui); transition: color .2s, background .2s, transform .2s; }
+.links a:hover { color: var(--gold); background: rgba(255,214,96,.09); transform: translateY(-2px); }
+.btn { display: inline-flex; padding: 11px 22px; border-radius: 999px; background: var(--gold); color: var(--ink); text-decoration: none; font: 700 15px var(--f-ui); }
+main { padding-block: 48px 90px; }
+h1, h2, h3 { font-family: var(--f-head); line-height: 1.35; text-wrap: balance; }
+h1 { font-size: clamp(30px, 5vw, 48px); margin: 8px 0 14px; }
+.eyebrow { font: 500 14px var(--f-ui); color: var(--dim); }
+.list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 30px; }
+.art { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: var(--ink-2); text-decoration: none; color: inherit; transition: transform .25s, border-color .25s, box-shadow .25s; }
+.art:hover { transform: translateY(-4px); border-color: var(--gold); box-shadow: 0 22px 60px -30px rgba(255,214,96,.5); }
+.art .cv { aspect-ratio: 16 / 9; background: linear-gradient(135deg, #10131f, #07080d); display: grid; place-items: center; font: 900 60px var(--f-kan); color: var(--c, var(--gold)); }
+.art .cv img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.art .bd { padding: 18px 20px 22px; }
+.art time { font: 500 13px var(--f-ui); color: var(--dim); }
+.art h3 { font-size: 20px; margin: 6px 0; }
+.art p { margin: 0; color: #b4b7c9; font-size: 15.5px; line-height: 1.7; }
+article { max-width: 720px; margin: 0 auto; }
+article .cover { width: 100%; border-radius: 16px; margin: 10px 0 24px; display: block; }
+.prose h2 { font-size: 27px; margin: 38px 0 10px; padding-bottom: 6px; border-bottom: 1px solid rgba(255,214,96,.35); }
+.prose h3 { font-size: 22px; margin: 28px 0 8px; }
+.prose p, .prose li { color: #dcdde6; }
+.prose img { max-width: 100%; border-radius: 12px; }
+.prose blockquote { margin: 20px 0; padding: 10px 18px; border-left: 3px solid var(--gold); color: var(--soft); background: var(--ink-2); border-radius: 0 12px 12px 0; }
+.prose table { width: 100%; border-collapse: collapse; font-size: 16px; display: block; overflow-x: auto; }
+.prose th, .prose td { border-bottom: 1px solid var(--line); padding: 8px 10px; text-align: left; }
+.cta { margin-top: 48px; padding: 26px; border: 1px solid var(--line); border-radius: 18px; background: var(--ink-2); text-align: center; }
+.back { display: inline-block; margin-bottom: 18px; font: 500 15px var(--f-ui); text-decoration: none; }
+footer { border-top: 1px solid var(--line); padding-block: 28px; color: var(--dim); font-size: 14px; }
+@media (max-width: 900px) { .list { grid-template-columns: minmax(0, 1fr); } .links { display: none; } }
