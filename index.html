@@ -202,6 +202,12 @@ h1 em { font-style: normal; background: linear-gradient(95deg, var(--wood), var(
 .facts { margin: 22px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 10px 22px; font-size: 15.5px; }
 .facts dt { color: var(--dim); font-family: var(--f-display); } .facts dd { margin: 0; }
 .facts dd .kan { font-size: 20px; letter-spacing: .2em; }
+.trait { margin-top: 18px; padding: 14px 16px; border-radius: 14px; background: color-mix(in srgb, var(--c) 8%, var(--ink-3)); border: 1px solid color-mix(in srgb, var(--c) 35%, transparent); animation: fade .35s backwards; }
+.trait p { margin: 0; font-size: 15.5px; line-height: 1.7; color: #d4d6e2; }
+.trait b { font-family: var(--f-display); font-weight: 600; margin-right: 6px; color: var(--c); }
+.trait .vir { display: inline-block; margin-left: 6px; padding: 0 10px; border-radius: 999px; background: var(--ink); font-size: 13px; color: var(--dim); }
+.trait .vir .kan { color: var(--c); }
+.trait .pc { display: grid; gap: 4px; margin-top: 8px; } .trait .plus { color: var(--wood); } .trait .minus { color: var(--fire); }
 .relnote { margin-top: 22px; padding-top: 18px; border-top: 1px dashed var(--line); color: #c6c8d6; }
 .relnote b { color: var(--c); font-weight: 600; }
 @media (max-width: 820px) { .wheel-grid { grid-template-columns: minmax(0, 1fr); } }
@@ -238,6 +244,10 @@ h1 em { font-style: normal; background: linear-gradient(95deg, var(--wood), var(
 /* articles */
 .arts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .art { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: var(--ink-2); text-decoration: none; color: inherit; transition: transform .25s, border-color .25s, box-shadow .25s; }
+.arts { transition: opacity .26s ease, transform .26s ease; } .arts.swap { opacity: 0; transform: translateY(8px); }
+.artdots { display: flex; justify-content: center; gap: 8px; margin-top: 22px; }
+.artdots button { width: 9px; height: 9px; padding: 0; border-radius: 50%; border: 0; background: var(--line); cursor: pointer; transition: width .25s, background .25s; }
+.artdots button[aria-current] { width: 26px; border-radius: 5px; background: var(--gold); }
 .art:hover { transform: translateY(-4px); border-color: var(--gold); box-shadow: 0 22px 60px -30px rgba(255,214,96,.5); }
 .art .cv { aspect-ratio: 16 / 9; background: linear-gradient(135deg, #10131f, #07080d); display: grid; place-items: center; font-family: var(--f-kanji); font-weight: 900; font-size: 64px; color: var(--c, var(--gold)); }
 .art .cv img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -580,6 +590,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         <a class="btn ghosty" href="articles/">ดูบทความทั้งหมด ▸</a>
       </div>
       <div class="arts" id="arts"><p class="sub" style="color:var(--dim)">กำลังโหลดบทความ…</p></div>
+      <div class="artdots" id="artDots"></div>
     </div>
   </section>
 
@@ -723,11 +734,16 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   var svg = $('#wheelsvg'), NS = 'http://www.w3.org/2000/svg', CX = 200, CY = 200, R = 135, NR = 34;
   var KAN = ['木', '火', '土', '金', '水'];
   var INFO = {
-    wood: { th: 'ไม้', dir: 'ทิศตะวันออก', sea: 'ฤดูใบไม้ผลิ', st: '甲 乙', br: '寅 卯' },
-    fire: { th: 'ไฟ', dir: 'ทิศใต้', sea: 'ฤดูร้อน', st: '丙 丁', br: '巳 午' },
-    earth: { th: 'ดิน', dir: 'ศูนย์กลาง', sea: 'รอยต่อทุกฤดู (18 วันท้ายฤดู)', st: '戊 己', br: '辰 戌 丑 未' },
-    gold: { th: 'ทอง', dir: 'ทิศตะวันตก', sea: 'ฤดูใบไม้ร่วง', st: '庚 辛', br: '申 酉' },
-    water: { th: 'น้ำ', dir: 'ทิศเหนือ', sea: 'ฤดูหนาว', st: '壬 癸', br: '亥 子' }
+    wood: { th: 'ไม้', dir: 'ทิศตะวันออก', sea: 'ฤดูใบไม้ผลิ', st: '甲 乙', br: '寅 卯', vir: '仁 เมตตา',
+      trait: 'ชอบเติบโต มีเป้าหมาย ใจกว้าง', pro: 'มีน้ำใจ ริเริ่มเก่ง มองไกล', con: 'ดื้อ ใจร้อนเมื่อถูกขวาง ไม่ชอบถูกบังคับ' },
+    fire: { th: 'ไฟ', dir: 'ทิศใต้', sea: 'ฤดูร้อน', st: '丙 丁', br: '巳 午', vir: '禮 จารีต',
+      trait: 'ร่าเริง กระตือรือร้น ชอบแสดงออก', pro: 'อบอุ่น จุดประกายคนอื่นได้ พูดเก่ง', con: 'อารมณ์ขึ้นลงเร็ว ใจร้อน หมดไฟง่าย' },
+    earth: { th: 'ดิน', dir: 'ศูนย์กลาง', sea: 'รอยต่อทุกฤดู (18 วันท้ายฤดู)', st: '戊 己', br: '辰 戌 丑 未', vir: '信 สัจจะ',
+      trait: 'หนักแน่น มั่นคง เป็นที่พึ่ง', pro: 'ซื่อสัตย์ อดทน รักษาคำพูด', con: 'ช้า เปลี่ยนใจยาก คิดมากเก็บกังวล' },
+    gold: { th: 'ทอง', dir: 'ทิศตะวันตก', sea: 'ฤดูใบไม้ร่วง', st: '庚 辛', br: '申 酉', vir: '義 ความถูกต้อง',
+      trait: 'เด็ดขาด มีหลักการ รักความเป็นระเบียบ', pro: 'ยุติธรรม ตัดสินใจไว มีวินัย', con: 'แข็งกระด้าง พูดตรงจนบาดใจ ยืดหยุ่นน้อย' },
+    water: { th: 'น้ำ', dir: 'ทิศเหนือ', sea: 'ฤดูหนาว', st: '壬 癸', br: '亥 子', vir: '智 ปัญญา',
+      trait: 'ฉลาด ปรับตัวเก่ง ช่างสังเกต', pro: 'คิดลึก สื่อสารดี เข้าใจคน', con: 'ลังเล เปลี่ยนใจบ่อย เก็บความรู้สึก' }
   };
   var GEN = ['ไม้ให้กำเนิดไฟ', 'ไฟให้กำเนิดดิน', 'ดินให้กำเนิดทอง', 'ทองให้กำเนิดน้ำ', 'น้ำให้กำเนิดไม้'];
   var CTL = ['ไม้ข่มดิน', 'ไฟหลอมทอง', 'ดินข่มน้ำ', 'ทองตัดไม้', 'น้ำดับไฟ'];
@@ -769,6 +785,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     var k = KEYS[active], d = INFO[k], rel = mode === 'gen' ? GEN[active] : CTL[active];
     $('#pinfo').innerHTML = '<div class="big ' + k + '" style="--c:' + COL[k] + '"><span class="kan">' + KAN[active] + '</span><h3>ธาตุ' + d.th + '</h3></div>' +
       '<dl class="facts"><dt>ทิศ</dt><dd>' + d.dir + '</dd><dt>ฤดู</dt><dd>' + d.sea + '</dd><dt>天干</dt><dd><span class="kan">' + d.st + '</span></dd><dt>地支</dt><dd><span class="kan">' + d.br + '</span></dd></dl>' +
+      '<div class="trait" style="--c:' + COL[k] + '"><p class="tline"><b>นิสัยเด่น</b> ' + d.trait + ' <span class="vir"><span class="kan">' + d.vir.split(' ')[0] + '</span> ' + d.vir.split(' ')[1] + '</span></p>' +
+      '<div class="pc"><p><b class="plus">ข้อดี</b> ' + d.pro + '</p><p><b class="minus">ข้อเสีย</b> ' + d.con + '</p></div></div>' +
       '<p class="relnote" style="--c:' + COL[k] + '"><b>' + (mode === 'gen' ? 'ส่งเสริม' : 'ข่ม') + '</b> · ' + rel + '</p>';
   }
   function render() { $$('.node', svg).forEach(function (n, i) { n.classList.toggle('on', i === active); }); info(); }
@@ -782,12 +800,27 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     var box = $('#arts'); if (!box) return;
     var EL = ['wood', 'fire', 'earth', 'gold', 'water'];
     fetch('articles/index.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (list) {
-      list = (list || []).filter(function (a) { return !a.draft; }).sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); }).slice(0, 3);
+      list = (list || []).filter(function (a) { return !a.draft; });
       if (!list.length) { box.innerHTML = '<p style="color:var(--dim)">บทความแรกกำลังจะมาเร็วๆ นี้</p>'; return; }
-      box.innerHTML = list.map(function (a, i) {
+      for (var k = list.length - 1; k > 0; k--) { var q = Math.floor(Math.random() * (k + 1)), t = list[k]; list[k] = list[q]; list[q] = t; } // new mix every visit
+      var per = 3, pages = Math.ceil(list.length / per), pg = 0, timer = null, paused = false;
+      var card = function (a, i) {
         var d = new Date(a.date + 'T00:00:00'), th = isNaN(d) ? '' : d.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
-        return '<a class="art rv in" href="articles/read.html?a=' + encodeURIComponent(a.slug) + '" style="--c:var(--' + EL[i % 5] + ')"><div class="cv">' + (a.cover ? '<img src="articles/' + a.cover + '" alt="" loading="lazy">' : (a.kanji || '文')) + '</div><div class="bd"><time>' + th + '</time><h3>' + a.title + '</h3><p>' + (a.excerpt || '') + '</p></div></a>';
-      }).join('');
+        return '<a class="art" href="articles/read.html?a=' + encodeURIComponent(a.slug) + '" style="--c:var(--' + EL[(i + pg) % 5] + ')"><div class="cv">' + (a.cover ? '<img src="articles/' + a.cover + '" alt="" loading="lazy">' : (a.kanji || '文')) + '</div><div class="bd"><time>' + th + '</time><h3>' + a.title + '</h3><p>' + (a.excerpt || '') + '</p></div></a>';
+      };
+      var dots = $('#artDots');
+      var show = function (n) {
+        pg = (n + pages) % pages; var items = list.slice(pg * per, pg * per + per);
+        if (items.length < per) items = items.concat(list.slice(0, per - items.length));
+        box.classList.add('swap');
+        setTimeout(function () { box.innerHTML = items.map(card).join(''); box.classList.remove('swap'); }, reduce ? 0 : 260);
+        if (dots) dots.innerHTML = pages > 1 ? Array.apply(null, Array(pages)).map(function (_, i) { return '<button type="button" aria-label="ชุดที่ ' + (i + 1) + '"' + (i === pg ? ' aria-current="true"' : '') + ' data-pg="' + i + '"></button>'; }).join('') : '';
+      };
+      var start = function () { if (reduce || pages < 2) return; clearInterval(timer); timer = setInterval(function () { if (!paused && !document.hidden) show(pg + 1); }, 7000); };
+      box.addEventListener('pointerenter', function () { paused = true; }); box.addEventListener('pointerleave', function () { paused = false; });
+      box.addEventListener('focusin', function () { paused = true; }); box.addEventListener('focusout', function () { paused = false; });
+      if (dots) dots.addEventListener('click', function (e) { var b = e.target.closest('[data-pg]'); if (!b) return; show(+b.getAttribute('data-pg')); start(); });
+      show(0); start();
     }).catch(function () { box.innerHTML = '<p style="color:var(--dim)">บทความแรกกำลังจะมาเร็วๆ นี้</p>'; });
   })();
   /* highlight the nav item of the section on screen */
