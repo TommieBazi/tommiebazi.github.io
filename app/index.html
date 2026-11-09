@@ -704,11 +704,11 @@ button.lk.sel { background: var(--ink-4); border-color: var(--soft); }
       '<section class="rp-cover"><div class="rp-cover-in"><span class="seal">八</span><div class="rp-eyebrow">Tommie BaZi · รายงานผังสี่เสาหลักแห่งชะตา</div><h1>' + esc(cur.name || '') + '</h1>' +
       '<p class="rp-birth">เกิด ' + c.d + ' ' + MONTH[c.m - 1] + ' ' + c.y + (c.noTime ? '' : ' เวลา ' + pad(c.h) + ':' + pad(c.mi) + ' น.') + (c.pv ? '<br>' + esc(placeName(c)) : '') + '</p>' +
       '<div class="rp-cover-chart">' + TBZV.chart(P, A, { title: 'ผังของ ' + (cur.nick || cur.name || '') }) + '</div>' +
-      '<p class="rp-by">จัดทำโดย Tommie BaZi · LINE @moo2moon · ' + thDate(Date.now() + 7 * 3600000) + '</p></div></section>' +
+      '<p class="rp-by">จัดทำโดย Tommie BaZi · LINE @237owut · ' + thDate(Date.now() + 7 * 3600000) + '</p></div></section>' +
       '<section class="rp-sec"><h2><span class="kan">四柱</span> ผังสี่เสาของคุณ</h2><p>' + (P.system === 'std' ? 'ผูกดวงตามระบบทั่วไป' : 'ผูกดวงตามระบบ อ.มาศ') + (c.pv && !c.noTime ? ' · ใช้เวลาสุริยะจริงที่' + esc(placeName(c)) + ' คือ ' + pad(P.local[3]) + ':' + pad(P.local[4]) + ' น.' : '') + ' · ธาตุประจำตัวของคุณคือ <b class="kan">' + P.d[0] + '</b> ' + dmEl + '</p><div class="rp-img">' + TBZV.chart(P, A) + '</div></section>' +
       '<section class="rp-sec"><h2><span class="kan">五行</span> กำลังธาตุ</h2><p>' + (P.h ? 'ธาตุประจำตัวของคุณเป็น<b>' + S.verdict.th + '</b> · ' : '') + 'คู่ธาตุและธาตุส่งเสริมรวม ' + S.support + ' จาก ' + S.total + ' คะแนน' + (P.h ? '' : ' (ไม่ทราบเวลาเกิด จึงไม่ประเมินดิถี)') + '</p><div class="rp-img">' + TBZV.bars(S) + '</div></section>' +
       secs + luck + cal +
-      '<p class="rp-foot">ปาจื้อเป็นศาสตร์แห่งการตีความ ใช้เป็นแนวทางประกอบการตัดสินใจ · Tommie BaZi · tommiebazi.github.io · LINE @moo2moon</p></div>';
+      '<p class="rp-foot">ปาจื้อเป็นศาสตร์แห่งการตีความ ใช้เป็นแนวทางประกอบการตัดสินใจ · Tommie BaZi · tommiebazi.github.io · LINE @237owut</p></div>';
   }
 
   /* ---------- backup ---------- */
