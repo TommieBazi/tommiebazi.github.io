@@ -114,14 +114,21 @@
     SANHUI.forEach(function (g) { var n = 0; for (var i = 0; i < 3; i++) if (set.indexOf(g[0][i]) >= 0) n++; if (n === 3) out.push({ t: '三會', th: 'ภาคีฤดู', x: 'ภาคีฤดู ' + g[0] + ' (三會) เป็นธาตุ' + EL_TH[EL_FROM_ZH[g[1]]] }); });
     return out;
   }
-  /* strength — Tommie's weights: month branch (season) 2, day branch 1.5, every other character 1 (day stem included) */
+  /* strength — Tommie's weights: month branch (season) 2, day branch 1.5, every other character 1 (day stem included); branches count through their hidden stems, main qi 70% */
   function strength(P) {
     var cells = [['y', 0, 1], ['y', 1, 1], ['m', 0, 1], ['m', 1, 2], ['d', 0, 1], ['d', 1, 1.5]];
     if (P.h) cells.push(['h', 0, 1], ['h', 1, 1]);
     var sc = [0, 0, 0, 0, 0], total = 0;
-    cells.forEach(function (c) { var ch = P[c[0]][c[1]], el = c[1] === 0 ? EL_S[STEMS.indexOf(ch)] : EL_B[BR.indexOf(ch)]; sc[el] += c[2]; total += c[2]; });
+    cells.forEach(function (c) {
+      var ch = P[c[0]][c[1]], w = c[2]; total += w;
+      if (c[1] === 0) { sc[EL_S[STEMS.indexOf(ch)]] += w; return; }
+      /* branch: split over its hidden stems — main qi 70%, the rest share 30% (middle 20%, residual 10%) */
+      var hs = HIDDEN[BR.indexOf(ch)].split(''), share = hs.length === 1 ? [1] : hs.length === 2 ? [.7, .3] : [.7, .2, .1];
+      hs.forEach(function (h, i) { sc[EL_S[STEMS.indexOf(h)]] += w * share[i]; });
+    });
+    sc = sc.map(function (v) { return Math.round(v * 100) / 100; });
     var dm = EL_S[STEMS.indexOf(P.d[0])], res = (dm + 4) % 5;
-    var support = sc[dm] + sc[res];
+    var support = Math.round((sc[dm] + sc[res]) * 100) / 100;
     var verdict = support >= 8 ? { k: 'gold', th: 'ดิถีกระแสทอง' } : support >= 5 ? { k: 'strong', th: 'ดิถีแข็ง' } : support >= 4.5 ? { k: 'bal', th: 'ดิถีสมดุล' } : support >= 2 ? { k: 'weak', th: 'ดิถีอ่อน' } : { k: 'follow', th: 'ดิถีตามกระแส' };
     return { scores: sc, total: total, dm: dm, resource: res, support: support, oppose: total - support, pct: support / total * 100, verdict: verdict,
       parts: { same: sc[dm], resource: sc[res], output: sc[(dm + 1) % 5], wealth: sc[(dm + 2) % 5], power: sc[(dm + 3) % 5] } };
