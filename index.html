@@ -291,6 +291,16 @@ details .a { padding: 0 4px 30px; color: #d4d6e2; max-width: 40em; font-size: cl
 .lb-qr img { width: 168px; height: 168px; padding: 10px; border-radius: 16px; background: #fff; }
 .linebox .lineid { margin-top: 0; }
 @media (max-width: 860px) { .linebox { grid-template-columns: minmax(0, 1fr); } .lb-qr { display: none !important; } .linebox { max-width: 460px; } }
+.lmodal { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 20px; background: rgba(4,5,9,.72); backdrop-filter: blur(6px); }
+.lmodal[hidden] { display: none; }
+.lm-card { position: relative; width: min(380px, 100%); padding: 30px 26px 24px; border-radius: 22px; background: var(--ink-2); border: 1px solid var(--line); text-align: center; display: grid; gap: 12px; justify-items: center; box-shadow: 0 40px 90px -30px rgba(0,0,0,.8); }
+.lm-card h3 { margin: 0; font-size: 21px; }
+.lm-card img { width: 220px; height: 220px; padding: 12px; border-radius: 18px; background: #fff; }
+.lm-card p { margin: 0; color: var(--dim); font-size: 15px; line-height: 1.6; }
+.lm-card .lm-id b { color: #06c755; }
+.lm-open { color: var(--gold); font: 500 14px var(--f-display); text-decoration: none; }
+.lm-x { position: absolute; top: 10px; right: 12px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: transparent; color: var(--dim); font-size: 24px; cursor: pointer; }
+.lm-x:hover { color: var(--text); background: rgba(255,255,255,.06); }
 .fab-line { position: fixed; z-index: 75; right: max(20px, env(safe-area-inset-right, 0px)); bottom: calc(22px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 8px; padding: 12px 18px 12px 14px; border-radius: 999px; background: #06c755; color: #fff; text-decoration: none; font: 700 15px var(--f-display); box-shadow: 0 14px 34px -10px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08); transform: translateY(140%); transition: transform .35s ease; }
 .fab-line.show { transform: none; } .fab-line svg { width: 22px; height: 22px; }
 .fab-line .fq { position: absolute; right: 0; bottom: calc(100% + 12px); width: 170px; padding: 12px; border-radius: 16px; background: #fff; color: #222; font: 500 12.5px var(--f-display); text-align: center; box-shadow: 0 20px 50px -14px rgba(0,0,0,.6); opacity: 0; pointer-events: none; transform: translateY(6px); transition: opacity .2s, transform .2s; }
@@ -864,6 +874,27 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     Object.keys(map).forEach(function (id) { var el = document.getElementById(id); if (el) io2.observe(el); });
   })();
 
+  /* computer: LINE add-friend links can't add from a desktop browser, so show the QR instead */
+  (function () {
+    var m = null, wired = false;
+    var get = function () {
+      m = m || document.getElementById('lmodal'); if (!m || wired) return m; wired = true;
+      $('#lmX').addEventListener('click', close);
+      m.addEventListener('click', function (e) { if (e.target === m) close(); });
+      return m;
+    };
+    var desk = function () { return window.matchMedia('(hover: hover) and (pointer: fine)').matches && innerWidth > 860; };
+    var last = null;
+    var close = function () { m.hidden = true; if (last) last.focus(); };
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href*="line.me/R/"]');
+      if (!a || a.id === 'lmOpen' || !desk()) return;
+      if (!get()) return;
+      e.preventDefault(); last = a; m.hidden = false; $('#lmX').focus();
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && m && !m.hidden) close(); });
+  })();
+
   /* copy LINE id */
   $('#cp').addEventListener('click', function () {
     var b = this, done = function () { b.textContent = 'คัดลอกแล้ว'; setTimeout(function () { b.textContent = 'คัดลอก'; }, 1600); };
@@ -1052,5 +1083,15 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   });
 })();
 </script>
+<div class="lmodal" id="lmodal" hidden role="dialog" aria-modal="true" aria-labelledby="lmT">
+  <div class="lm-card">
+    <button type="button" class="lm-x" id="lmX" aria-label="ปิด">×</button>
+    <h3 id="lmT">เพิ่มเพื่อน LINE @moo2moon</h3>
+    <img src="line-qr.svg" width="220" height="220" alt="QR Code เพิ่มเพื่อน LINE @moo2moon">
+    <p>เปิดกล้องมือถือหรือแอป LINE แล้วสแกน QR นี้ เพิ่มเพื่อนเสร็จแล้วทักมาได้เลย</p>
+    <p class="lm-id">หรือค้นหาไอดี <b>@moo2moon</b> ในแอป LINE</p>
+    <a class="lm-open" id="lmOpen" href="https://line.me/R/ti/p/%40moo2moon" target="_blank" rel="noopener">ใช้ LINE บนคอมพิวเตอร์ ▸</a>
+  </div>
+</div>
 </body>
 </html>
