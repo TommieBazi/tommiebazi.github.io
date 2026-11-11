@@ -272,7 +272,6 @@
     L.push('⛔ ไม่ควรทำ');
     R.dontList.forEach(function (x) { L.push('• ' + x); });
     L.push('');
-    L.push('🧭 ทิศควรเลี่ยง: ' + R.avoidDirs.join(', '));
     if (R.bestAwake.length) L.push('⏰ ช่วงเวลาดี: ' + spans(R.bestAwake).join(', '));
     return L.join('\n');
   }
