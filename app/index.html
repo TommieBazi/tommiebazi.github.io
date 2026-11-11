@@ -30,6 +30,55 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .wood { --c: var(--wood); } .fire { --c: var(--fire); } .earth { --c: var(--earth); } .gold { --c: var(--gold); } .water { --c: var(--water); }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
+/* daily */
+:root { --bad-hot: #b8402c; --bad-warm: rgba(255,92,40,.22); }
+.favbox { margin-top: 14px; }
+.fchips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.fchip { display: grid; gap: 0; min-width: 76px; padding: 7px 12px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--ink-3); color: var(--c); font: 600 15px var(--f-ui); cursor: pointer; line-height: 1.3; }
+.fchip small { font: 400 11.5px var(--f-ui); color: var(--dim); }
+.fchip.g, .fchip.g1 { border-color: var(--c); background: color-mix(in srgb, var(--c) 14%, var(--ink-3)); }
+.fchip.g1 { box-shadow: 0 0 0 2px var(--ink-2), 0 0 0 3.5px var(--c); }
+.fchip.g small, .fchip.g1 small { color: var(--c); }
+.fchip.b { border-style: dashed; opacity: .75; } .fchip.b small { color: var(--fire); }
+.dscore { display: grid; justify-items: center; padding: 8px 16px; border-radius: 14px; background: var(--ink-3); border: 1px solid var(--line); }
+.dscore b { font: 700 30px var(--f-ui); line-height: 1.1; } .dscore span { font-size: 12px; color: var(--dim); }
+.dscore.hi { border-color: var(--gold); } .dscore.hi b { color: var(--gold); } .dscore.lo b { color: var(--fire); }
+.dcols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 14px; text-align: center; }
+.dcol { min-width: 0; padding: 10px 4px; border-radius: 14px; background: var(--ink-3); }
+.dcol:first-child { outline: 1.5px solid var(--gold); }
+.dz { font-size: clamp(32px, 6vw, 48px); line-height: 1.15; }
+.dl { font-size: 12.5px; color: var(--soft); line-height: 1.5; margin-bottom: 4px; } .dl .god { font-size: 12.5px; }
+.dcol .hid { font-size: 15px; letter-spacing: .1em; }
+.hrow { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 5px; margin-top: 10px; }
+.hcell { position: relative; display: grid; justify-items: center; gap: 0; padding: 8px 2px 6px; border-radius: 10px; border: 1px solid var(--line); background: var(--ink-3); cursor: pointer; line-height: 1.25; min-width: 0; }
+.hcell .kan { font-size: 19px; } .hcell small { font-size: 10.5px; color: var(--dim); } .hcell b { font: 600 13px var(--f-ui); margin-top: 2px; }
+.hcell.hi b { color: var(--gold); } .hcell.lo b { color: var(--fire); }
+.hcell.sel { background: var(--ink-4); border-color: var(--soft); } .hcell.now { box-shadow: 0 0 0 2px var(--gold); }
+.hcell .dot { position: absolute; top: 4px; right: 5px; width: 7px; height: 7px; border-radius: 50%; background: #ff6fb1; }
+@media (max-width: 760px) { .hrow { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+.why { margin-top: 10px; font-size: 14px; } .why summary { cursor: pointer; color: var(--soft); } .why ul { margin: 6px 0 0; padding-left: 20px; }
+.advg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; margin-top: 12px; }
+.advg h4 { margin: 0 0 4px; font: 600 15px var(--f-ui); } .advg p { margin: 0 0 4px; font-size: 14.5px; } .advg ul { margin: 0; padding-left: 20px; font-size: 14.5px; }
+@media (max-width: 700px) { .advg { grid-template-columns: minmax(0, 1fr); } }
+.dtext { width: 100%; margin-top: 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--ink-3); color: var(--soft); font: 13.5px/1.6 var(--f-body); resize: vertical; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.seg button { padding: 6px 14px; border: 0; background: transparent; cursor: pointer; font: 500 14px var(--f-ui); }
+.seg button[aria-pressed="true"] { background: var(--gold); color: var(--ink); }
+.compwrap { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 18px; align-items: center; margin-top: 12px; }
+@media (max-width: 760px) { .compwrap { grid-template-columns: minmax(0, 1fr); } }
+.compass { width: 100%; max-width: 360px; height: auto; display: block; margin: 0 auto; }
+.compass .cz { font: 900 17px var(--f-kan); } .compass .cn { font: 500 9.5px var(--f-ui); fill: var(--soft); }
+.compass .ce { font: 600 11px var(--f-ui); } .compass .ck { font: 500 8.5px var(--f-ui); fill: var(--dim); }
+.compass .cd { font: 500 8.5px var(--f-ui); fill: var(--dim); } .compass .cl { font: 600 12px var(--f-ui); fill: #c7a6ff; }
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; margin-top: 12px; }
+.cal > b { text-align: center; font: 500 13px var(--f-ui); color: var(--dim); padding: 4px 0; }
+.cal .cd { display: grid; gap: 0; padding: 6px 6px 4px; border-radius: 10px; border: 1px solid var(--line); background: var(--ink-3); cursor: pointer; text-align: left; min-width: 0; line-height: 1.25; }
+.cal .cd .n { font: 600 13.5px var(--f-ui); } .cal .cd .g { font-size: 18px; justify-self: end; } .cal .cd small { font-size: 10.5px; color: var(--dim); justify-self: end; }
+.cal .cd.hi { background: color-mix(in srgb, var(--gold) 16%, var(--ink-3)); border-color: color-mix(in srgb, var(--gold) 50%, transparent); }
+.cal .cd.lo { border-color: var(--fire); }
+.cal .cd.sel { box-shadow: 0 0 0 2px var(--soft); } .cal .cd.tdy .n { color: var(--gold); }
+.cal .mo { font-size: 12px; } .cal .mo.full { color: var(--fire); } .cal .tm { font-size: 11px; color: var(--gold); }
+@media print { .favbox, .seg, [data-dnav], [data-mnav], #dCopy, #dCode, .dtext { display: none !important; } }
 /* shell */
 .top { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 12px; padding: calc(10px + env(safe-area-inset-top, 0px)) var(--gr) 10px var(--gl); background: rgba(7,8,13,.86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
 .brand { display: flex; align-items: center; gap: 10px; font: 700 17px var(--f-ui); margin-right: auto; white-space: nowrap; }
@@ -238,13 +287,14 @@ button.lk.sel { background: var(--ink-4); border-color: var(--soft); }
 
 <script src="lunar.js"></script>
 <script src="core.js"></script>
+<script src="daily.js"></script>
 <script src="visual.js"></script>
 <script src="ai.js"></script>
 <script>
 (function () {
   'use strict';
   var $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-  var C = TBZ, KEYS = C.EL_KEY, ELTH = C.EL_TH;
+  var C = TBZ, D = null, KEYS = C.EL_KEY, ELTH = C.EL_TH;
   var MONTH = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
   var MON_S = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
   var PNAME = { y: 'ปี', m: 'เดือน', d: 'วัน', h: 'ยาม' }, PZH = { y: '年', m: '月', d: '日', h: '時' };
@@ -405,13 +455,13 @@ button.lk.sel { background: var(--ink-4); border-color: var(--soft); }
     m.innerHTML = '<div class="card" id="form"></div><nav class="tabs" role="tablist"></nav><div id="body"></div>';
     renderForm(); renderBody();
   }
-  var TABS = [['chart', 'ผังเต็ม'], ['power', 'กำลังธาตุ'], ['luck', 'วัยจร 10 ปี'], ['year', 'ดวงปี · เดือน'], ['compare', 'เทียบดวง'], ['report', 'รายงาน'], ['notes', 'โน้ต']];
+  var TABS = [['chart', 'ผังเต็ม'], ['power', 'กำลังธาตุ'], ['luck', 'วัยจร 10 ปี'], ['year', 'ดวงปี · เดือน'], ['daily', 'ฤกษ์ประจำวัน'], ['compare', 'เทียบดวง'], ['report', 'รายงาน'], ['notes', 'โน้ต']];
   function renderBody() {
     $('.tabs').innerHTML = TABS.map(function (t) { return '<button type="button" role="tab" data-t="' + t[0] + '" aria-selected="' + (tab === t[0]) + '">' + t[1] + '</button>'; }).join('');
     var R; try { R = compute(cur); } catch (e) { $('#body').innerHTML = '<div class="card flag">คำนวณไม่ได้: ' + esc(e.message) + '</div>'; return; }
     if (!R) { $('#meta').innerHTML = ''; $('#body').innerHTML = '<div class="card"><p>ยังไม่มีผัง กรอกวัน เดือน ปี เวลา สถานที่เกิด และเพศ แล้วกด <b>“คำนวณผัง”</b></p></div>'; return; }
     $('#meta').innerHTML = metaHTML(R);
-    var fn = { chart: tChart, power: tPower, luck: tLuck, year: tYear, compare: tCompare, report: tReport, notes: tNotes }[tab];
+    var fn = { chart: tChart, power: tPower, luck: tLuck, year: tYear, daily: tDaily, compare: tCompare, report: tReport, notes: tNotes }[tab];
     $('#body').innerHTML = fn(R);
   }
   function metaHTML(R) {
@@ -552,6 +602,119 @@ button.lk.sel { background: var(--ink-4); border-color: var(--soft); }
     return '<div class="card"><div class="row" style="justify-content:space-between;align-items:end">' + sel + '<div><span class="sub">ดวงปี (流年)</span><div class="kan" style="font-size:40px;line-height:1.1">' + D.yg + '</div><span class="god">' + godTH(D.yGod) + '</span></div></div>' +
       '<p class="hint">' + (sys === 'std' ? 'ปีเริ่มที่ 立春' : 'ปี ' + (Y + 543) + ' ตามระบบ อ.มาศ เริ่มที่ 冬至 ' + thDate(D.months[0].m.startMs, true)) + '</p>' + relList(D.yRel) + '</div>' +
       '<div class="card"><h3>ดวงเดือน (流月) และปฏิทินช่วงเวลาสำคัญ</h3><p class="sub">“ชงวัน” = เดือนที่ชงราศีล่างของวัน (ตำแหน่งตัวเราและคู่ครอง) · “ภาคีวัน” = เดือนที่ภาคีกับราศีล่างของวัน</p><div class="tw"><table class="t"><thead><tr><th>เริ่ม</th><th>เดือน</th><th>ฐานะ</th><th>สัมพันธ์กับผัง</th><th>โน้ต</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+  }
+
+  /* --- tab: ฤกษ์ประจำวัน (daily timing) --- */
+  var DY = null, dSel = null, dLevel = 'h';
+  var LEVEL = [['h', 'ยาม'], ['d', 'วัน'], ['m', 'เดือน'], ['y', 'ปี']];
+  var KLANG = { 辰: 'คลังน้ำ', 未: 'คลังไม้', 戌: 'คลังไฟ', 丑: 'คลังทอง' };
+  function hereLon() {
+    db.settings = db.settings || {}; var pv = db.settings.herePv || 'ภูเก็ต';
+    var lon = PL ? resolveLon({ pv: pv }) : ''; return { pv: pv, lon: lon === '' || lon == null ? 98.39 : +lon };
+  }
+  function todayTh() { var n = new Date(nowTh()); return [n.getUTCFullYear(), n.getUTCMonth() + 1, n.getUTCDate()]; }
+  function favOf(N) { var p = D.proposeFav(N); return { proposed: p, use: cur.fav ? { good: cur.fav.good, bad: cur.fav.bad, why: 'ผู้ดูกำหนดเอง' } : p, manual: !!cur.fav }; }
+  function compassSVG(R, level) {
+    var cx = 160, cy = 160, ro = 140, rm = 108, ri = 40, rad = Math.PI / 180;
+    var pt = function (deg, r) { return [cx - r * Math.sin(deg * rad), cy + r * Math.cos(deg * rad)]; };
+    var arc = function (a, b, r1, r2) { var p1 = pt(a, r2), p2 = pt(b, r2), p3 = pt(b, r1), p4 = pt(a, r1); return 'M' + p1[0].toFixed(1) + ' ' + p1[1].toFixed(1) + 'A' + r2 + ' ' + r2 + ' 0 0 0 ' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1) + 'L' + p3[0].toFixed(1) + ' ' + p3[1].toFixed(1) + 'A' + r1 + ' ' + r1 + ' 0 0 1 ' + p4[0].toFixed(1) + ' ' + p4[1].toFixed(1) + 'Z'; };
+    var gzOf = { h: R.hours[dSel].gz, d: R.P.d, m: R.P.m, y: R.P.y };
+    var hot = {}, warm = {};
+    LEVEL.forEach(function (L) { var x = D.directions(gzOf[L[0]][1]), set = L[0] === level ? hot : warm; (x.asura.br + x.broken.br).split('').forEach(function (b) { set[b] = 1; }); });
+    var s = '<svg viewBox="0 0 320 320" class="compass" role="img" aria-label="ทิศอสูรและทิศแตก">';
+    C.BR.split('').forEach(function (b, i) {
+      var a = i * 30, e = D.mainEl(b), fill = hot[b] ? 'var(--bad-hot)' : warm[b] ? 'var(--bad-warm)' : 'var(--ink-3)';
+      s += '<path d="' + arc(a, a + 30, rm, ro) + '" fill="' + fill + '" stroke="var(--line)"/>';
+      s += '<path d="' + arc(a, a + 30, ri + 8, rm) + '" fill="var(--ink-2)" stroke="var(--line)"/>';
+      var p = pt(a + 15, (rm + ro) / 2); s += '<text x="' + p[0].toFixed(1) + '" y="' + (p[1] - 2).toFixed(1) + '" text-anchor="middle" class="cz" fill="var(--' + KEYS[C.EL_B[i]] + ')">' + b + '</text><text x="' + p[0].toFixed(1) + '" y="' + (p[1] + 13).toFixed(1) + '" text-anchor="middle" class="cn">' + C.BR_TH[i] + '</text>';
+      var q = pt(a + 15, (rm + ri + 8) / 2 + 6); s += '<text x="' + q[0].toFixed(1) + '" y="' + q[1].toFixed(1) + '" text-anchor="middle" class="ce" fill="var(--' + KEYS[e] + ')">' + ELTH[e] + (D.mainYang(b) ? '+' : '−') + '</text>';
+      if (KLANG[b]) { var k = pt(a + 15, (rm + ri + 8) / 2 - 12); s += '<text x="' + k[0].toFixed(1) + '" y="' + k[1].toFixed(1) + '" text-anchor="middle" class="ck">' + KLANG[b] + '</text>'; }
+      var dl = pt(a, ro + 11); s += '<text x="' + dl[0].toFixed(1) + '" y="' + (dl[1] + 4).toFixed(1) + '" text-anchor="middle" class="cd">' + a + '°</text>';
+    });
+    [['N', 0], ['E', 90], ['S', 180], ['W', 270]].forEach(function (x) { var p = pt(x[1], ri - 14); s += '<text x="' + p[0].toFixed(1) + '" y="' + (p[1] + 5).toFixed(1) + '" text-anchor="middle" class="cl">' + x[0] + '</text>'; });
+    s += '<circle cx="160" cy="160" r="' + (ri + 8) + '" fill="none" stroke="var(--line)"/><circle cx="160" cy="160" r="5" fill="var(--wood)"/></svg>';
+    return s;
+  }
+  function tDaily(R) {
+    D = D || TBZDaily; var N = D.natal(R.P), F = favOf(N), fav = F.use, here = hereLon();
+    var T = todayTh(); DY = DY || T.slice();
+    var X = D.day(N, fav, DY[0], DY[1], DY[2], here.lon, nowTh());
+    if (dSel == null || dSel < 0 || dSel > 11) dSel = X.nowI >= 0 ? X.nowI : X.best[0].i;
+    var H = X.hours[dSel], isToday = DY[0] === T[0] && DY[1] === T[1] && DY[2] === T[2];
+    var godH = godTH(C.god(N.dm, C.STEMS.indexOf(H.gz[0])));
+    var col = function (lab, g, gs, gb, sub) {
+      var s = g[0], b = g[1], es = elOfStem(s), eb = D.mainEl(b), ys = C.STEMS.indexOf(s) % 2 === 0;
+      return '<div class="dcol"><div class="sub">' + lab + (sub ? '<br><small>' + sub + '</small>' : '') + '</div><div class="kan dz" style="color:var(--' + KEYS[es] + ')">' + s + '</div><div class="dl">' + ELTH[es] + (ys ? '+' : '−') + '<br><span class="god">' + gs + '</span></div>' +
+        '<div class="kan dz" style="color:var(--' + KEYS[eb] + ')">' + b + '</div><div class="dl">' + C.BR_TH[C.BR.indexOf(b)] + ' · ' + ELTH[C.EL_B[C.BR.indexOf(b)]] + (D.mainYang(b) ? '+' : '−') + '<br><span class="god">' + gb + '</span></div>' +
+        '<div class="hid">' + C.HIDDEN[C.BR.indexOf(b)].split('').map(function (h) { var e = elOfStem(h); return '<span class="kan" style="color:var(--' + KEYS[e] + ')">' + h + '</span>'; }).join(' ') + '</div></div>';
+    };
+    var bgod = function (b) { return godTH(C.god(N.dm, C.STEMS.indexOf(C.HIDDEN[C.BR.indexOf(b)][0]))); };
+    var favChips = [0, 1, 2, 3, 4].map(function (e) {
+      var gi = fav.good.indexOf(e), st = gi === 0 ? 'g1' : gi > 0 ? 'g' : fav.bad.indexOf(e) >= 0 ? 'b' : '';
+      return '<button type="button" class="fchip ' + KEYS[e] + ' ' + st + '" data-fav="' + e + '">' + ELTH[e] + '<small>' + (gi === 0 ? 'ให้คุณหลัก' : gi > 0 ? 'ให้คุณ' : st === 'b' ? 'ให้โทษ' : 'กลาง') + '</small></button>';
+    }).join('');
+    var pvSel = PL ? '<label class="f" style="max-width:220px"><span>ตอนนี้อยู่ที่ (ใช้คิดเวลายาม)</span><select id="dPv">' + opts(PL.map(function (p) { return [p[0], p[0]]; }), here.pv) + '</select></label>' : '';
+    var head = '<div class="card"><div class="row" style="justify-content:space-between;align-items:end">' +
+      '<div class="row"><button class="btn sm" type="button" data-dnav="-1" aria-label="วันก่อนหน้า">◀</button><label class="f" style="max-width:190px"><span>วันที่</span><input type="date" id="dDate" value="' + DY[0] + '-' + pad(DY[1]) + '-' + pad(DY[2]) + '"></label><button class="btn sm" type="button" data-dnav="1" aria-label="วันถัดไป">▶</button>' + (isToday ? '' : '<button class="btn sm" type="button" data-dnav="0">วันนี้</button>') + '</div>' + pvSel + '</div>' +
+      '<div class="favbox"><div class="sub">ธาตุให้คุณ-ให้โทษของ ' + esc(cur.nick || cur.name || 'ลูกดวง') + ' · ' + (F.manual ? '<b style="color:var(--gold)">ผู้ดูกำหนดเอง</b> <button class="btn sm" type="button" id="favReset">ใช้ค่าที่ระบบเสนอ</button>' : 'ระบบเสนอ (แตะธาตุเพื่อปรับเอง)') + '</div><div class="fchips">' + favChips + '</div><p class="hint">' + esc(F.proposed.why) + (F.manual ? '' : ' · แตะเพื่อสลับ: กลาง → ให้คุณ → ให้โทษ') + '</p></div></div>';
+    var today = '<div class="card"><div class="row" style="justify-content:space-between;align-items:start"><div><h3 style="margin:0">' + X.label + '</h3><p class="sub" style="margin:2px 0 0">' + (X.term ? '<span class="kan">' + X.term.cur.zh + '</span> ' + X.term.cur.th + ' (' + X.term.cur.n + ') ' + X.term.cur.en + ' · ' + thDate(X.term.cur.ms) + (X.term.next ? ' – ' + thDate(X.term.next.ms) : '') : '') + '</p></div>' +
+      '<div class="dscore ' + (X.score >= 7.5 ? 'hi' : X.score <= 3 ? 'lo' : '') + '"><b>' + X.score + '</b><span>คะแนนวัน</span></div></div>' +
+      '<div class="dcols">' + col('ยาม', H.gz, godH, bgod(H.gz[1]), H.from.t + '–' + H.to.t) + col('วัน', X.P.d, X.gods.d, X.bgods.d) + col('เดือน', X.P.m, X.gods.m, X.bgods.m) + col('ปี', X.P.y, X.gods.y, X.bgods.y) + '</div>' +
+      '<p class="hint">ฐานะ (十神) เทียบกับตัวเรา <span class="kan">' + R.P.d[0] + '</span> ของลูกดวง · เวลายามปรับเป็นเวลาสุริยะจริงที่' + esc(here.pv) + ' (' + (X.corr < 0 ? '−' : '+') + Math.abs(X.corr).toFixed(1) + ' นาที)</p></div>';
+    var hrs = '<div class="card"><h3>12 ยามของวันนี้</h3><p class="sub">แตะยามเพื่อดูรายละเอียดและทิศ · <span style="color:#ff6fb1">●</span> = ยามดี 3 อันดับแรก · กรอบทอง = ยามขณะนี้</p><div class="hrow">' + X.hours.map(function (h) {
+      var bestH = X.best.some(function (b) { return b.i === h.i; });
+      return '<button type="button" class="hcell' + (h.i === dSel ? ' sel' : '') + (h.i === X.nowI ? ' now' : '') + (h.score >= 7.5 ? ' hi' : h.score <= 3 ? ' lo' : '') + '" data-hr="' + h.i + '">' + (bestH ? '<i class="dot"></i>' : '') + '<span class="kan" style="color:var(--' + KEYS[elOfStem(h.gz[0])] + ')">' + h.gz[0] + '</span><span class="kan" style="color:var(--' + KEYS[elOfBr(h.gz[1])] + ')">' + h.gz[1] + '</span><small>' + C.BR_TH[h.i] + '</small><small>' + h.from.t + '</small><b>' + h.score.toFixed(1) + '</b></button>';
+    }).join('') + '</div><details class="why"><summary>ที่มาคะแนน ยาม' + C.BR_TH[dSel] + ' (' + H.gz + ') = ' + H.score + '</summary><ul>' + (H.why.length ? H.why.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') : '<li>ไม่มีปัจจัยบวกลบ (ฐาน 5)</li>') + '</ul></details>' +
+      '<details class="why"><summary>ที่มาคะแนนวัน ' + X.P.d + ' = ' + X.score + '</summary><ul>' + (X.why.length ? X.why.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') : '<li>ไม่มีปัจจัยบวกลบ (ฐาน 5)</li>') + '</ul><p class="hint">สูตรร่าง: เริ่มที่ 5 · ราศีบนธาตุให้คุณหลัก +2 ให้คุณ +1.5 ให้โทษ −1.5 · ราศีล่าง ⅔ ของค่านั้น · ภาคี/ชง/เฮ้ง/ไห่/ผั่วกับผังเกิด (เสาวันหนัก 1.5 เท่า) · ยามที่ชงวัน −1</p></details></div>';
+    var adv = '<div class="card"><h3>วันนี้ ' + X.P.d + ' — ' + X.theme + '</h3><p class="sub">ราศีบนวันเป็น ' + X.gods.d + ' (กลุ่ม' + X.group + ') ' + (X.dayGood ? '· เป็นธาตุให้คุณ' : X.dayBad ? '· เป็นธาตุให้โทษ' : '· ธาตุกลาง') + '</p>' +
+      '<div class="advg"><div><h4>✨ ควรเสริม</h4>' + (X.boost.length ? X.boost.map(function (b) { return '<p><b style="color:var(--' + KEYS[b.el] + ')">ธาตุ' + b.th + '</b> สี' + b.color + ' · ' + b.items + ' · ทิศ' + b.dir + '</p>'; }).join('') : '<p class="sub">ยังไม่ได้กำหนดธาตุให้คุณ</p>') + (X.reduce.length ? '<p class="sub">ลดสี' + X.reduce[0].color + ' (ธาตุ' + X.reduce[0].th + ')</p>' : '') + '</div>' +
+      '<div><h4>✅ ควรทำ</h4><ul>' + X.doList.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div><div><h4>⛔ ไม่ควรทำ</h4><ul>' + X.dontList.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>' +
+      '<div><h4>⏰ ยามดี</h4><ul>' + X.best.map(function (h) { return '<li>' + h.from.t + '–' + h.to.t + ' ยาม' + C.BR_TH[h.i] + ' <span class="kan">' + h.gz + '</span> (' + h.score + ')</li>'; }).join('') + '</ul></div></div>' +
+      '<div class="row" style="margin-top:12px"><button class="btn pri sm" type="button" id="dCopy">คัดลอกข้อความ (Notion / LINE)</button><button class="btn sm" type="button" id="dCode">คัดลอกรหัสผังสำหรับแจ้งเตือนอัตโนมัติ</button></div>' +
+      '<textarea id="dText" class="dtext" readonly rows="9">' + esc(D.text(X, cur.nick || '', fav)) + '</textarea><p class="hint">คำแนะนำเป็นร่างแรก ให้ Tommie ปรับคำได้ ข้อความนี้ไม่มีวันเดือนปีเกิดของลูกดวง</p></div>';
+    var dirsSel = { h: D.directions(H.gz[1]), d: X.dirs.d, m: X.dirs.m, y: X.dirs.y }[dLevel], lvName = { h: 'ยาม' + C.BR_TH[dSel], d: 'วัน', m: 'เดือน', y: 'ปี' }[dLevel];
+    var comp = '<div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0">ทิศอสูร และ ทิศแตก</h3><div class="seg">' + LEVEL.map(function (L) { return '<button type="button" data-lv="' + L[0] + '" aria-pressed="' + (dLevel === L[0]) + '">' + L[1] + '</button>'; }).join('') + '</div></div>' +
+      '<div class="compwrap">' + compassSVG(X, dLevel) + '<div><p><b style="color:var(--fire)">ทิศอสูร (三煞) ของ' + lvName + '</b><br>' + dirsSel.asura.br.split('').join(' ') + ' · ' + dirsSel.asura.from + '°–' + dirsSel.asura.to + '° (' + dirsSel.asura.name + ')</p><p><b style="color:var(--fire)">ทิศแตก (沖) ของ' + lvName + '</b><br>' + dirsSel.broken.br + ' · ' + dirsSel.broken.from + '°–' + dirsSel.broken.to + '° (' + dirsSel.broken.name + ')</p>' +
+      '<p class="hint">สีเข้ม = ระดับที่เลือก · สีอ่อน = ทิศของระดับอื่น (ยาม วัน เดือน ปี) · แต่ละนักษัตรกว้าง 30° เริ่มที่ ชวด 0°–30° ตามผังที่ อ.มาศ ใช้ · ทิศใต้อยู่ด้านบน</p></div></div></div>';
+    var G = D.monthGrid(N, fav, DY[0], DY[1], here.lon), MOON = { 0: '●', 0.25: '☽', 0.5: '○', 0.75: '☾' };
+    var cal = '<div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0">ปฏิทิน ' + MONTH[DY[1] - 1] + ' ' + (DY[0] + 543) + '</h3><div class="row"><button class="btn sm" type="button" data-mnav="-1">◀ เดือนก่อน</button><button class="btn sm" type="button" data-mnav="1">เดือนถัดไป ▶</button></div></div>' +
+      '<div class="cal"><b>อา</b><b>จ</b><b>อ</b><b>พ</b><b>พฤ</b><b>ศ</b><b>ส</b>' + Array(G.first + 1).join('<i></i>') + G.days.map(function (x) {
+        var tdy = DY[0] === T[0] && DY[1] === T[1] && x.d === T[2];
+        return '<button type="button" class="cd' + (x.d === DY[2] ? ' sel' : '') + (tdy ? ' tdy' : '') + (x.score >= 7.5 ? ' hi' : x.score <= 2 ? ' lo' : '') + '" data-cd="' + x.d + '" title="คะแนน ' + x.score + '"><span class="n">' + x.d + (x.moon ? ' <span class="mo' + (x.moon.q === 0.5 ? ' full' : '') + '" title="' + D.MOON_TH[x.moon.q] + '">' + MOON[x.moon.q] + '</span>' : '') + (x.term ? ' <span class="tm" title="' + x.term.zh + ' ' + x.term.th + '">' + (x.term.qi ? '▲' : '★') + '</span>' : '') + '</span><span class="kan g"><span style="color:var(--' + KEYS[elOfStem(x.gz[0])] + ')">' + x.gz[0] + '</span><span style="color:var(--' + KEYS[elOfBr(x.gz[1])] + ')">' + x.gz[1] + '</span></span><small>' + x.score.toFixed(1) + '</small></button>';
+      }).join('') + '</div><p class="hint">พื้นทอง = วันดีของลูกดวง (7.5 ขึ้นไป) · ขอบแดง = วันควรระวัง (2 ลงมา) · ● จันทร์ดับ ☽ ข้างขึ้นครึ่งดวง ○ จันทร์เต็มดวง ☾ ข้างแรมครึ่งดวง · ★ เริ่มปักษ์ (節) · ▲ 中氣 วันเปลี่ยนเดือนตามระบบ อ.มาศ</p></div>';
+    setTimeout(bindDaily, 0);
+    return head + today + hrs + adv + comp + cal;
+  }
+  function bindDaily() {
+    var b = $('#body'); if (!b || b.dataset.dy) return; b.dataset.dy = 1;
+    var setDay = function (y, m, d) { var t = new Date(Date.UTC(y, m - 1, d)); DY = [t.getUTCFullYear(), t.getUTCMonth() + 1, t.getUTCDate()]; dSel = null; renderBody(); };
+    b.addEventListener('click', function (e) {
+      if (tab !== 'daily') return;
+      var t = e.target.closest('[data-dnav],[data-hr],[data-lv],[data-cd],[data-mnav],[data-fav],#favReset,#dCopy,#dCode'); if (!t) return;
+      if (t.dataset.dnav != null) { var n = +t.dataset.dnav; if (n === 0) { DY = null; dSel = null; renderBody(); } else setDay(DY[0], DY[1], DY[2] + n); }
+      else if (t.dataset.hr != null) { dSel = +t.dataset.hr; renderBody(); }
+      else if (t.dataset.lv) { dLevel = t.dataset.lv; renderBody(); }
+      else if (t.dataset.cd) setDay(DY[0], DY[1], +t.dataset.cd);
+      else if (t.dataset.mnav) setDay(DY[0], DY[1] + +t.dataset.mnav, 1);
+      else if (t.dataset.fav != null) {
+        var e5 = +t.dataset.fav, N = D.natal(compute(cur).P), F = favOf(N), f = { good: F.use.good.slice(), bad: F.use.bad.slice() };
+        if (f.good.indexOf(e5) >= 0) { f.good.splice(f.good.indexOf(e5), 1); f.bad.push(e5); } else if (f.bad.indexOf(e5) >= 0) f.bad.splice(f.bad.indexOf(e5), 1); else f.good.push(e5);
+        cur.fav = f; cur.updated = Date.now(); save(); renderBody();
+      }
+      else if (t.id === 'favReset') { delete cur.fav; save(); renderBody(); }
+      else if (t.id === 'dCopy' || t.id === 'dCode') {
+        var txt;
+        if (t.id === 'dCopy') txt = $('#dText').value;
+        else { var R0 = compute(cur), N0 = D.natal(R0.P), F0 = favOf(N0).use; txt = (cur.nick || 'ลูกดวง') + ' | ' + [R0.P.y, R0.P.m, R0.P.d, R0.P.h || '？？'].join(' ') + ' | ให้คุณ: ' + F0.good.map(function (x) { return ELTH[x]; }).join(' ') + ' | ให้โทษ: ' + F0.bad.map(function (x) { return ELTH[x]; }).join(' '); }
+        var done = function () { toast('คัดลอกแล้ว'); };
+        try { navigator.clipboard.writeText(txt).then(done, function () { var ta = $('#dText'); ta.value = txt; ta.select(); toast('เลือกข้อความไว้แล้ว กดคัดลอกเองได้เลย'); }); } catch (x) { var ta = $('#dText'); ta.value = txt; ta.select(); }
+      }
+    });
+    b.addEventListener('change', function (e) {
+      if (tab !== 'daily') return;
+      if (e.target.id === 'dDate' && e.target.value) { var p = e.target.value.split('-'); setDay(+p[0], +p[1], +p[2]); }
+      if (e.target.id === 'dPv') { db.settings = db.settings || {}; db.settings.herePv = e.target.value; save(); renderBody(); }
+    });
   }
 
   /* --- tab: compare --- */

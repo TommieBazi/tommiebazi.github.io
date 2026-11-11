@@ -201,6 +201,6 @@
   }
   var api = { STEMS: STEMS, BR: BR, EL_S: EL_S, EL_B: EL_B, EL_TH: EL_TH, EL_ZH: EL_ZH, EL_KEY: EL_KEY, BR_TH: BR_TH, HIDDEN: HIDDEN, GODS: GODS, GOD_TRAD: GOD_TRAD,
     STAGES: STAGES, STAGES_TH: STAGES_TH, TERM_TH: TERM_TH, pillars: pillars, analyse: analyse, luck: luck, months: months, yearGz: yearGz, relTo: relTo, relPair: relPair,
-    god: god, stage: stage, nayin: nayin, idx60: idx60, gz: gz, eot: eot, solarCorr: solarCorr, strength: strength };
+    god: god, stage: stage, nayin: nayin, idx60: idx60, gz: gz, eot: eot, solarCorr: solarCorr, strength: strength, termTable: termTable };
   if (typeof module !== 'undefined') module.exports = api; else root.TBZ = api;
 })(this);
