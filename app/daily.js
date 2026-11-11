@@ -101,7 +101,7 @@
   function dirName(deg) { deg = ((deg % 360) + 360) % 360; return ['เหนือ', 'ตะวันออกเฉียงเหนือ', 'ตะวันออก', 'ตะวันออกเฉียงใต้', 'ใต้', 'ตะวันตกเฉียงใต้', 'ตะวันตก', 'ตะวันตกเฉียงเหนือ'][Math.round(deg / 45) % 8]; }
   function directions(b) {
     var sha = SANSHA[b], clash = BR[(BR.indexOf(b) + 6) % 12], a = sector(sha[0])[0];
-    return { asura: { br: sha, from: a, to: a + 90, name: dirName(a + 45) }, broken: { br: clash, from: sector(clash)[0], to: sector(clash)[1], name: dirName(sector(clash)[0] + 15) } };
+    return { asura: { br: sha, from: a, to: (a + 90) % 360, name: dirName(a + 45) }, broken: { br: clash, from: sector(clash)[0], to: sector(clash)[1], name: dirName(sector(clash)[0] + 15) } };
   }
 
   /* ---------- scoring (draft weights, 0–10) ---------- */
