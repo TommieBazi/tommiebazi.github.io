@@ -129,10 +129,24 @@
     sc = sc.map(function (v) { return Math.round(v * 100) / 100; });
     var dm = EL_S[STEMS.indexOf(P.d[0])], res = (dm + 4) % 5;
     var support = Math.round((sc[dm] + sc[res]) * 100) / 100;
-    var opp = [['ถ่ายเท', sc[(dm + 1) % 5]], ['โชคลาภ', sc[(dm + 2) % 5]], ['อำนาจ', sc[(dm + 3) % 5]]].sort(function (a, b) { return b[1] - a[1]; })[0][0];
-    var verdict = support >= 8 ? { k: 'gold', th: 'ดิถีเป็นกระแส' + EL_TH[dm], el: dm } : support >= 5 ? { k: 'strong', th: 'ดิถีแข็ง' } : support >= 4.5 ? { k: 'bal', th: 'ดิถีสมดุล' } : support >= 2 ? { k: 'weak', th: 'ดิถีอ่อน' } : { k: 'follow', th: 'สละดิถีตามธาตุ' + opp, fam: opp };
-    return { scores: sc, total: total, dm: dm, resource: res, support: support, oppose: total - support, pct: support / total * 100, verdict: verdict,
+    var k = support >= 8 ? 'gold' : support >= 5 ? 'strong' : support >= 4.5 ? 'bal' : support >= 2 ? 'weak' : 'follow';
+    var out = { scores: sc, total: total, dm: dm, resource: res, support: support, oppose: total - support, pct: support / total * 100,
       parts: { same: sc[dm], resource: sc[res], output: sc[(dm + 1) % 5], wealth: sc[(dm + 2) % 5], power: sc[(dm + 3) % 5] } };
+    out.verdict = out.calcVerdict = verdictOf(k, out);
+    return out;
+  }
+  /* verdict label for a class key — also used when Tommie overrides the computed ดิถี */
+  var VERDICT_KEYS = ['follow', 'weak', 'bal', 'strong', 'gold'];
+  function verdictOf(k, S) {
+    var sc = S.scores, dm = S.dm;
+    if (k === 'gold') return { k: k, th: 'ดิถีเป็นกระแส' + EL_TH[dm], el: dm };
+    if (k === 'follow') { var opp = [['ถ่ายเท', sc[(dm + 1) % 5]], ['โชคลาภ', sc[(dm + 2) % 5]], ['อำนาจ', sc[(dm + 3) % 5]]].sort(function (a, b) { return b[1] - a[1]; })[0][0]; return { k: k, th: 'สละดิถีตามธาตุ' + opp, fam: opp }; }
+    return { k: k, th: { strong: 'ดิถีแข็ง', bal: 'ดิถีสมดุล', weak: 'ดิถีอ่อน' }[k] };
+  }
+  /* apply Tommie's own verdict (keeps the computed one as calcVerdict) */
+  function applyVerdict(S, over) {
+    if (!over || !over.k || VERDICT_KEYS.indexOf(over.k) < 0) { S.verdict = S.calcVerdict; S.manual = null; return S; }
+    S.verdict = verdictOf(over.k, S); S.manual = { k: over.k, why: over.why || '' }; return S;
   }
   function analyse(P) {
     var dm = STEMS.indexOf(P.d[0]), keys = P.h ? ['h', 'd', 'm', 'y'] : ['d', 'm', 'y'], cols = {};
@@ -201,6 +215,6 @@
   }
   var api = { STEMS: STEMS, BR: BR, EL_S: EL_S, EL_B: EL_B, EL_TH: EL_TH, EL_ZH: EL_ZH, EL_KEY: EL_KEY, BR_TH: BR_TH, HIDDEN: HIDDEN, GODS: GODS, GOD_TRAD: GOD_TRAD,
     STAGES: STAGES, STAGES_TH: STAGES_TH, TERM_TH: TERM_TH, pillars: pillars, analyse: analyse, luck: luck, months: months, yearGz: yearGz, relTo: relTo, relPair: relPair,
-    god: god, stage: stage, nayin: nayin, idx60: idx60, gz: gz, eot: eot, solarCorr: solarCorr, strength: strength, termTable: termTable };
+    god: god, stage: stage, nayin: nayin, idx60: idx60, gz: gz, eot: eot, solarCorr: solarCorr, strength: strength, termTable: termTable, verdictOf: verdictOf, applyVerdict: applyVerdict, VERDICT_KEYS: VERDICT_KEYS };
   if (typeof module !== 'undefined') module.exports = api; else root.TBZ = api;
 })(this);

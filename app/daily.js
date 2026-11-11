@@ -61,10 +61,10 @@
   var MOON_TH = { 0: 'จันทร์ดับ', 0.25: 'ข้างขึ้นครึ่งดวง', 0.5: 'จันทร์เต็มดวง', 0.75: 'ข้างแรมครึ่งดวง' };
 
   /* ---------- natal: favourable elements (扶抑, draft) ---------- */
-  function natal(P) { var A = C.analyse(P); return { P: P, A: A, S: A.strength, dm: STEMS.indexOf(P.d[0]), dmEl: EL_S[STEMS.indexOf(P.d[0])] }; }
+  function natal(P, opts) { var A = C.analyse(P); if (opts && opts.verdict) C.applyVerdict(A.strength, opts.verdict); return { P: P, A: A, S: A.strength, dm: STEMS.indexOf(P.d[0]), dmEl: EL_S[STEMS.indexOf(P.d[0])] }; }
   function famEl(dmEl, f) { return (dmEl + f) % 5; } // f: 0 same, 1 output, 2 wealth, 3 power, 4 resource
   function proposeFav(N) {
-    if (!N.P.h) return { good: [], bad: [], why: 'ไม่ทราบเวลาเกิด จึงยังไม่เสนอธาตุให้คุณ-ให้โทษ (ให้ผู้ดูกำหนดเอง)' };
+    if (!N.P.h && !N.S.manual) return { good: [], bad: [], why: 'ไม่ทราบเวลาเกิด จึงยังไม่เสนอธาตุให้คุณ-ให้โทษ (ให้ผู้ดูยืนยันดิถี หรือกำหนดธาตุเอง)' };
     var S = N.S, d = N.dmEl, p = S.parts, E = function (f) { return famEl(d, f); }, k = S.verdict.k, why;
     var good, bad;
     if (k === 'weak') {
@@ -94,6 +94,61 @@
     return { good: good, bad: bad, why: why };
   }
 
+  /* ---------- กิ่งฟ้า / ก้านดิน: each stem and branch gets its own status ----------
+     stems follow their element; a branch follows its main qi, but a branch that ชง a natal branch carrying a
+     ธาตุให้คุณ becomes ให้โทษ (e.g. metal is useful, 申 is fine, 酉 is not because 酉 ชง 卯 the useful wood).
+     over = { st: {甲: 'g'|'b'|'n'}, br: {酉: 'b'} } — Tommie's own calls win. */
+  var ST = { g1: 'ให้คุณหลัก', g: 'ให้คุณ', b: 'ให้โทษ', n: 'กลาง' };
+  function itemFav(N, fav, over) {
+    over = over || {}; var st = {}, br = {};
+    var elSt = function (e) { var i = fav.good.indexOf(e); return i === 0 ? 'g1' : i > 0 ? 'g' : fav.bad.indexOf(e) >= 0 ? 'b' : 'n'; };
+    STEMS.split('').forEach(function (s) { var a = elSt(EL_S[STEMS.indexOf(s)]), m = over.st && over.st[s]; st[s] = { s: m || a, auto: a, manual: !!m, why: 'ธาตุ' + EL_TH[EL_S[STEMS.indexOf(s)]] + ST[a] }; });
+    var natB = ['y', 'm', 'd', 'h'].filter(function (k) { return N.P[k]; }).map(function (k) { return { k: k, b: N.P[k][1] }; });
+    BR.split('').forEach(function (b) {
+      var a = elSt(mainEl(b)), why = 'ธาตุแฝงหลัก' + EL_TH[mainEl(b)] + ST[a];
+      natB.forEach(function (x) {
+        if (BR[(BR.indexOf(b) + 6) % 12] === x.b && fav.good.indexOf(mainEl(x.b)) >= 0 && a !== 'b') { a = 'b'; why = 'ชง ' + x.b + ' ในผังเกิด (เสา' + { y: 'ปี', m: 'เดือน', d: 'วัน', h: 'ยาม' }[x.k] + ' ธาตุ' + EL_TH[mainEl(x.b)] + 'ให้คุณ)'; }
+      });
+      var m = over.br && over.br[b]; br[b] = { s: m || a, auto: a, manual: !!m, why: why };
+    });
+    return { st: st, br: br };
+  }
+
+  /* ---------- คู่ดาวเทพ (ten-god pairs) — readings written with Tommie ---------- */
+  var COMBOS = [
+    ['食神制殺', ['食神'], ['七杀'], 'ใช้ไหวพริบคุมแรงกดดันได้นิ่ง ยิ่งวิกฤตยิ่งเห็นฝีมือ', 'บันเทิงมากจนนักรบหมดแรง จะขาดวินัยและแรงผลัก'],
+    ['殺印相生', ['七杀'], ['正印', '偏印'], 'แรงกดดันกลายเป็นบทเรียน ยิ่งโดนท้าทายยิ่งเก่ง มีผู้ใหญ่หนุน', 'ถ้าดิถีแข็งอยู่แล้ว จะดื้อและเชื่อตัวเองเกินไป'],
+    ['官印相生', ['正官'], ['正印'], 'ก้าวหน้าตามขั้นในองค์กร ชื่อเสียงดี คนไว้ใจ', 'ยึดกฎจนไม่กล้าเสี่ยง พลาดโอกาสนอกกรอบ'],
+    ['傷官見官', ['伤官'], ['正官'], 'ถ้ามีความรู้คั่นกลาง จะเป็นนักปฏิรูปที่กล้าพูดความจริง', 'ปากไวขัดผู้ใหญ่ มีเรื่องกับหัวหน้าหรือกฎระเบียบ ผู้หญิงระวังเรื่องคู่ครอง'],
+    ['傷官配印', ['伤官'], ['正印'], 'ความเก่งมีหลักวิชาคุม เหมาะเป็นครู ที่ปรึกษา ผู้เชี่ยวชาญ', 'คิดเยอะจนลงมือช้า'],
+    ['食神生財', ['食神'], ['正财', '偏财'], 'หาเงินจากฝีมือและสิ่งที่รัก งานบริการ อาหาร คอนเทนต์', 'ถ้าดิถีอ่อน ทำมาก เหนื่อยมาก ได้ไม่คุ้มแรง'],
+    ['傷官生財', ['伤官'], ['偏财'], 'หัวการค้า ขายเก่ง เปลี่ยนไอเดียเป็นเงินไว', 'ได้เร็วเสียเร็ว ชอบเสี่ยงเกินตัว'],
+    ['財官雙美', ['正财'], ['正官'], 'เงินหนุนตำแหน่ง ฐานะมั่นคง ผู้ชายได้คู่ครองช่วยงาน', 'ดิถีอ่อนจะแบกไม่ไหว เครียดจากความรับผิดชอบ'],
+    ['財滋殺', ['偏财'], ['七杀'], 'ถ้าดิถีแข็ง เป็นนักธุรกิจกล้าได้กล้าเสีย', 'เงินพาแรงกดดันมา หนี้ ความขัดแย้ง การลงทุนเสี่ยงสูง'],
+    ['梟神奪食', ['偏印'], ['食神'], 'ถ้ามีโชคลาภคุม จะเป็นคนมีญาณ วิเคราะห์ลึก', 'คิดมากจนความสุขหาย เริ่มแล้วล้มเลิก ผู้หญิงห่วงเรื่องลูก'],
+    ['比劫奪財', ['劫财'], ['正财'], 'ถ้าดิถีอ่อน เพื่อนและหุ้นส่วนช่วยแบกงานใหญ่', 'เงินรั่ว หุ้นส่วนแย่งผลประโยชน์ ระวังค้ำประกัน ผู้ชายระวังมือที่สาม'],
+    ['財壞印', ['正财', '偏财'], ['正印'], 'ถ้าดิถีแข็งเพราะส่งเสริมมาก เงินทำให้ลงมือจริง ไม่คิดอย่างเดียว', 'ทิ้งการเรียนหรือหลักการเพื่อเงิน ห่วงเรื่องมารดา'],
+    ['官殺混雜', ['正官'], ['七杀'], 'ถ้ามีภาคีดึงออกไปตัวหนึ่ง จะกลายเป็นคนมีอำนาจชัดเจน', 'เป้าหมายไม่ชัด หลายนายหลายทาง ผู้หญิงระวังความรักซ้อน'],
+    ['劫財駕殺', ['劫财'], ['七杀'], 'นักสู้ ผู้นำยามวิกฤต งานเครื่องแบบ งานที่ต้องกล้าตัดสินใจ', 'แข็งชนแข็ง ขัดแย้งรุนแรง ระวังอุบัติเหตุ'],
+    ['比肩食神', ['比肩'], ['食神'], 'ทำงานกับเพื่อนแล้วสนุก สร้างชุมชนเก่ง', 'ทำเพราะสนุกแต่ไม่เก็บเงิน']
+  ];
+  function combos(N, fav) {
+    var dm = N.dm, nm = { y: 'ปี', m: 'เดือน', d: 'วัน', h: 'ยาม' }, have = {};
+    var put = function (g, where, el) { (have[g] = have[g] || { where: [], el: el }).where.push(where); };
+    ['y', 'm', 'h'].forEach(function (k) { if (N.P[k]) { var s = STEMS.indexOf(N.P[k][0]); put(C.god(dm, s), 'ราศีบน' + nm[k], EL_S[s]); } });
+    ['y', 'm', 'd', 'h'].forEach(function (k) { if (N.P[k]) { var h = C.HIDDEN[BR.indexOf(N.P[k][1])][0], s = STEMS.indexOf(h); put(C.god(dm, s), 'ราศีล่าง' + nm[k], EL_S[s]); } });
+    var out = [];
+    COMBOS.forEach(function (c) {
+      var a = c[1].filter(function (g) { return have[g]; }), b = c[2].filter(function (g) { return have[g]; });
+      if (!a.length || !b.length) return;
+      var gs = a.concat(b), els = gs.map(function (g) { return have[g].el; });
+      var good = els.every(function (e) { return fav.good.indexOf(e) >= 0; }), bad = els.some(function (e) { return fav.bad.indexOf(e) >= 0; });
+      out.push({ zh: c[0], th: gs.map(function (g) { return C.GODS[g]; }).join(' + '), good: c[3], bad: c[4], tone: good ? 'good' : bad ? 'caution' : 'mixed',
+        where: gs.map(function (g) { return C.GODS[g] + ' (' + have[g].where.join(', ') + ')'; }) });
+    });
+    return out;
+  }
+
   /* ---------- 三煞 (ทิศอสูร) and 沖 (ทิศแตก) ---------- */
   var SANSHA = { 申: '巳午未', 子: '巳午未', 辰: '巳午未', 亥: '申酉戌', 卯: '申酉戌', 未: '申酉戌', 寅: '亥子丑', 午: '亥子丑', 戌: '亥子丑', 巳: '寅卯辰', 酉: '寅卯辰', 丑: '寅卯辰' };
   /* อ.มาศ compass: each branch spans 30° starting at 子 = 0°–30° (shifted half a sector, like the 中氣 months) */
@@ -106,11 +161,11 @@
 
   /* ---------- scoring (draft weights, 0–10) ---------- */
   function scorePillar(g, N, fav, extra) {
-    var s = 5, why = [], gEl = EL_S[STEMS.indexOf(g[0])], bEl = mainEl(g[1]);
-    var rank = function (e) { var i = fav.good.indexOf(e); if (i >= 0) return i === 0 ? 2 : 1.5; return fav.bad.indexOf(e) >= 0 ? -1.5 : 0; };
-    var a = rank(gEl), b = rank(bEl) * (2 / 3);
-    if (a) { s += a; why.push((a > 0 ? '+' : '') + a + ' ราศีบน ' + g[0] + ' ธาตุ' + EL_TH[gEl] + (a > 0 ? 'ให้คุณ' : 'ให้โทษ')); }
-    if (b) { s += b; why.push((b > 0 ? '+' : '') + b.toFixed(1).replace('.0', '') + ' ราศีล่าง ' + g[1] + ' ธาตุ' + EL_TH[bEl] + (b > 0 ? 'ให้คุณ' : 'ให้โทษ')); }
+    var s = 5, why = [], IT = fav.items || (fav.items = itemFav(N, fav, fav.over));
+    var V = { g1: 2, g: 1.5, b: -1.5, n: 0 }, si = IT.st[g[0]], bi = IT.br[g[1]];
+    var a = V[si.s], b = Math.round(V[bi.s] * 2 / 3 * 100) / 100;
+    if (a) { s += a; why.push((a > 0 ? '+' : '') + a + ' กิ่งฟ้า ' + g[0] + ' ' + ST[si.s] + (si.manual ? ' (ผู้ดูกำหนด)' : '')); }
+    if (b) { s += b; why.push((b > 0 ? '+' : '') + b + ' ก้านดิน ' + g[1] + ' ' + ST[bi.s] + (bi.manual ? ' (ผู้ดูกำหนด)' : ' · ' + bi.why)); }
     var W = { 合: 0.75, 沖: -1.25, 刑: -0.5, 害: -0.4, 破: -0.3 }, names = { y: 'ปี', m: 'เดือน', d: 'วัน', h: 'ยาม' };
     ['d', 'y', 'm', 'h'].forEach(function (k) {
       if (!N.P[k]) return; var w = k === 'd' ? 1.5 : 1;
@@ -159,7 +214,7 @@
     var nowI = -1;
     if (nowMs != null) { var nd = new Date(nowMs); if (nd.getUTCFullYear() === y && nd.getUTCMonth() + 1 === m && nd.getUTCDate() === d) { var mins = nd.getUTCHours() * 60 + nd.getUTCMinutes(); hours.forEach(function (h) { if (mins >= h.fromMin && mins < h.toMin) nowI = h.i; }); } }
     var best = hours.slice().sort(function (a, b) { return b.score - a.score || a.i - b.i; }).slice(0, 3).sort(function (a, b) { return a.i - b.i; });
-    var grp = groupOf(P.d[0]), gEl = EL_S[STEMS.indexOf(P.d[0])], isGood = fav.good.indexOf(gEl) >= 0, isBad = fav.bad.indexOf(gEl) >= 0;
+    var grp = groupOf(P.d[0]), gEl = EL_S[STEMS.indexOf(P.d[0])], IT0 = fav.items || (fav.items = itemFav(N, fav, fav.over)), isGood = /^g/.test(IT0.st[P.d[0]].s), isBad = IT0.st[P.d[0]].s === 'b';
     var adv = ADV[grp], doList = [], dontList = [];
     if (isBad) { doList.push('เสริมธาตุให้คุณให้มากกว่าปกติ (ดูหัวข้อควรเสริม)'); doList.push(adv.good[0] + ' แบบพอดี'); dontList = adv.bad.slice(); }
     else { doList = adv.good.slice(); dontList = adv.bad.slice(0, 2); }
@@ -202,6 +257,6 @@
     if (R.term) L.push('🌏 ปักษ์: ' + R.term.cur.zh + ' ' + R.term.cur.th + ' (' + R.term.cur.n + ')');
     return L.join('\n');
   }
-  var api = { natal: natal, proposeFav: proposeFav, day: day, monthGrid: monthGrid, text: text, directions: directions, moonPhases: moonPhases, MOON_TH: MOON_TH, terms: terms, termAt: termAt, scorePillar: scorePillar, GROUP: GROUP, mainEl: mainEl, mainYang: mainYang, BOOST: BOOST };
+  var api = { natal: natal, proposeFav: proposeFav, itemFav: itemFav, combos: combos, COMBOS: COMBOS, ST: ST, day: day, monthGrid: monthGrid, text: text, directions: directions, moonPhases: moonPhases, MOON_TH: MOON_TH, terms: terms, termAt: termAt, scorePillar: scorePillar, GROUP: GROUP, mainEl: mainEl, mainYang: mainYang, BOOST: BOOST };
   if (typeof module !== 'undefined') module.exports = api; else root.TBZDaily = api;
 })(this);
