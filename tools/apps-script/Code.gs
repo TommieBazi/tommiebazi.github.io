@@ -29,6 +29,11 @@ function loadEngine_() {
 function props_() { return PropertiesService.getScriptProperties(); }
 function nowTh_() { return Date.now() + 7 * 3600000; } // Thai wall clock in UTC fields
 function ymdTh_(offsetDays) { var d = new Date(nowTh_() + (offsetDays || 0) * 864e5); return [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()]; }
+function dmy_(v) { // "11/05/2541" or a Date the sheet converted → [d, m, yBE]
+  if (Object.prototype.toString.call(v) === '[object Date]') { var t = new Date(v.getTime() + 7 * 3600000); return [t.getUTCDate(), t.getUTCMonth() + 1, t.getUTCFullYear() + 543]; }
+  var b = String(v || '').trim().split(/[\/\-.]/); if (b.length < 3) return null; var y = +b[2]; if (y < 2400) y += 543; return [+b[0], +b[1], y];
+}
+function hm_(v) { if (Object.prototype.toString.call(v) === '[object Date]') { var t = new Date(v.getTime() + 7 * 3600000); return [t.getUTCHours(), t.getUTCMinutes()]; } var s = String(v || '').trim(); if (!s) return null; var p = s.split(/[:.]/); return [+p[0], +(p[1] || 0)]; }
 function truthy_(v) { return v === true || String(v).toUpperCase() === 'TRUE' || v === 'ใช่'; }
 
 /* ---------- rows ---------- */
@@ -47,11 +52,10 @@ function log_(code, nick, ch, status, detail) {
 function pillarsOf_(row) {
   var v = row.v, txt = String(v[COL.pillars] || '').trim();
   if (txt) { var g = txt.split(/\s+/); return { y: g[0], m: g[1], d: g[2], h: g[3] && !/[？?]/.test(g[3]) ? g[3] : null }; }
-  var b = String(v[COL.bdate] || '').trim().split(/[\/\-.]/); if (b.length < 3) throw new Error('ไม่มีวันเกิดหรือผังสี่เสา');
-  var y = +b[2]; if (y > 2400) y -= 543;
-  var noTime = truthy_(v[COL.notime]) || !String(v[COL.btime] || '').trim(), t = String(v[COL.btime] || '12:00').split(':');
+  var b = dmy_(v[COL.bdate]); if (!b) throw new Error('ไม่มีวันเกิดหรือผังสี่เสา');
+  var y = b[2] - 543, t = hm_(v[COL.btime]), noTime = truthy_(v[COL.notime]) || !t; t = t || [12, 0];
   var lon = v[COL.lon] === '' || v[COL.lon] == null ? null : +v[COL.lon];
-  var P = TBZ.pillars([y, +b[1], +b[0], noTime ? 12 : +t[0], noTime ? 0 : +(t[1] || 0)], { tz: 7, lon: lon, system: /ทั่วไป|std/.test(String(v[COL.sys])) ? 'std' : 'amat', noTime: noTime });
+  var P = TBZ.pillars([y, b[1], b[0], noTime ? 12 : t[0], noTime ? 0 : t[1]], { tz: 7, lon: lon, system: /ทั่วไป|std/.test(String(v[COL.sys])) ? 'std' : 'amat', noTime: noTime });
   return { y: P.y, m: P.m, d: P.d, h: P.h };
 }
 function verdictKey_(txt) {
@@ -143,9 +147,8 @@ function handleLine_(ev) {
 function register_(token, uid, m) {
   var code = m[1].toUpperCase().replace(/^TB-?/, 'TB-'), dd = +m[2], mm = +m[3], yy = +m[4]; if (yy < 2400) yy += 543;
   var row = rows_().filter(function (r) { return String(r.v[COL.code]).toUpperCase() === code; })[0];
-  var b = row ? String(row.v[COL.bdate]).split(/[\/\-.]/) : [];
-  var by = +b[2]; if (by && by < 2400) by += 543;
-  if (!row || +b[0] !== dd || +b[1] !== mm || by !== yy) { log_(code, '', 'LINE', 'สมัครไม่ผ่าน', 'รหัสหรือวันเกิดไม่ตรง'); return reply_(token, 'รหัสหรือวันเกิดไม่ตรงกับที่บันทึกไว้ครับ ลองตรวจอีกครั้ง หรือทักถาม Tommie ได้เลยครับ'); }
+  var b = row ? dmy_(row.v[COL.bdate]) : null;
+  if (!row || !b || b[0] !== dd || b[1] !== mm || b[2] !== yy) { log_(code, '', 'LINE', 'สมัครไม่ผ่าน', 'รหัสหรือวันเกิดไม่ตรง'); return reply_(token, 'รหัสหรือวันเกิดไม่ตรงกับที่บันทึกไว้ครับ ลองตรวจอีกครั้ง หรือทักถาม Tommie ได้เลยครับ'); }
   if (row.v[COL.lineId] && String(row.v[COL.lineId]) !== uid) { log_(code, row.v[COL.nick], 'LINE', 'สมัครซ้ำ', 'มีบัญชีอื่นผูกไว้แล้ว'); return reply_(token, 'รหัสนี้ผูกกับบัญชี LINE อื่นไว้แล้วครับ ทักบอก Tommie เพื่อเปลี่ยนให้'); }
   setCell_(row.r, COL.lineId, uid); setCell_(row.r, COL.consent, new Date());
   if (!row.v[COL.channel]) setCell_(row.r, COL.channel, 'LINE');
