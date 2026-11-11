@@ -247,7 +247,7 @@
   function text(R, who, fav) {
     var L = [];
     L.push('📅 ' + R.label + (who ? ' · ' + who : ''));
-    L.push('วันนี้: ' + R.P.d + ' (' + R.gods.d + ' · กลุ่ม' + R.group + ') — ' + R.theme);
+    L.push('ประจำวัน: ' + R.P.d + ' (' + R.gods.d + ' · กลุ่ม' + R.group + ') — ' + R.theme);
     L.push('ปี ' + R.P.y + ' · เดือน ' + R.P.m + ' · คะแนนวัน ' + R.score + '/10');
     if (R.boost.length) L.push('✨ เสริม: ' + R.boost.map(function (b) { return 'ธาตุ' + b.th + ' (สี' + b.color + ' · ' + b.items + ' · ทิศ' + b.dir + ')'; }).join(' / '));
     if (R.reduce.length) L.push('🔻 ลด: สี' + R.reduce[0].color + ' (ธาตุ' + R.reduce[0].th + ')');

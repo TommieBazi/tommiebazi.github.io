@@ -717,7 +717,7 @@ button.lk.sel { background: var(--ink-4); border-color: var(--soft); }
       '<div class="advg"><div><h4>✨ ควรเสริม</h4>' + (X.boost.length ? X.boost.map(function (b) { return '<p><b style="color:var(--' + KEYS[b.el] + ')">ธาตุ' + b.th + '</b> สี' + b.color + ' · ' + b.items + ' · ทิศ' + b.dir + '</p>'; }).join('') : '<p class="sub">ยังไม่ได้กำหนดธาตุให้คุณ</p>') + (X.reduce.length ? '<p class="sub">ลดสี' + X.reduce[0].color + ' (ธาตุ' + X.reduce[0].th + ')</p>' : '') + '</div>' +
       '<div><h4>✅ ควรทำ</h4><ul>' + X.doList.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div><div><h4>⛔ ไม่ควรทำ</h4><ul>' + X.dontList.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>' +
       '<div><h4>⏰ ยามดี</h4><ul>' + X.best.map(function (h) { return '<li>' + h.from.t + '–' + h.to.t + ' ยาม' + C.BR_TH[h.i] + ' <span class="kan">' + h.gz + '</span> (' + h.score + ')</li>'; }).join('') + '</ul></div></div>' +
-      '<div class="row" style="margin-top:12px"><button class="btn pri sm" type="button" id="dCopy">คัดลอกข้อความ (Notion / LINE)</button><button class="btn sm" type="button" id="dCode">คัดลอกรหัสผังสำหรับแจ้งเตือนอัตโนมัติ</button></div>' +
+      '<div class="row" style="margin-top:12px"><button class="btn pri sm" type="button" id="dCopy">คัดลอกข้อความ (Notion / LINE)</button><button class="btn sm" type="button" id="dCode">คัดลอกแถวสำหรับ Google Sheet' + (cur.code ? ' (' + esc(cur.code) + ')' : '') + '</button></div>' +
       '<textarea id="dText" class="dtext" readonly rows="9">' + esc(D.text(X, cur.nick || '', fav)) + '</textarea><p class="hint">คำแนะนำเป็นร่างแรก ให้ Tommie ปรับคำได้ ข้อความนี้ไม่มีวันเดือนปีเกิดของลูกดวง</p></div>';
     var dirsSel = { h: D.directions(H.gz[1]), d: X.dirs.d, m: X.dirs.m, y: X.dirs.y }[dLevel], lvName = { h: 'ยาม' + C.BR_TH[dSel], d: 'วัน', m: 'เดือน', y: 'ปี' }[dLevel];
     var comp = '<div class="card"><div class="row" style="justify-content:space-between"><h3 style="margin:0">ทิศอสูร และ ทิศแตก</h3><div class="seg">' + LEVEL.map(function (L) { return '<button type="button" data-lv="' + L[0] + '" aria-pressed="' + (dLevel === L[0]) + '">' + L[1] + '</button>'; }).join('') + '</div></div>' +
@@ -746,8 +746,8 @@ button.lk.sel { background: var(--ink-4); border-color: var(--soft); }
       else if (t.id === 'dCopy' || t.id === 'dCode') {
         var txt;
         if (t.id === 'dCopy') txt = $('#dText').value;
-        else { var R0 = compute(cur), F0 = favState(R0).use; txt = (cur.nick || 'ลูกดวง') + ' | ' + [R0.P.y, R0.P.m, R0.P.d, R0.P.h || '？？'].join(' ') + ' | ให้คุณ: ' + F0.good.map(function (x) { return ELTH[x]; }).join(' ') + ' | ให้โทษ: ' + F0.bad.map(function (x) { return ELTH[x]; }).join(' '); }
-        var done = function () { toast('คัดลอกแล้ว'); };
+        else txt = sheetRow();
+        var done = function () { toast(t.id === 'dCode' ? 'คัดลอกแล้ว · ไปวางที่คอลัมน์ A ของแถวว่างใน Google Sheet' : 'คัดลอกแล้ว'); if (t.id === 'dCode') renderBody(); };
         try { navigator.clipboard.writeText(txt).then(done, function () { var ta = $('#dText'); ta.value = txt; ta.select(); toast('เลือกข้อความไว้แล้ว กดคัดลอกเองได้เลย'); }); } catch (x) { var ta = $('#dText'); ta.value = txt; ta.select(); }
       }
     });
@@ -756,6 +756,17 @@ button.lk.sel { background: var(--ink-4); border-color: var(--soft); }
       if (e.target.id === 'dDate' && e.target.value) { var p = e.target.value.split('-'); setDay(+p[0], +p[1], +p[2]); }
       if (e.target.id === 'dPv') { db.settings = db.settings || {}; db.settings.herePv = e.target.value; save(); renderBody(); }
     });
+  }
+
+  /* one tab-separated row for the Google Sheet "ลูกดวง · Tommie BaZi" (columns A–R) */
+  function sheetRow() {
+    if (!cur.code) { var mx = 0; db.clients.forEach(function (c) { var m = /^TB-(\d+)$/.exec(c.code || ''); if (m) mx = Math.max(mx, +m[1]); }); db.seq = Math.max(db.seq || 0, mx) + 1; cur.code = 'TB-' + ('000' + db.seq).slice(-4); save(); }
+    var R0 = compute(cur), c = R0.c, F0 = favState(R0), u = F0.use, o = u.over || {}, ov = [];
+    ['st', 'br'].forEach(function (k) { Object.keys(o[k] || {}).forEach(function (ch) { ov.push(ch + ':' + o[k][ch]); }); });
+    var cells = [cur.code, cur.nick || '', cur.name || '', c.sex || '', pad(c.d) + '/' + pad(c.m) + '/' + c.y, c.noTime ? '' : pad(c.h) + ':' + pad(c.mi), c.noTime ? 'TRUE' : 'FALSE',
+      c.pv || '', c.ap || '', c.tb || '', c.lon == null ? '' : c.lon, R0.P.system === 'std' ? 'ทั่วไป' : 'อ.มาศ', [R0.P.y, R0.P.m, R0.P.d, R0.P.h || '？？'].join(' '),
+      R0.A.strength.manual ? R0.A.strength.verdict.th : '', u.good.map(function (e) { return ELTH[e]; }).join(' '), u.bad.map(function (e) { return ELTH[e]; }).join(' '), ov.join(' '), Math.round(hereLon().lon * 100) / 100];
+    return cells.map(function (x) { return String(x).replace(/[\t\n]/g, ' '); }).join('\t');
   }
 
   /* fav / verdict editor — shared by กำลังธาตุ and ฤกษ์ประจำวัน */
