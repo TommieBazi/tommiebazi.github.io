@@ -188,7 +188,7 @@
   var BOOST = [ // element → colours, things, direction (อ.มาศ compass)
     { color: 'เขียว', items: 'ต้นไม้ ไม้ หนังสือ', dir: 'ตะวันออก' },
     { color: 'แดง ชมพู ม่วง', items: 'แสงสว่าง เทียน ของสีแดง', dir: 'ใต้' },
-    { color: 'เหลือง น้ำตาล ครีม', items: 'หิน เซรามิก ดินเผา', dir: 'กึ่งกลาง และมุมรอยต่อ' },
+    { color: 'เหลือง น้ำตาล ครีม', items: 'หิน เซรามิก ดินเผา', dir: 'กลางบ้าน' },
     { color: 'ขาว เงิน ทอง', items: 'โลหะ เหรียญ เครื่องประดับเงินทอง', dir: 'ตะวันตก' },
     { color: 'ดำ น้ำเงิน กรมท่า', items: 'น้ำ ตู้ปลา ดื่มน้ำให้พอ', dir: 'เหนือ' }
   ];
@@ -216,14 +216,17 @@
     var best = hours.slice().sort(function (a, b) { return b.score - a.score || a.i - b.i; }).slice(0, 3).sort(function (a, b) { return a.i - b.i; });
     var grp = groupOf(P.d[0]), gEl = EL_S[STEMS.indexOf(P.d[0])], IT0 = fav.items || (fav.items = itemFav(N, fav, fav.over)), isGood = /^g/.test(IT0.st[P.d[0]].s), isBad = IT0.st[P.d[0]].s === 'b';
     var adv = ADV[grp], doList = [], dontList = [];
-    if (isBad) { doList.push('เสริมธาตุให้คุณให้มากกว่าปกติ (ดูหัวข้อควรเสริม)'); doList.push(adv.good[0] + ' แบบพอดี'); dontList = adv.bad.slice(); }
+    if (isBad) { doList.push('ใช้สีและของเสริมดวงให้มากกว่าปกติ'); doList.push(adv.good[0] + ' แบบพอดี'); dontList = adv.bad.slice(); }
     else { doList = adv.good.slice(); dontList = adv.bad.slice(0, 2); }
     var natClash = [];
     ['d', 'y'].forEach(function (k) { C.relPair(P.d[1], N.P[k][1]).forEach(function (x) { if (x.t === '沖' || x.t === '刑') natClash.push({ k: k, x: x }); }); });
-    natClash.forEach(function (c) { dontList.push((c.k === 'd' ? 'วันนี้' + c.x.th + 'กับเสาวันเกิด (ตัวเรา/คู่ครอง): ' : 'วันนี้' + c.x.th + 'กับเสาปีเกิด (ครอบครัว/ผู้ใหญ่): ') + 'เลี่ยงการตัดสินใจใหญ่ เดินทางให้เผื่อเวลา ใจเย็นกับคนใกล้ตัว'); });
-    C.relPair(P.d[1], N.P.d[1]).forEach(function (x) { if (x.t === '合') doList.push('วันนี้ภาคีกับเสาวันเกิด เหมาะนัดคุย ขอความร่วมมือ ทำเรื่องคู่ครอง'); });
+    var tech = natClash.map(function (c) { return 'วันนี้' + c.x.th + 'กับเสา' + (c.k === 'd' ? 'วันเกิด (ตัวเรา/คู่ครอง)' : 'ปีเกิด (ครอบครัว/ผู้ใหญ่)') + ' ' + P.d[1] + N.P[c.k][1]; });
+    if (natClash.length) dontList.push('ตัดสินใจเรื่องใหญ่ หรือเร่งรีบเดินทาง (วันนี้ใจเย็นกับคนใกล้ตัว)');
+    C.relPair(P.d[1], N.P.d[1]).forEach(function (x) { if (x.t === '合') { doList.push('นัดคุย ขอความร่วมมือ ดูแลความสัมพันธ์'); tech.push('วันนี้ภาคีกับเสาวันเกิด ' + P.d[1] + N.P.d[1]); } });
     var dirD = directions(P.d[1]);
-    dontList.push('เลี่ยงหันหน้าทำงานสำคัญหรือเดินทางไปทาง' + dirD.asura.name + ' (ทิศอสูร ' + dirD.asura.from + '°–' + dirD.asura.to + '°) และ' + dirD.broken.name + ' (ทิศแตก ' + dirD.broken.from + '°–' + dirD.broken.to + '°)');
+    var avoid = [dirD.asura.name, dirD.broken.name].filter(function (x, i, a) { return a.indexOf(x) === i; });
+    /* waking-hours picks for clients (about 06:00–22:00) */
+    var awake = hours.filter(function (h) { return h.fromMin >= 300 && h.toMin <= 1380; }).sort(function (a, b) { return b.score - a.score || a.i - b.i; }).slice(0, 3).sort(function (a, b) { return a.i - b.i; });
     var boost = fav.good.slice(0, 2).map(function (e) { return { el: e, th: EL_TH[e], color: BOOST[e].color, items: BOOST[e].items, dir: BOOST[e].dir }; });
     var reduce = fav.bad.slice(0, 1).map(function (e) { return { el: e, th: EL_TH[e], color: BOOST[e].color }; });
     var date = new Date(Date.UTC(y, m - 1, d)), msNoon = Date.UTC(y, m - 1, d, 12);
@@ -231,7 +234,7 @@
       y: y, m: m, d: d, weekday: WEEKDAY[date.getUTCDay()], label: WEEKDAY[date.getUTCDay()] + 'ที่ ' + d + ' ' + MON_S[m - 1] + ' ' + (y + 543),
       P: P, gods: { y: godOf(P.y[0]), m: godOf(P.m[0]), d: godOf(P.d[0]) }, bgods: { y: godOf(C.HIDDEN[BR.indexOf(P.y[1])][0]), m: godOf(C.HIDDEN[BR.indexOf(P.m[1])][0]), d: godOf(C.HIDDEN[BR.indexOf(P.d[1])][0]) },
       group: grp, theme: adv.theme, dayGood: isGood, dayBad: isBad, score: dScore.score, why: dScore.why,
-      hours: hours, nowI: nowI, best: best, corr: H.corr,
+      hours: hours, nowI: nowI, best: best, bestAwake: awake, corr: H.corr, avoidDirs: avoid, tech: tech, grade: grade(dScore.score),
       doList: doList, dontList: dontList, boost: boost, reduce: reduce, dirs: { d: dirD, m: directions(P.m[1]), y: directions(P.y[1]) }, term: termAt(msNoon)
     };
   }
@@ -244,19 +247,35 @@
     }
     return { y: y, m: m, first: first, days: days };
   }
+  function grade(sc) { return sc >= 8 ? 'ดีมาก 🌟' : sc >= 6.5 ? 'ดี 👍' : sc >= 4 ? 'กลางๆ' : 'ควรระวัง ⚠️'; }
+  /* merge back-to-back hours: 08:10–10:10 + 10:10–12:10 → 08:10–12:10 */
+  function spans(list) {
+    var out = [];
+    list.forEach(function (h) { var last = out[out.length - 1]; if (last && last.i + 1 === h.i) { last.to = h.to.t; last.i = h.i; } else out.push({ from: h.from.t, to: h.to.t, i: h.i }); });
+    return out.map(function (x) { return x.from + '–' + x.to + ' น.'; });
+  }
+  /* the message clients receive (LINE / e-mail / Notion) — plain words, no jargon */
   function text(R, who, fav) {
     var L = [];
-    L.push('📅 ' + R.label + (who ? ' · ' + who : ''));
-    L.push('ประจำวัน: ' + R.P.d + ' (' + R.gods.d + ' · กลุ่ม' + R.group + ') — ' + R.theme);
-    L.push('ปี ' + R.P.y + ' · เดือน ' + R.P.m + ' · คะแนนวัน ' + R.score + '/10');
-    if (R.boost.length) L.push('✨ เสริม: ' + R.boost.map(function (b) { return 'ธาตุ' + b.th + ' (สี' + b.color + ' · ' + b.items + ' · ทิศ' + b.dir + ')'; }).join(' / '));
-    if (R.reduce.length) L.push('🔻 ลด: สี' + R.reduce[0].color + ' (ธาตุ' + R.reduce[0].th + ')');
-    L.push('✅ ควรทำ: ' + R.doList.join(' · '));
-    L.push('⛔ ไม่ควรทำ: ' + R.dontList.join(' · '));
-    L.push('⏰ ยามดี: ' + R.best.map(function (h) { return h.from.t + '–' + h.to.t + ' (' + h.gz + ' ' + h.score + ')'; }).join(', '));
-    if (R.term) L.push('🌏 ปักษ์: ' + R.term.cur.zh + ' ' + R.term.cur.th + ' (' + R.term.cur.n + ')');
+    L.push('📅 ' + R.label + (who ? ' · คุณ' + who : ''));
+    L.push('ภาพรวม: ' + R.grade);
+    L.push('วัน ' + R.P.d + ' — ' + R.theme);
+    L.push('');
+    if (R.boost.length) {
+      L.push('✨ สีเสริมดวง: ' + R.boost.map(function (b) { return b.color; }).join(' · '));
+      L.push('🎁 ของเสริมดวง: ' + R.boost.map(function (b) { return b.items; }).join(' · '));
+    }
+    if (R.reduce.length) L.push('🔻 สีที่ควรเลี่ยง: ' + R.reduce.map(function (b) { return b.color; }).join(' · '));
+    L.push('');
+    L.push('✅ ควรทำ');
+    R.doList.forEach(function (x) { L.push('• ' + x); });
+    L.push('⛔ ไม่ควรทำ');
+    R.dontList.forEach(function (x) { L.push('• ' + x); });
+    L.push('');
+    L.push('🧭 ทิศควรเลี่ยง: ' + R.avoidDirs.join(', '));
+    if (R.bestAwake.length) L.push('⏰ ช่วงเวลาดี: ' + spans(R.bestAwake).join(', '));
     return L.join('\n');
   }
-  var api = { natal: natal, proposeFav: proposeFav, itemFav: itemFav, combos: combos, COMBOS: COMBOS, ST: ST, day: day, monthGrid: monthGrid, text: text, directions: directions, moonPhases: moonPhases, MOON_TH: MOON_TH, terms: terms, termAt: termAt, scorePillar: scorePillar, GROUP: GROUP, mainEl: mainEl, mainYang: mainYang, BOOST: BOOST };
+  var api = { grade: grade, spans: spans, natal: natal, proposeFav: proposeFav, itemFav: itemFav, combos: combos, COMBOS: COMBOS, ST: ST, day: day, monthGrid: monthGrid, text: text, directions: directions, moonPhases: moonPhases, MOON_TH: MOON_TH, terms: terms, termAt: termAt, scorePillar: scorePillar, GROUP: GROUP, mainEl: mainEl, mainYang: mainYang, BOOST: BOOST };
   if (typeof module !== 'undefined') module.exports = api; else root.TBZDaily = api;
 })(this);

@@ -114,7 +114,7 @@ function notionPage_(token, db, nick, X) {
       'วันที่': { date: { start: ymd } },
       'เสาวัน': { rich_text: [{ text: { content: R.P.d } }] },
       'คะแนนวัน': { number: R.score },
-      'ยามดี': { rich_text: [{ text: { content: R.best.map(function (h) { return h.from.t + '–' + h.to.t; }).join(', ') } }] }
+      'ยามดี': { rich_text: [{ text: { content: R.bestAwake.map(function (h) { return h.from.t + '–' + h.to.t; }).join(', ') } }] }
     },
     children: X.text.split('\n').filter(String).map(para)
   };
