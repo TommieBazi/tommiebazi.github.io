@@ -129,7 +129,8 @@
     sc = sc.map(function (v) { return Math.round(v * 100) / 100; });
     var dm = EL_S[STEMS.indexOf(P.d[0])], res = (dm + 4) % 5;
     var support = Math.round((sc[dm] + sc[res]) * 100) / 100;
-    var verdict = support >= 8 ? { k: 'gold', th: 'ดิถีกระแสทอง' } : support >= 5 ? { k: 'strong', th: 'ดิถีแข็ง' } : support >= 4.5 ? { k: 'bal', th: 'ดิถีสมดุล' } : support >= 2 ? { k: 'weak', th: 'ดิถีอ่อน' } : { k: 'follow', th: 'ดิถีตามกระแส' };
+    var opp = [['ถ่ายเท', sc[(dm + 1) % 5]], ['โชคลาภ', sc[(dm + 2) % 5]], ['อำนาจ', sc[(dm + 3) % 5]]].sort(function (a, b) { return b[1] - a[1]; })[0][0];
+    var verdict = support >= 8 ? { k: 'gold', th: 'ดิถีเป็นกระแส' + EL_TH[dm], el: dm } : support >= 5 ? { k: 'strong', th: 'ดิถีแข็ง' } : support >= 4.5 ? { k: 'bal', th: 'ดิถีสมดุล' } : support >= 2 ? { k: 'weak', th: 'ดิถีอ่อน' } : { k: 'follow', th: 'สละดิถีตามธาตุ' + opp, fam: opp };
     return { scores: sc, total: total, dm: dm, resource: res, support: support, oppose: total - support, pct: support / total * 100, verdict: verdict,
       parts: { same: sc[dm], resource: sc[res], output: sc[(dm + 1) % 5], wealth: sc[(dm + 2) % 5], power: sc[(dm + 3) % 5] } };
   }
